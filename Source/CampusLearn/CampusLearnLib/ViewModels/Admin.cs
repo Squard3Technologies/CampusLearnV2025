@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CampusLearnLib
+namespace CampusLearnLib.ViewModels
 {
     internal class Admin : User
     {
-        public Admin() : base() // Calls the User constructor
+        public Admin() : base() // Calls the UserModel constructor
         {
         }
         public Module createModule(string moduleName, string moduleCode, string description)
@@ -28,6 +28,7 @@ namespace CampusLearnLib
             return newModule;
         }
 
+
         public Tutor assignTutorRole(Student student)
         {
 
@@ -37,7 +38,7 @@ namespace CampusLearnLib
                 id = student.Id,
                 name = student.Name,
                 surname = student.Surname,
-                email = student.Email,
+                email = student.EmailAddress,
                 password = student.Password,
                 contactNumber = student.ContactNumber,
                 messages = new List<Message>(),
@@ -45,11 +46,13 @@ namespace CampusLearnLib
 
                 ownedTopics = new List<Topic>()
             };
-            Console.WriteLine($"User {student.Name} {student.Surname} has been assigned Tutor role.");
+            Console.WriteLine($"UserModel {student.Name} {student.Surname} has been assigned Tutor role.");
 
             return newTutor;
 
         }
+
+
         public class Module
         {
             public int Id { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CampusLearnLib
+namespace CampusLearnLib.ViewModels
 {
     public class Student : User
     {
