@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj": {}
+    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.API/CampusLearn.API.csproj": {}
   },
   "projects": {
-    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj": {
+    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.API/CampusLearn.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj",
-        "projectName": "CampusLearnLib",
-        "projectPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj",
+        "projectUniqueName": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.API/CampusLearn.API.csproj",
+        "projectName": "CampusLearn.API",
+        "projectPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.API/CampusLearn.API.csproj",
         "packagesPath": "/Users/bailey.brooke/.nuget/packages/",
-        "outputPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/obj/",
+        "outputPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/bailey.brooke/.nuget/NuGet/NuGet.Config"
@@ -42,6 +42,16 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.13, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -54,6 +64,9 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

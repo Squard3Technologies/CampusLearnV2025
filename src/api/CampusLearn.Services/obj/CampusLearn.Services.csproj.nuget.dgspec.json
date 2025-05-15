@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj": {}
+    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj": {}
   },
   "projects": {
-    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj": {
+    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj",
-        "projectName": "CampusLearnLib",
-        "projectPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/CampusLearnLib.csproj",
+        "projectUniqueName": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj",
+        "projectName": "CampusLearn.Services",
+        "projectPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj",
         "packagesPath": "/Users/bailey.brooke/.nuget/packages/",
-        "outputPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/Source/CampusLearn/CampusLearnLib/obj/",
+        "outputPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/bailey.brooke/.nuget/NuGet/NuGet.Config"

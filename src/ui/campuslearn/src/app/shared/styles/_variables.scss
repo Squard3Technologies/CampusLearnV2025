@@ -1,0 +1,24 @@
+// Color palette
+$primary-color: #AD0151;
+$secondary-color: #4AC1C1;
+$tertiary-color: #27222E;
+
+// Text colors
+$light-text: #ffffff;
+$dark-text: #333333;
+
+// Additional shades
+$primary-light: lighten($primary-color, 15%);
+$primary-dark: darken($primary-color, 15%);
+$secondary-light: lighten($secondary-color, 15%);
+$secondary-dark: darken($secondary-color, 15%);
+
+// Utility colors
+$success-color: #4caf50;
+$warning-color: #ff9800;
+$error-color: #f44336;
+$info-color: #2196f3;
+
+// Background colors
+$light-bg: #f8f9fa;
+$medium-bg: #e9ecef;

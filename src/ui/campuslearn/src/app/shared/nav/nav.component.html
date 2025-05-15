@@ -1,0 +1,14 @@
+<nav class="top-nav">
+  <ul class="left">
+    <li class="brand"><a routerLink="/login">Campus Learn</a></li>
+    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+  </ul>
+  <ul class="right">
+    <li *ngIf="!currentUser">
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+    </li>
+    <li *ngIf="currentUser">
+      <a (click)="logout()" style="cursor: pointer;">Logout</a>
+    </li>
+  </ul>
+</nav>
