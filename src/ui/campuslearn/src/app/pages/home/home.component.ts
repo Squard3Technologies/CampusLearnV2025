@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { ModuleService } from '../../services/module/module.service';
 import { Module } from '../../models/module/module.model';
@@ -21,12 +21,16 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private moduleService: ModuleService
+    private moduleService: ModuleService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+
+    let user = this.authService.getCurrentUser();
     // Check user role for conditional UI elements
     this.authService.currentUser$.subscribe(user => {
+      console.log("user: "+ user);
       if (user) {
         this.isAdmin = user.role === UserRole.Admin;
         this.isTutor = user.role === UserRole.Tutor;
@@ -35,6 +39,9 @@ export class HomeComponent implements OnInit {
         this.moduleService.getModulesByUser(user.id).subscribe(modules => {
           this.userModules = modules;
         });
+      }
+      else{
+        this.router.navigate(['/login']);
       }
     });
   }

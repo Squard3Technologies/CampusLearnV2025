@@ -28,7 +28,7 @@ export class LoginComponent {
     console.log('Login submitted:', this.username, this.password);
 
     // Simulate a login delay
-    setTimeout(() => {
+    setTimeout(async () => {
       // Create a mock user for demonstration
       const mockUser: User = {
         id: '1',

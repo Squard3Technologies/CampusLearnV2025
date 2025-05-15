@@ -10,7 +10,7 @@ import { EnquiryFormComponent } from './pages/enquiry-form/enquiry-form.componen
 import { TutorDashboardComponent } from './pages/tutor-dashboard/tutor-dashboard.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'modules', component: ModulesComponent },
