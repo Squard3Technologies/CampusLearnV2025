@@ -1,0 +1,123 @@
+.modules-container {
+  padding: 2rem;
+
+  .heading {
+    margin-bottom: 2rem;
+    h1 {
+      color: #AD0151;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      color: #27222E;
+    }
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .module-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .module-header {
+      background: linear-gradient(135deg, #AD0151, #4AC1C1);
+      color: white;
+      padding: 1.5rem;
+
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+
+      .module-code {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .module-body {
+      padding: 1.5rem;
+
+      .btn-primary {
+        background-color: #AD0151;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        font-weight: 500;
+
+        &:hover {
+          background-color: darken(#AD0151, 10%);
+        }
+      }
+    }
+  }
+
+  .section-title {
+    color: #27222E;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .admin-controls {
+    margin-top: 2rem;
+
+    .btn-add {
+      background-color: #4AC1C1;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover {
+        background-color: darken(#4AC1C1, 10%);
+      }
+    }
+  }
+
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: #AD0151;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

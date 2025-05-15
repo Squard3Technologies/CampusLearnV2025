@@ -1,13 +1,19 @@
 <nav class="top-nav">
   <ul class="left">
     <li class="brand"><a routerLink="/login">Campus Learn</a></li>
-    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+    <li *ngIf="currentUser"><a routerLink="/home" routerLinkActive="active">Home</a></li>
+    <li *ngIf="currentUser"><a routerLink="/modules" routerLinkActive="active">Modules</a></li>
+    <li *ngIf="currentUser"><a routerLink="/ask" routerLinkActive="active">Ask a Question</a></li>
+    <li *ngIf="currentUser && (isAdmin || isTutor)">
+      <a routerLink="/tutor-dashboard" routerLinkActive="active">Tutor Dashboard</a>
+    </li>
   </ul>
   <ul class="right">
     <li *ngIf="!currentUser">
       <a routerLink="/login" routerLinkActive="active">Login</a>
     </li>
-    <li *ngIf="currentUser">
+    <li *ngIf="currentUser" class="user-menu">
+      <span class="username">{{ currentUser.name || 'User' }}</span>
       <a (click)="logout()" style="cursor: pointer;">Logout</a>
     </li>
   </ul>

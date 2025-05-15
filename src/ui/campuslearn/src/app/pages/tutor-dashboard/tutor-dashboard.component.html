@@ -1,0 +1,142 @@
+<div class="tutor-dashboard-container">
+  <div class="page-header">
+    <h1>Tutor Dashboard</h1>
+    <p>Manage your modules, topics, and student enquiries</p>
+  </div>
+
+  <!-- Loading spinner -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Unauthorized Message -->
+  <div class="dashboard-unauthorized" *ngIf="!isLoading && !isAuthorized">
+    <h2>Access Denied</h2>
+    <p>You do not have permission to access the tutor dashboard. Please contact an administrator if you believe this is an error.</p>
+    <a class="btn-back" [routerLink]="['/home']">Return to Home</a>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading && isAuthorized">
+    <!-- Dashboard Tabs -->
+    <div class="dashboard-tabs">
+      <div
+        class="tab-item"
+        [class.active]="activeTab === 'modules'"
+        (click)="setActiveTab('modules')">
+        Modules
+      </div>
+      <div
+        class="tab-item"
+        [class.active]="activeTab === 'topics'"
+        (click)="setActiveTab('topics')">
+        My Topics
+      </div>
+      <div
+        class="tab-item"
+        [class.active]="activeTab === 'enquiries'"
+        (click)="setActiveTab('enquiries')">
+        Student Enquiries
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Modules Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'modules'">
+        <div class="add-new-section">
+          <a class="btn-add" [routerLink]="['/modules/new']">
+            Create New Module
+          </a>
+        </div>
+
+        <div class="modules-grid">
+          <div class="card" *ngFor="let module of modules">
+            <div class="card-header">
+              <h3>{{ module.name }}</h3>
+              <div class="module-code">{{ module.code }}</div>
+            </div>
+            <div class="card-body placeholder">
+              Module details would be shown here...
+            </div>
+            <div class="card-footer">
+              <a class="btn btn-primary" [routerLink]="['/modules', module.id]">
+                View
+              </a>
+              <a class="btn btn-secondary" [routerLink]="['/topics/new', {moduleId: module.id}]">
+                Add Topic
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topics Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'topics'">
+        <div class="add-new-section">
+          <a class="btn-add" [routerLink]="['/topics/new']">
+            Create New Topic
+          </a>
+        </div>
+
+        <div class="topics-grid" *ngIf="topics.length > 0; else noTopics">
+          <div class="card" *ngFor="let topic of topics">
+            <div class="card-header">
+              <h3>{{ topic.title }}</h3>
+            </div>
+            <div class="card-body">
+              <p>{{ topic.description }}</p>
+            </div>
+            <div class="card-footer">
+              <a class="btn btn-primary" [routerLink]="['/topics', topic.id]">
+                View
+              </a>
+              <a class="btn btn-secondary" [routerLink]="['/quizzes/new', {topicId: topic.id}]">
+                Add Quiz
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noTopics>
+          <div class="no-enquiries">
+            <p>You haven't created any topics yet.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Enquiries Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'enquiries'">
+        <div class="enquiries-list" *ngIf="openEnquiries.length > 0; else noEnquiries">
+          <div class="enquiry-card" *ngFor="let enquiry of openEnquiries">
+            <div class="enquiry-header">
+              <h3>{{ enquiry.title }}</h3>
+              <div class="enquiry-meta">
+                Submitted: {{ enquiry.dateCreated | date:'medium' }}
+              </div>
+            </div>
+            <div class="enquiry-body">
+              <p>{{ enquiry.content }}</p>
+              <div class="enquiry-from">
+                From: Student #{{ enquiry.createdByUserId }}
+              </div>
+            </div>
+            <div class="enquiry-actions">
+              <button class="btn btn-view" [routerLink]="['/enquiries', enquiry.id]">
+                View Full Enquiry
+              </button>
+              <button class="btn btn-resolve" (click)="resolveEnquiry(enquiry.id)">
+                Mark as Resolved
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noEnquiries>
+          <div class="no-enquiries">
+            <p>There are no open enquiries at the moment.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

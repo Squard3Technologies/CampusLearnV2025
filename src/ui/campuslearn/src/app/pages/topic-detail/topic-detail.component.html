@@ -1,0 +1,147 @@
+<div class="topic-detail-container">
+  <!-- Loading spinner -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!isLoading && topic">
+    <!-- Topic Header -->
+    <div class="topic-header">
+      <h1>{{ topic.title }}</h1>
+      <p>{{ topic.description }}</p>
+
+      <div class="topic-actions">
+        <div class="topic-date">Created: {{ topic.dateCreated | date:'mediumDate' }}</div>
+
+        <button
+          class="btn btn-primary"
+          (click)="subscribeTopic()"
+          *ngIf="!isSubscribed">
+          Subscribe to Updates
+        </button>
+
+        <button
+          class="btn btn-outline"
+          (click)="unsubscribeTopic()"
+          *ngIf="isSubscribed">
+          Unsubscribe
+        </button>
+
+        <button
+          class="btn btn-outline"
+          [routerLink]="['/modules', topic.moduleId]">
+          Back to Module
+        </button>
+      </div>
+    </div>
+
+    <!-- Learning Materials Section -->
+    <div class="content-section">
+      <div class="section-header">
+        <h2>Learning Materials</h2>
+        <button
+          class="btn-add"
+          [routerLink]="['/materials/upload', {topicId: topicId}]"
+          *ngIf="isAdmin">
+          Upload New Material
+        </button>
+      </div>
+
+      <div *ngIf="learningMaterials.length > 0; else noMaterials">
+        <div class="materials-list">
+          <div class="material-card" *ngFor="let material of learningMaterials">
+            <div class="material-icon">
+              <!-- Icon based on file type -->
+              <span *ngIf="material.fileType === 'pdf'">📄</span>
+              <span *ngIf="material.fileType === 'video'">🎬</span>
+              <span *ngIf="material.fileType !== 'pdf' && material.fileType !== 'video'">📁</span>
+            </div>
+            <div class="material-details">
+              <div class="material-type">{{ material.fileType }}</div>
+              <a class="download-btn" [href]="material.filePath" target="_blank">Download / View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noMaterials>
+        <div class="empty-state">
+          <p>No learning materials available for this topic yet.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Discussions Section -->
+    <div class="content-section">
+      <div class="section-header">
+        <h2>Discussions</h2>
+        <button
+          class="btn-add"
+          [routerLink]="['/discussions/new', {topicId: topicId}]">
+          Start New Discussion
+        </button>
+      </div>
+
+      <div *ngIf="discussions.length > 0; else noDiscussions">
+        <div class="discussions-list">
+          <div
+            class="discussion-card"
+            *ngFor="let discussion of discussions"
+            [routerLink]="['/discussions', discussion.id]">
+            <h3 class="discussion-title">{{ discussion.title }}</h3>
+            <div class="discussion-meta">
+              <span>Started by: User #{{ discussion.createdByUserId }}</span>
+              <span class="discussion-date">{{ discussion.dateCreated | date:'shortDate' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noDiscussions>
+        <div class="empty-state">
+          <p>No discussions started for this topic yet. Be the first to start a conversation!</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Quizzes Section -->
+    <div class="content-section">
+      <div class="section-header">
+        <h2>Quizzes & Assessments</h2>
+        <button
+          class="btn-add"
+          [routerLink]="['/quizzes/new', {topicId: topicId}]"
+          *ngIf="isAdmin">
+          Create New Quiz
+        </button>
+      </div>
+
+      <div *ngIf="quizzes.length > 0; else noQuizzes">
+        <div class="quizzes-list">
+          <div class="quiz-card" *ngFor="let quiz of quizzes">
+            <div class="quiz-details">
+              <h3 class="quiz-title">{{ quiz.title }}</h3>
+              <div class="quiz-meta">
+                <span>Created: {{ quiz.dateCreated | date:'shortDate' }}</span>
+                <span class="quiz-duration">Duration: {{ quiz.duration }}</span>
+              </div>
+            </div>
+            <div class="quiz-actions">
+              <button
+                class="btn-take-quiz"
+                [routerLink]="['/quizzes', quiz.id]">
+                Take Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noQuizzes>
+        <div class="empty-state">
+          <p>No quizzes available for this topic yet.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

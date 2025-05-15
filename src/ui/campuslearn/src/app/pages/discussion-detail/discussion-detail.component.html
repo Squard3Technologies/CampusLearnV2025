@@ -1,0 +1,75 @@
+<div class="discussion-detail-container">
+  <!-- Loading spinner -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!isLoading && discussion">
+    <!-- Discussion Header -->
+    <div class="discussion-header">
+      <h1>{{ discussion.title }}</h1>
+      <div class="discussion-meta">
+        <span>Started by: User #{{ discussion.createdByUserId }}</span>
+        <span class="discussion-date">{{ discussion.dateCreated | date:'medium' }}</span>
+      </div>
+      <div class="navigation">
+        <a [routerLink]="['/topics', discussion.topicId]">← Back to Topic</a>
+      </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <h2>Discussion Thread</h2>
+
+      <div *ngIf="comments.length > 0; else noComments">
+        <div class="comments-list">
+          <div class="comment-card" *ngFor="let comment of comments">
+            <div class="comment-header">
+              <div class="user-avatar">
+                {{ comment.createdByUserId.charAt(0) }}
+              </div>
+              <div class="comment-meta">
+                <div class="user-name">User #{{ comment.createdByUserId }}</div>
+                <div class="comment-date">{{ comment.createdDate | date:'medium' }}</div>
+              </div>
+            </div>
+            <div class="comment-content">
+              <p>{{ comment.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noComments>
+        <div class="empty-state">
+          <p>No comments yet. Be the first to contribute to this discussion!</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Reply Form -->
+    <div class="reply-form">
+      <h3>Add Your Comment</h3>
+      <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+        <div class="form-group">
+          <textarea
+            formControlName="content"
+            placeholder="Type your comment here..."></textarea>
+          <div
+            class="error-message"
+            *ngIf="commentForm.get('content')?.invalid && commentForm.get('content')?.touched">
+            Please enter a valid comment (minimum 2 characters).
+          </div>
+        </div>
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="commentForm.invalid || !currentUserId">
+            Post Comment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

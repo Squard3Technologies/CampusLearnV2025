@@ -1,0 +1,69 @@
+<div class="module-detail-container">
+  <!-- Loading spinner -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!isLoading && module">
+    <!-- Module Header -->
+    <div class="module-header">
+      <div class="module-code">{{ module.code }}</div>
+      <h1>{{ module.name }}</h1>
+
+      <div class="module-actions">
+        <button
+          class="btn btn-primary"
+          (click)="enrollInModule()"
+          *ngIf="!isEnrolled"
+          [disabled]="isEnrolled">
+          Enroll in this Module
+        </button>
+        <button
+          class="btn btn-secondary"
+          [routerLink]="['/modules']">
+          Back to All Modules
+        </button>
+      </div>
+    </div>
+
+    <!-- Topics Section -->
+    <div class="section-title">
+      <h2>Learning Topics</h2>
+      <button
+        class="add-topic-btn"
+        [routerLink]="['/topics/new', {moduleId: moduleId}]"
+        *ngIf="isAdmin">
+        Add New Topic
+      </button>
+    </div>
+
+    <!-- Topics List -->
+    <div *ngIf="topics.length > 0; else noTopics">
+      <div class="topics-list">
+        <div class="topic-card" *ngFor="let topic of topics" [routerLink]="['/topics', topic.id]">
+          <div class="topic-header">
+            <h3>{{ topic.title }}</h3>
+            <div class="topic-date">Created: {{ topic.dateCreated | date:'mediumDate' }}</div>
+          </div>
+          <div class="topic-body">
+            <p>{{ topic.description }}</p>
+            <a class="btn-view">View Topic →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Topics Template -->
+    <ng-template #noTopics>
+      <div class="no-topics">
+        <p>No topics available for this module yet.</p>
+        <button
+          class="add-topic-btn"
+          [routerLink]="['/topics/new', {moduleId: moduleId}]"
+          *ngIf="isAdmin">
+          Add First Topic
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

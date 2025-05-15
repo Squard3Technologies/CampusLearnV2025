@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../../models/user/user';
+import { User } from '../../models/user/user.module';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
@@ -16,9 +15,8 @@ export class UserService {
   }
 
   setCurrentUser(user: User): void {
-
+    // Save user to local storage and update the behavior subject
     localStorage.setItem('currentUser', JSON.stringify(user));
-
     this.currentUserSubject.next(user);
   }
 
