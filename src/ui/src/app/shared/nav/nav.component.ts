@@ -24,7 +24,6 @@ export class NavComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to user changes
     this.userSubscription = this.userService.currentUser$.subscribe((user: User | null) => {
       this.currentUser = user;
       this.isAdmin = user?.role === 'admin';
@@ -51,11 +50,9 @@ export class NavComponent implements OnInit, OnDestroy {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  // Close dropdown when clicking outside
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    // Check if the click is outside the dropdown
     if (!target.closest('.dropdown-menu') && !target.classList.contains('dropdown-toggle')) {
       this.isDropdownOpen = false;
     }

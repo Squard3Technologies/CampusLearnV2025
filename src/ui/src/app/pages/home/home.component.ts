@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
     this.userService.currentUser$.subscribe((user: User | null) => {
       this.currentUser = user;
 
-      // Mock some modules for demonstration
       if (user) {
         this.recentModules = [
           { id: '1', title: 'Introduction to Programming', progress: 60 },

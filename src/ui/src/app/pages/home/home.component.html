@@ -1,5 +1,4 @@
 <div class="container mt-4">
-  <!-- Welcome section -->
   <section class="mb-5">
     <div class="card">
       <div class="card-body">
@@ -10,7 +9,6 @@
         <div *ngIf="currentUser">
           <p class="card-text">Welcome back, {{currentUser.name}}! Continue your learning journey.</p>
 
-          <!-- Recent Modules -->
           <h5 class="mt-4">Your Recent Modules</h5>
           <div class="row">
             <div class="col-md-4 mb-3" *ngFor="let module of recentModules">
@@ -36,37 +34,5 @@
     </div>
   </section>
 
-  <!-- Platform features section -->
-  <section class="mb-5">
-    <h3>Learning Platform Features</h3>
-    <div class="row mt-3">
-      <div class="col-md-4 mb-3">
-        <div class="card h-100">
-          <div class="card-body text-center">
-            <h1><i class="bi bi-book"></i></h1>
-            <h5 class="card-title">Interactive Modules</h5>
-            <p class="card-text">Engage with comprehensive learning materials designed by experts.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="card h-100">
-          <div class="card-body text-center">
-            <h1><i class="bi bi-chat-dots"></i></h1>
-            <h5 class="card-title">Discussion Forums</h5>
-            <p class="card-text">Participate in topic discussions with peers and tutors.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="card h-100">
-          <div class="card-body text-center">
-            <h1><i class="bi bi-journal-check"></i></h1>
-            <h5 class="card-title">Assessments</h5>
-            <p class="card-text">Test your knowledge with quizzes and get immediate feedback.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+
 </div>
