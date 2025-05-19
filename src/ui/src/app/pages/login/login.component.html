@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-center align-items-center">
+  <form class="container mt-5" style="max-width: 400px;" (ngSubmit)="onSubmit()">
+    <h2 class="mb-4 text-center">Campus Learn Login</h2>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="email"
+             placeholder="Enter email" required
+             [(ngModel)]="email" name="email">
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password"
+             placeholder="Password" required
+             [(ngModel)]="password" name="password">
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+
+    <div class="mt-3 text-center">
+      <small class="text-muted">
+        Demo Credentials: any email/password will work
+      </small>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <strong>Campus Learn</strong>
+    </a>
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" [class.show]="isNavbarCollapsed" id="navbarMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser">
+          <a class="nav-link" routerLink="/modules" routerLinkActive="active">Modules</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser">
+          <a class="nav-link" routerLink="/discussions" routerLinkActive="active">Discussions</a>
+        </li>
+        <li class="nav-item" *ngIf="currentUser && isAdmin">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+        </li>
+      </ul>
+
+      <!-- Right side menu -->
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="!currentUser">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+        </li>
+        <li class="nav-item" *ngIf="!currentUser">
+          <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="currentUser">
+          <a class="nav-link dropdown-toggle" href="javascript:void(0)" role="button" (click)="toggleDropdown($event)">
+            Welcome, {{currentUser.name}}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
+            <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+            <li><a class="dropdown-item" routerLink="/settings">Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" (click)="logout(); toggleDropdown($event)" style="cursor: pointer;">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
