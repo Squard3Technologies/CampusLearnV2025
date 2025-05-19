@@ -41,7 +41,6 @@
 *.su
 *.idb
 *.pdb
-**/bin/
 
 # Kernel Module Compile Results
 *.mod*
@@ -51,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Build artifacts
+**/bin/
+**/obj/
+
+# Visual Studio folder
+.vs/
