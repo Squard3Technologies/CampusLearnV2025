@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj": {}
+    "C:\\Users\\User\\Downloads\\temp\\CampusLearnV2025\\src\\api\\CampusLearn.Services\\CampusLearn.Services.csproj": {}
   },
   "projects": {
-    "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj": {
+    "C:\\Users\\User\\Downloads\\temp\\CampusLearnV2025\\src\\api\\CampusLearn.Services\\CampusLearn.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Downloads\\temp\\CampusLearnV2025\\src\\api\\CampusLearn.Services\\CampusLearn.Services.csproj",
         "projectName": "CampusLearn.Services",
-        "projectPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/CampusLearn.Services.csproj",
-        "packagesPath": "/Users/bailey.brooke/.nuget/packages/",
-        "outputPath": "/Users/bailey.brooke/Documents/GitHub/CampusLearnV2025/src/api/CampusLearn.Services/obj/",
+        "projectPath": "C:\\Users\\User\\Downloads\\temp\\CampusLearnV2025\\src\\api\\CampusLearn.Services\\CampusLearn.Services.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Downloads\\temp\\CampusLearnV2025\\src\\api\\CampusLearn.Services\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/bailey.brooke/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -37,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -58,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/bailey.brooke/.dotnet/sdk/8.0.406/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

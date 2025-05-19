@@ -1,6 +1,7 @@
-﻿namespace CampusLearn.Datalayer;
-
-public class Class1
+﻿namespace CampusLearn.DataLayer
 {
+    public class Class1
+    {
 
+    }
 }
