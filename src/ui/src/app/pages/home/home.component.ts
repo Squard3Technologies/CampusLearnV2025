@@ -12,7 +12,7 @@ import { UserService, User } from '../../services/user.service';
 })
 export class HomeComponent implements OnInit {
   currentUser: User | null = null;
-  recentModules: any[] = [];
+  userModules: any[] = [];
 
   constructor(private userService: UserService) {}
 
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
       this.currentUser = user;
 
       if (user) {
-        this.recentModules = [
+        this.userModules = [
           { id: '1', title: 'Introduction to Programming', progress: 60 },
           { id: '2', title: 'Web Development Fundamentals', progress: 30 },
           { id: '3', title: 'Database Systems', progress: 75 }
