@@ -1,0 +1,89 @@
+﻿using Asp.Versioning;
+using CampusLearn.DataModel.Models;
+using CampusLearn.DataModel.Models.Enums;
+using CampusLearn.DataModel.Models.User;
+using CampusLearn.Services.Domain.Users;
+using CampusLearn.Services.Domain.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+namespace CampusLearn.API.Controllers
+{
+    [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1)]
+    public class UserController : ControllerBase
+    {
+        #region -- protected properties --
+        protected readonly ILogger<UserController> logger;
+        protected readonly JwtTokenProvider tokenProvider;
+        protected readonly IUserService userService;
+
+        #endregion
+
+
+        public UserController(ILogger<UserController> logger, JwtTokenProvider tokenProvider, IUserService userService)
+        {
+            this.logger = logger;
+            this.tokenProvider = tokenProvider;      
+            this.userService = userService;
+        }
+
+
+        [HttpPost("Login")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> LoginAsync(LoginRequestModel loginRequest)
+        {
+            if(string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
+            {
+                return BadRequest("Both username and Password are required");
+            }
+            var response = await userService.LoginAsync(loginRequest.Username, loginRequest.Password);
+            return Ok(response);
+        }
+
+
+
+        [HttpPost("CreateAccount")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
+        {
+            var response = new GenericAPIResponse<CreateUserRequestModel>();
+            if(model == null)
+            {
+                response.Status = false;
+                response.StatusCode = 404;
+                response.StatusMessage = "User details missing";
+                return BadRequest(response);
+            }
+            if (string.IsNullOrEmpty(model.EmailAddress))
+            {
+                response.Status = false;
+                response.StatusCode = 404;
+                response.StatusMessage = "User email address is required";
+                return BadRequest(response);
+            }
+
+            response = await userService.CreateUserAccountAsync(model);
+
+            return Ok(response);
+        }
+
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Learner, Tutor")]
+        [HttpGet("GetTokenDetails")]
+        [MapToApiVersion(1)]
+        public IActionResult GetTokenDetails()
+        {
+            var name = User?.Identity?.Name;
+            var emailAddress = User?.FindFirstValue(ClaimTypes.Email);
+            var roleClaims = User?.FindAll(ClaimTypes.Role);
+            var roles = roleClaims?.Select(s => s.Value)?.ToList();
+            return Ok(new {name = name, email = emailAddress, roles = roles});
+        }
+    }
+}

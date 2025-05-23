@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <section class="mb-5">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Welcome to Campus Learn</h2>
+        <p class="card-text" *ngIf="!currentUser">
+          Please <a routerLink="/login">log in</a> to access your courses and materials.
+        </p>
+        <div *ngIf="currentUser">
+          <p class="card-text">Welcome back, {{currentUser.name}}! Continue your learning journey.</p>
+
+          <h5 class="mt-4">Your Modules</h5>
+          <div class="row">
+            <div class="col-md-4 mb-3" *ngFor="let module of userModules">
+              <div class="card h-100 text-center">
+                <div class="card-body ">
+                  <h5 class="card-title">{{module.title}}</h5>
+                  <a [routerLink]="['/modules', module.id]" class="btn btn-primary btn-sm">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

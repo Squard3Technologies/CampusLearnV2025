@@ -1,0 +1,74 @@
+// Custom navbar styling
+
+// Active link highlighting
+.navbar-nav .nav-link.active {
+  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+// Dropdown styling
+.dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+  padding: 8px 0;
+
+  .dropdown-item {
+    padding: 8px 16px;
+
+    &:hover, &:focus {
+      background-color: #f8f9fa;
+    }
+
+    &:active {
+      background-color: #e9ecef;
+    }
+  }
+}
+
+// Custom primary color overrides
+.bg-primary {
+  background-color: #AD0151 !important; // Campus Learn primary color
+}
+
+// Add a subtle hover effect to nav items
+.navbar-nav .nav-link {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+}
+
+// Responsiveness improvements
+@media (max-width: 992px) {
+  .dropdown-menu {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+
+    .dropdown-item {
+      color: rgba(255, 255, 255, 0.8);
+
+      &:hover, &:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+    }
+
+    .dropdown-divider {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .navbar-nav {
+    padding: 10px 0;
+  }
+}
+
+// Pointer cursor for clickable items
+.dropdown-toggle, .dropdown-item {
+  cursor: pointer;
+}
