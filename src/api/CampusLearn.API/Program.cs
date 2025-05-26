@@ -116,7 +116,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new { message = "Invalid or expired token." });
+                var result = JsonConvert.SerializeObject(new 
+                { 
+                    message = "Invalid or expired token.",
+                    details = context.Exception?.InnerException?.Message ?? context.Exception?.Message
+                });
                 return context.Response.WriteAsync(result);
             },
             OnChallenge = context =>
@@ -125,16 +129,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 context.HandleResponse();
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new { message = "Authorization token is missing or invalid." });
+                var result = JsonConvert.SerializeObject(new 
+                { 
+                    message = "Authorization token is missing or invalid." 
+                });
                 return context.Response.WriteAsync(result);
             },
             OnForbidden = context =>
             {
                 // Suppress the default behavior
                 //context.HandleResponse();
-                context.Response.StatusCode = 401;
+                context.Response.StatusCode = 403;
                 context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new { message = "You are not authorized to access this function." });
+                var result = JsonConvert.SerializeObject(new { message = "Access denied. You do not have permission." });
                 return context.Response.WriteAsync(result);
             }
         };
