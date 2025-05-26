@@ -1,4 +1,4 @@
-﻿namespace CampusLearn.Services
+﻿namespace CampusLearn.DataLayer
 {
     public class Class1
     {
