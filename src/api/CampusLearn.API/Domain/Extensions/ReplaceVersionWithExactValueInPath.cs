@@ -1,7 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace CampusLearn.API.Domain.Extensions;
+﻿namespace CampusLearn.API.Domain.Extensions;
 
 public class ReplaceVersionWithExactValueInPath : IDocumentFilter
 {

@@ -1,0 +1,10 @@
+﻿global using Microsoft.Extensions.Configuration;
+global using Microsoft.Data.SqlClient;
+global using CampusLearn.DataModel.Models.Messages;
+global using CampusLearn.DataModel.ViewModels;
+global using CampusLearn.DataLayer.DbContext;
+global using CampusLearn.DataLayer.IRepositoryService;
+global using System.Data;
+global using Dapper;
+global using CampusLearn.DataModel.Models.User;
+global using Microsoft.Extensions.Logging;

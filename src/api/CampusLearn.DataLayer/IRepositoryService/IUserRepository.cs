@@ -1,12 +1,4 @@
-﻿using CampusLearn.DataModel.Models.User;
-using CampusLearn.DataModel.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CampusLearn.DataLayer.IRepositoryService;
+﻿namespace CampusLearn.DataLayer.IRepositoryService;
 
 public interface IUserRepository
 {

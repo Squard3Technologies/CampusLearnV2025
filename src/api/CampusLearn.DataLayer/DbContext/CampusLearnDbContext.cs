@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Data.SqlClient;
-
-namespace CampusLearn.DataLayer.DbContext;
+﻿namespace CampusLearn.DataLayer.DbContext;
 
 public class CampusLearnDbContext
 {
@@ -9,26 +6,23 @@ public class CampusLearnDbContext
 
     protected readonly IConfiguration config;
 
-    #endregion
-
+    #endregion -- protected readonly properties --
 
     public CampusLearnDbContext(IConfiguration config)
     {
         this.config = config;
     }
 
-
     public SqlConnection CreateSqlConnection()
     {
-        if (string.IsNullOrEmpty(config.GetConnectionString("DefaultConnection")))
+        var connectionString = config.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connectionString))
         {
             throw new Exception("Database connection string not configured in the configuration file.");
         }
         else
         {
-            return new SqlConnection(config.GetConnectionString("DefaultConnection"));
+            return new SqlConnection(connectionString);
         }
     }
-
-
 }

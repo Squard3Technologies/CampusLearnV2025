@@ -1,52 +1,34 @@
-using Asp.Versioning;
-using CampusLearn.API.Domain.Extensions;
-using CampusLearn.DataLayer.DbContext;
-using CampusLearn.DataLayer.IRepositoryService;
-using CampusLearn.DataLayer.RepositoryService;
-using CampusLearn.DataModel.Models.Configurations;
-using CampusLearn.Services.Domain;
-using CampusLearn.Services.Domain.Emailing;
-using CampusLearn.Services.Domain.Users;
-using CampusLearn.Services.Domain.Utils;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 
-
 #region -- custom configurations --
+
 builder.Services.Configure<ScheduleSetting>(builder.Configuration.GetSection("defaultSchedule"));
 builder.Services.Configure<SMTPSettings>(builder.Configuration.GetSection("smtp"));
-#endregion
 
-
+#endregion -- custom configurations --
 
 #region -- db context --
+
 builder.Services.AddSingleton<CampusLearnDbContext>();
-#endregion
 
-
+#endregion -- db context --
 
 #region -- repositories --
+
 builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
-#endregion
 
-
+#endregion -- repositories --
 
 #region -- services --
+
 builder.Services.AddSingleton<JwtTokenProvider>();
 builder.Services.AddSingleton<SMTPManager>();
 builder.Services.AddSingleton<ScheduleManager>();
 builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
 builder.Services.AddSingleton<IUserService, UserService>();
-#endregion
 
-
+#endregion -- services --
 
 builder.Services.AddHostedService<PersonalHostedService>();
 builder.Services.AddControllers();
@@ -66,8 +48,6 @@ builder.Services.AddApiVersioning(v =>
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
 });
-
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -156,10 +136,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 context.Response.ContentType = "application/json";
                 var result = JsonConvert.SerializeObject(new { message = "You are not authorized to access this function." });
                 return context.Response.WriteAsync(result);
-            }            
+            }
         };
     });
-
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
