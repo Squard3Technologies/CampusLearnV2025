@@ -1,20 +1,13 @@
-﻿using CampusLearn.DataLayer.DbContext;
-using CampusLearn.DataLayer.IRepositoryService;
-using CampusLearn.DataModel.Models.User;
-using CampusLearn.DataModel.ViewModels;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using System.Data;
-
-namespace CampusLearn.DataLayer.RepositoryService;
+﻿namespace CampusLearn.DataLayer.RepositoryService;
 
 public class UserRepository : IUserRepository
 {
     #region -- protected properties --
+
     protected readonly ILogger<UserRepository> logger;
     protected readonly CampusLearnDbContext database;
-    #endregion
+
+    #endregion -- protected properties --
 
     public UserRepository(ILogger<UserRepository> logger, CampusLearnDbContext database)
     {
@@ -58,11 +51,9 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
-
         }
         return response;
     }
-
 
     public async Task<GenericDbResponseViewModel> CreateUserAccountAsync(CreateUserRequestModel user)
     {
@@ -133,7 +124,7 @@ public class UserRepository : IUserRepository
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,
                             transaction: sqltrans);
-                        if(dbUser != null)
+                        if (dbUser != null)
                         {
                             response.Body = dbUser;
                         }
@@ -152,7 +143,6 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
-
         }
         return response;
     }

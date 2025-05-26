@@ -1,18 +1,4 @@
-﻿using CampusLearn.DataLayer.DbContext;
-using CampusLearn.DataLayer.IRepositoryService;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
-using Dapper;
-using System.Reflection;
-using CampusLearn.DataModel.ViewModels;
-using CampusLearn.DataModel.Models.Messages;
-
-namespace CampusLearn.DataLayer.RepositoryService;
+﻿namespace CampusLearn.DataLayer.RepositoryService;
 
 public class MessagingRepository : IMessagingRepository
 {
@@ -21,9 +7,7 @@ public class MessagingRepository : IMessagingRepository
     public MessagingRepository(CampusLearnDbContext database)
     {
         this.database = database;
-        
     }
-
 
     public async Task<GenericDbResponseViewModel> SendMessageAsync(SendMessageRequest model, string messageType)
     {
@@ -38,6 +22,7 @@ public class MessagingRepository : IMessagingRepository
                     try
                     {
                         string query = "dbo.SP_CreateMessage";
+
                         var parameters = new DynamicParameters();
                         parameters.Add("SenderId", model.SenderId, DbType.Guid);
                         parameters.Add("ReceiverId", model.RecieverId, DbType.Guid);
@@ -70,7 +55,6 @@ public class MessagingRepository : IMessagingRepository
         }
         return response;
     }
-
 
     public async Task<GenericDbResponseViewModel> GetAllPendingMessagesAsync(string messageType, int batchSize = 100)
     {
@@ -163,7 +147,6 @@ public class MessagingRepository : IMessagingRepository
         }
         catch (Exception ex)
         {
-
         }
     }
 }
