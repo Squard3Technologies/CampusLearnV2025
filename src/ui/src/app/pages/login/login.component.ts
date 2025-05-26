@@ -21,6 +21,26 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  forgotPassword($event: Event): void {
+    $event.preventDefault();
+
+    if (!this.email) {
+      this.errorMessage = 'Please enter your email address to reset your password';
+      return;
+    }
+
+    // Here you would typically call a service method to initiate password reset
+    // For demo purposes, we'll just show a success message
+    this.errorMessage = '';
+    alert(`Password reset instructions sent to ${this.email}`);
+
+    // In a real implementation, you would call the user service
+    // this.userService.requestPasswordReset(this.email).subscribe(
+    //   () => alert('Password reset email sent'),
+    //   (error) => this.errorMessage = error.message
+    // );
+  }
+
   onSubmit(): void {
     if (!this.email || !this.password) {
       this.errorMessage = 'Please enter both email and password';
