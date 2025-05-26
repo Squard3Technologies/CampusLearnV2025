@@ -19,16 +19,13 @@ namespace CampusLearn.API.Controllers
     {
         #region -- protected properties --
         protected readonly ILogger<UserController> logger;
-        protected readonly JwtTokenProvider tokenProvider;
         protected readonly IUserService userService;
-
         #endregion
 
 
-        public UserController(ILogger<UserController> logger, JwtTokenProvider tokenProvider, IUserService userService)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
-            this.logger = logger;
-            this.tokenProvider = tokenProvider;      
+            this.logger = logger; 
             this.userService = userService;
         }
 
@@ -47,6 +44,7 @@ namespace CampusLearn.API.Controllers
 
 
 
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Learner, Tutor")]
         [HttpPost("CreateAccount")]
         [MapToApiVersion(1)]
         public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
@@ -74,16 +72,5 @@ namespace CampusLearn.API.Controllers
 
 
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Learner, Tutor")]
-        [HttpGet("GetTokenDetails")]
-        [MapToApiVersion(1)]
-        public IActionResult GetTokenDetails()
-        {
-            var name = User?.Identity?.Name;
-            var emailAddress = User?.FindFirstValue(ClaimTypes.Email);
-            var roleClaims = User?.FindAll(ClaimTypes.Role);
-            var roles = roleClaims?.Select(s => s.Value)?.ToList();
-            return Ok(new {name = name, email = emailAddress, roles = roles});
-        }
     }
 }
