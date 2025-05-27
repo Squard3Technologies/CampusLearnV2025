@@ -2,7 +2,7 @@
 
 public static class DbContextExtensions
 {
-    public static async Task<T> ExecuteInTransactionAsync<T>(this CampusLearnDbContext dbContext, Func<SqlConnection, SqlTransaction, Task<T>> dbAction)
+    public static async Task<T> ExecuteTransactionAsync<T>(this CampusLearnDbContext dbContext, Func<SqlConnection, SqlTransaction, Task<T>> dbAction)
     {
         using (var db = dbContext.CreateSqlConnection())
         {
@@ -28,7 +28,7 @@ public static class DbContextExtensions
         }
     }
 
-    public static async Task ExecuteInTransactionAsync(this CampusLearnDbContext dbContext, Func<SqlConnection, SqlTransaction, Task> dbAction)
+    public static async Task ExecuteTransactionAsync(this CampusLearnDbContext dbContext, Func<SqlConnection, SqlTransaction, Task> dbAction)
     {
         using (var db = dbContext.CreateSqlConnection())
         {

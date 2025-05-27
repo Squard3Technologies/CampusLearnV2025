@@ -1,6 +1,5 @@
 ﻿namespace CampusLearn.DataModel.ViewModels;
 
-
 public class GenericDbResponseViewModel
 {
     public bool Status { get; set; }

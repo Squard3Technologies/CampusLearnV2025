@@ -108,10 +108,12 @@ BEGIN
         DateResolved DATETIME NULL,
         ResolvedByUserId UNIQUEIDENTIFIER NULL,
         Status INT NOT NULL,
+        ModuleId UNIQUEIDENTIFIER NOT NULL,
         TopicId UNIQUEIDENTIFIER NULL,
         FOREIGN KEY (CreatedByUserId) REFERENCES [User](Id),
         FOREIGN KEY (ResolvedByUserId) REFERENCES [User](Id),
         FOREIGN KEY (TopicId) REFERENCES Topic(Id),
+        FOREIGN KEY (ModuleId) REFERENCES Module(Id),
         INDEX IX_DateCreated (DateCreated ASC) INCLUDE(ResolvedByUserId, TopicId)
     );
 END;

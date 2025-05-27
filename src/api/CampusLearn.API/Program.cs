@@ -17,6 +17,7 @@ builder.Services.AddSingleton<CampusLearnDbContext>();
 
 builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
 
 #endregion -- repositories --
 
@@ -27,6 +28,7 @@ builder.Services.AddSingleton<SMTPManager>();
 builder.Services.AddSingleton<ScheduleManager>();
 builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IEnquiryService, EnquiryService>();
 
 #endregion -- services --
 
@@ -53,48 +55,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
-    var securityScheme = new OpenApiSecurityScheme
-    {
-        Name = "JWT Authentication",
-        Description = "Enter your JWT token in this field",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = JwtBearerDefaults.AuthenticationScheme,
-        BearerFormat = "JWT"
-    };
-
-    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
-
-    var securityRequirement = new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = JwtBearerDefaults.AuthenticationScheme
-                        }
-                    },
-                    []
-                }
-            };
-
-    c.AddSecurityRequirement(securityRequirement);
-
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = $"v1",
-        Title = "CAMPUS LEARN API API v1",
-        Description = "The Campus Learn System API provides RESTful endpoints to manage users, courses, enrollments, assignments, submissions, and grades. It is designed to integrate with student portals, faculty dashboards, and mobile learning apps."
-    });
-    c.ResolveConflictingActions(x => x.GetEnumerator().Current);
-    c.OperationFilter<RemoveVersionFromParameter>();
-    c.DocumentFilter<ReplaceVersionWithExactValueInPath>();
-});
+builder.Services.AddSwagger();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -118,8 +79,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new 
-                { 
+                var result = JsonConvert.SerializeObject(new
+                {
                     message = "Invalid or expired token.",
                     details = context.Exception?.InnerException?.Message ?? context.Exception?.Message
                 });
@@ -131,9 +92,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 context.HandleResponse();
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new 
-                { 
-                    message = "Authorization token is missing or invalid." 
+                var result = JsonConvert.SerializeObject(new
+                {
+                    message = "Authorization token is missing or invalid."
                 });
                 return context.Response.WriteAsync(result);
             },
