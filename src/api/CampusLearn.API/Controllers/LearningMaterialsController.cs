@@ -16,44 +16,30 @@ public class LearningMaterialsController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpGet("/topic/{id}")]
+    [HttpGet("topic/{id}")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> GetSubscribedTutors()
+    public async Task<IActionResult> GetLearningMaterialsByTopic(Guid id)
     {
         return Ok();
     }
 
-    [HttpPost("/tutors")]
+    [HttpPost("topic/{id}")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> CreateSubscribedTutor()
+    public async Task<IActionResult> CreateLearningMaterial(Guid id)
     {
         return Ok();
     }
 
-    [HttpDelete("/tutors/{id}")]
+    [HttpDelete("{id}")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> RemoveSubscriberTutor(Guid id)
+    public async Task<IActionResult> RemoveLearningMaterial(Guid id)
     {
         return Ok();
     }
 
-    [HttpGet("/topics")]
+    [HttpGet("{id}/download")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> GetSubscribedTopics()
-    {
-        return Ok();
-    }
-
-    [HttpPost("/topics")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> CreateSubscribedTopics()
-    {
-        return Ok();
-    }
-
-    [HttpDelete("/topics/{id}")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> RemoveSubscriberTopics(Guid id)
+    public async Task<IActionResult> GetLearningMaterial(Guid id)
     {
         return Ok();
     }

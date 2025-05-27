@@ -56,7 +56,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/profile")]
+    [HttpGet("profile")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetUserProfile()
     {
@@ -65,7 +65,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("/profile")]
+    [HttpPut("profile")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> UpdateUserProfile()
     {

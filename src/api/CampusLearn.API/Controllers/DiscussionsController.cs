@@ -16,28 +16,28 @@ public class DiscussionsController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpGet("/topic/{id}")]
+    [HttpGet("topic/{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetDiscussionsByTopic(Guid id)
     {
         return Ok();
     }
 
-    [HttpGet("/topic/{id}/comments")]
+    [HttpGet("topic/{id}/comments")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetDiscussionComments(Guid id)
     {
         return Ok();
     }
 
-    [HttpPost("/topic/{id}")]
+    [HttpPost("topic/{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateDiscussion(Guid id)
     {
         return Ok();
     }
 
-    [HttpPost("/topic/{id}/comment")]
+    [HttpPost("topic/{id}/comment")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateComment(Guid id)
     {

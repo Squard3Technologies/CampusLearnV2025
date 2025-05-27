@@ -33,7 +33,7 @@ public class ChatsController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("/users")]
+    [HttpGet("users")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetChatUsers([FromQuery] string search)
     {
