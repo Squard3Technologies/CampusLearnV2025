@@ -2,9 +2,9 @@
 
 public record ResolveEnquiryRequestModel
 {
-    public Guid ModuleId { get; set; }
+    public EnquiryResolutionTypes ResolutionAction { get; set; }
 
-    public string Title { get; set; }
+    public string ResolutionResponse { get; set; }
 
-    public string Description { get; set; }
+    public Guid? LinkedTopicId { get; set; }
 }

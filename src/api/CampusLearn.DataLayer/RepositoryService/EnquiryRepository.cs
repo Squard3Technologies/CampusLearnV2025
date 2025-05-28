@@ -41,8 +41,8 @@ public class EnquiryRepository : IEnquiryRepository
             var parameters = new DynamicParameters();
             parameters.Add("CreatedByUserId", userId, DbType.Guid);
             parameters.Add("Title", model.Title, DbType.String);
-            parameters.Add("Content", model.Description, DbType.String);
-            parameters.Add("Status", EnquiryStatus.Pending, DbType.Int16);
+            parameters.Add("Description", model.Description, DbType.String);
+            parameters.Add("EnquiryStatus", EnquiryStatus.Pending, DbType.Int16);
             parameters.Add("ModuleId", model.ModuleId, DbType.Guid);
 
             var rowsAffected = await db.ExecuteAsync(
@@ -55,18 +55,65 @@ public class EnquiryRepository : IEnquiryRepository
         });
     }
 
-    public Task<GenericDbResponseViewModel> GetEnquiriesByStatus(Guid userId, EnquiryStatus statusFilter, CancellationToken token)
+    public async Task<List<EnquiryViewModel>> GetEnquiriesByStatusAsync(EnquiryStatus statusFilter, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("Status", statusFilter, DbType.Int16);
+
+            var result = await db.QueryAsync<EnquiryViewModel>(
+                "dbo.SP_EnquiriesByStatus",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result?.ToList() ?? [];
+        });
     }
 
-    public Task<GenericDbResponseViewModel> GetEnquiryAsync(Guid userId, Guid id, CancellationToken token)
+    public async Task<EnquiryViewModel?> GetEnquiryAsync(Guid id, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("id", id, DbType.Guid);
+
+            var result = await db.QueryFirstOrDefaultAsync<EnquiryViewModel>(
+                "dbo.SP_GetEnquiry",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result;
+        });
     }
 
-    public Task ResolveEnquiry(Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token)
+    public async Task<GenericDbResponseViewModel> ResolveEnquiryAsync(Guid enquiryId, Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("EnquiryId", enquiryId, DbType.Guid);
+            parameters.Add("ResolvedByUserId", tutorId, DbType.Guid);
+            parameters.Add("Status", EnquiryStatus.Resolved, DbType.Int16);
+            parameters.Add("ResolutionAction", model.ResolutionAction, DbType.Int16);
+            parameters.Add("ResolutionResponse", model.ResolutionResponse, DbType.String);
+            parameters.Add("LinkedTopicId", model.LinkedTopicId, DbType.Guid);
+
+            var result = await db.QueryFirstAsync<GenericDbResponseViewModel>(
+                "dbo.SP_ResolveEnquiry",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result;
+        });
     }
 }

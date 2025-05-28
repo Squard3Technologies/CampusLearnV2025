@@ -2,8 +2,8 @@ CREATE OR ALTER PROCEDURE dbo.SP_CreateEnquiry
 (
     @CreatedByUserId UNIQUEIDENTIFIER,
     @Title NVARCHAR(255),
-    @Content NVARCHAR(MAX),
-    @Status INT,
+    @Description NVARCHAR(MAX),
+    @EnquiryStatus INT,
     @ModuleId UNIQUEIDENTIFIER
 )
 AS
@@ -29,7 +29,7 @@ BEGIN
                 Id,
                 CreatedByUserId,
                 Title,
-                Content,
+                Description,
                 Status,
                 ModuleId,
                 DateCreated
@@ -38,8 +38,8 @@ BEGIN
                 NEWID(),
                 @CreatedByUserId,
                 @Title,
-                @Content,
-                @Status,
+                @Description,
+                @EnquiryStatus,
                 @ModuleId,
                 GETDATE()
             );

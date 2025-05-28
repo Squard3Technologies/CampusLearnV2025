@@ -47,29 +47,47 @@ public class EnquiriesController : ControllerBase
 
     [HttpGet("{id}")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> GetEnquiry(Guid id)
+    public async Task<IActionResult> GetEnquiry(Guid id, CancellationToken token)
     {
-        return Ok();
+        if (id == Guid.Empty)
+            return BadRequest("Provide valid enquiryId");
+
+        var userIdentifier = User.GetUserIdentifier();
+        if (userIdentifier == null)
+            return BadRequest("Could not determine UserIdentifier");
+
+        var result = await _enquiryService.GetEnquiry(userIdentifier.Value, id, token);
+        return result != null ? Ok(result) : NoContent();
     }
 
     [HttpGet("active")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> GetActiveEnquiries()
+    public async Task<IActionResult> GetActiveEnquiries(CancellationToken token)
     {
-        return Ok();
+        var results = await _enquiryService.GetEnquiriesByStatus(EnquiryStatus.Pending, token);
+        return results != null ? Ok(results) : NoContent();
     }
 
-    [HttpGet("{id}/resolve")]
+    [HttpPost("{id}/resolve")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> ResolveEnquiry(Guid id)
+    public async Task<IActionResult> ResolveEnquiry(Guid id, [FromBody] ResolveEnquiryRequestModel model, CancellationToken token)
     {
+        if (id == Guid.Empty)
+            return BadRequest("Provide valid enquiryId");
+
+        var userIdentifier = User.GetUserIdentifier();
+        if (userIdentifier == null)
+            return BadRequest("Could not determine UserIdentifier");
+
+        await _enquiryService.ResolveEnquiry(id, userIdentifier.Value, model, token);
         return Ok();
     }
 
     [HttpGet("resolved")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> GetResolvedEnquiries()
+    public async Task<IActionResult> GetResolvedEnquiries(CancellationToken token)
     {
-        return Ok();
+        var results = await _enquiryService.GetEnquiriesByStatus(EnquiryStatus.Resolved, token);
+        return results != null ? Ok(results) : NoContent();
     }
 }

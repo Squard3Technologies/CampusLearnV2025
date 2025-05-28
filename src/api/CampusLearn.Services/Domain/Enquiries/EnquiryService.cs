@@ -24,18 +24,18 @@ public class EnquiryService : IEnquiryService
         return await _enquiryRepository.GetEnquiriesAsync(userId, token);
     }
 
-    public Task<List<EnquiryViewModel>> GetEnquiriesByStatus(Guid userId, EnquiryStatus statusFilter, CancellationToken token)
+    public async Task<List<EnquiryViewModel>> GetEnquiriesByStatus(EnquiryStatus statusFilter, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _enquiryRepository.GetEnquiriesByStatusAsync(statusFilter, token);
     }
 
-    public Task<EnquiryDetailViewModel> GetEnquiry(Guid userId, Guid id, CancellationToken token)
+    public async Task<EnquiryViewModel?> GetEnquiry(Guid userId, Guid id, CancellationToken token)
     {
-        throw new NotImplementedException();
+        return await _enquiryRepository.GetEnquiryAsync(id, token);
     }
 
-    public Task ResolveEnquiry(Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token)
+    public async Task ResolveEnquiry(Guid enquiryId, Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token)
     {
-        throw new NotImplementedException();
+        await _enquiryRepository.ResolveEnquiryAsync(enquiryId, tutorId, model, token);
     }
 }

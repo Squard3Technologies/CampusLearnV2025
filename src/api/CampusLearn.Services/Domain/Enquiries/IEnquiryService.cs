@@ -10,9 +10,9 @@ public interface IEnquiryService
 
     Task CreateEnquiry(Guid userId, CreateEnquiryRequestModel model, CancellationToken token);
 
-    Task<EnquiryDetailViewModel> GetEnquiry(Guid userId, Guid id, CancellationToken token);
+    Task<EnquiryViewModel?> GetEnquiry(Guid userId, Guid id, CancellationToken token);
 
-    Task<List<EnquiryViewModel>> GetEnquiriesByStatus(Guid userId, EnquiryStatus statusFilter, CancellationToken token);
+    Task<List<EnquiryViewModel>> GetEnquiriesByStatus(EnquiryStatus statusFilter, CancellationToken token);
 
-    Task ResolveEnquiry(Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token);
+    Task ResolveEnquiry(Guid enquiryId, Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token);
 }

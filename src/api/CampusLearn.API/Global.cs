@@ -8,6 +8,7 @@ global using CampusLearn.DataLayer.RepositoryService;
 global using CampusLearn.DataModel.Models;
 global using CampusLearn.DataModel.Models.Configurations;
 global using CampusLearn.DataModel.Models.Enquiries;
+global using CampusLearn.DataModel.Models.Enums;
 global using CampusLearn.DataModel.Models.Messages;
 global using CampusLearn.DataModel.Models.User;
 global using CampusLearn.Services.Domain;
