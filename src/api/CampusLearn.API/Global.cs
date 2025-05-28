@@ -11,6 +11,7 @@ global using CampusLearn.DataModel.Models.Enquiries;
 global using CampusLearn.DataModel.Models.Enums;
 global using CampusLearn.DataModel.Models.Messages;
 global using CampusLearn.DataModel.Models.User;
+global using CampusLearn.DataModel.ViewModels;
 global using CampusLearn.Services.Domain;
 global using CampusLearn.Services.Domain.Emailing;
 global using CampusLearn.Services.Domain.Enquiries;

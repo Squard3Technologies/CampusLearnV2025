@@ -21,6 +21,7 @@ public class EnquiriesController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<EnquiryViewModel>), StatusCodes.Status200OK)]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetEnquiries(CancellationToken token)
     {
@@ -33,6 +34,7 @@ public class EnquiriesController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateEnquiry(CreateEnquiryRequestModel model, CancellationToken token)
     {
@@ -45,6 +47,8 @@ public class EnquiriesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(EnquiryViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetEnquiry(Guid id, CancellationToken token)
     {
@@ -61,6 +65,8 @@ public class EnquiriesController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpGet("active")]
+    [ProducesResponseType(typeof(List<EnquiryViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetActiveEnquiries(CancellationToken token)
     {
@@ -70,6 +76,7 @@ public class EnquiriesController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpPost("{id}/resolve")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [MapToApiVersion(1)]
     public async Task<IActionResult> ResolveEnquiry(Guid id, [FromBody] ResolveEnquiryRequestModel model, CancellationToken token)
     {
@@ -86,6 +93,8 @@ public class EnquiriesController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpGet("resolved")]
+    [ProducesResponseType(typeof(List<EnquiryViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetResolvedEnquiries(CancellationToken token)
     {

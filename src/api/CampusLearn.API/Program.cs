@@ -1,3 +1,5 @@
+using CampusLearn.Services.Domain.Quizzes;
+
 var builder = WebApplication.CreateBuilder(args);
 
 #region -- custom configurations --
@@ -18,6 +20,7 @@ builder.Services.AddSingleton<CampusLearnDbContext>();
 builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
+builder.Services.AddSingleton<IQuizRepository, QuizRepository>();
 
 #endregion -- repositories --
 
@@ -29,6 +32,7 @@ builder.Services.AddSingleton<ScheduleManager>();
 builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEnquiryService, EnquiryService>();
+builder.Services.AddSingleton<IQuizService, QuizService>();
 
 #endregion -- services --
 
