@@ -146,4 +146,67 @@ public class UserRepository : IUserRepository
         }
         return response;
     }
+
+    public async Task<UserProfileViewModel?> GetUserProfileAsync(Guid userId, CancellationToken token)
+    {
+        return await database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", userId, DbType.Guid);
+
+            var multipleResults = await db.QueryMultipleAsync(
+                "dbo.SP_GetUserProfile",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+
+            var userProfile = await multipleResults.ReadFirstOrDefaultAsync<UserProfileViewModel>();
+            if (userProfile == null)
+                return null;
+
+            userProfile.LinkedModules = (await multipleResults.ReadAsync<UserProfileModuleViewModel>()).ToList();
+
+            return userProfile;
+        });
+    }
+
+    public async Task UpdateUserProfileAsync(Guid userId, UserProfileRequestModel model, CancellationToken token)
+    {
+        await database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", userId, DbType.Guid);
+            parameters.Add("Name", model.Name, DbType.String);
+            parameters.Add("Surname", model.Surname, DbType.String);
+            parameters.Add("ContactNumber", model.ContactNumber, DbType.String);
+
+            await db.ExecuteAsync(
+                "dbo.SP_UpdateUserProfile",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+        });
+    }
+
+    public async Task ChangePasswordAsync(Guid userId, string newPassword, CancellationToken token)
+    {
+        await database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", userId, DbType.Guid);
+            parameters.Add("Password", newPassword, DbType.String);
+
+            await db.ExecuteAsync(
+                "dbo.SP_ChangePassword",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+        });
+    }
 }
