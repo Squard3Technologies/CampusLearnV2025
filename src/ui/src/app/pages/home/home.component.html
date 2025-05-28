@@ -4,49 +4,48 @@
       <div class="card-body">
         <h2 class="card-title">Welcome to Campus Learn</h2>
         <div class="card-text" *ngIf="!currentUser">
+          <strong>CampusLearn</strong> is an e-learning platform designed to
+          provide additional learning resources and academic support to students
+          at Belgium Campus who need extra help in certain IT related topics.
+          <br /><br />
+          The platform allows students to:
+          <ul>
+            <li>Create topics for which they need help</li>
+            <li>Access learning materials uploaded by tutors</li>
+            <li>Receive feedback on their progress</li>
+          </ul>
+          <br />
+          CampusLearn supports multimedia content such as videos, documents, and
+          interactive lessons, and integrates a messaging API to facilitate
+          communication between students and registered peer tutors.
+          <br /><br />
+          Our goal is to enhance the academic experience by offering flexible,
+          accessible learning opportunities outside of the traditional classroom
+          setting.
+        </div>
 
-            <strong>CampusLearn</strong> is an e-learning platform designed to provide additional learning
-            resources and academic support to students at Belgium Campus who need extra help in certain
-            IT related topics.
-            <br><br>
-            The platform allows students to:
-            <ul>
-              <li>Create topics for which they need help</li>
-              <li>Access learning materials uploaded by tutors</li>
-              <li>Receive feedback on their progress</li>
-            </ul>
-            <br>
-            CampusLearn supports multimedia content such as videos, documents, and interactive lessons,
-            and integrates a messaging API to facilitate communication between students and registered
-            peer tutors.
-            <br><br>
-            Our goal is to enhance the academic experience by offering flexible, accessible learning
-            opportunities outside of the traditional classroom setting.
-          </div>
+        <div *ngIf="currentUser">
+          <p class="card-text">
+            Welcome back, {{ currentUser.name }}! Continue your learning
+            journey.
+          </p>
 
-              <div *ngIf="currentUser">
-                <p class="card-text">Welcome back, {{currentUser.name}}! Continue your learning journey.</p>
-
-                <h5 class="mt-4">Your Modules</h5>
-                <div class="row">
-                  <div class="col-md-4 mb-3" *ngFor="let module of userModules">
-                    <div class="card h-100 text-center">
-                      <div class="card-body ">
-                        <h5 class="card-title">{{module.title}}</h5>
-                        <a [routerLink]="['/modules', module.id]" class="btn btn-primary btn-sm">View</a>
-                      </div>
-                    </div>
-                  </div>
+          <h5 class="mt-4">Your Modules</h5>
+          <div class="row">
+            <div class="col-md-4 mb-3" *ngFor="let module of userModules">
+              <div class="card h-100 text-center">
+                <div class="card-body">
+                  <h5 class="card-title">{{ module.title }}</h5>
+                  <a
+                    [routerLink]="['/modules', module.id]"
+                    class="btn btn-primary btn-sm"
+                    >View</a
+                  >
                 </div>
               </div>
-
-
-
-
-
-
-
-
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
