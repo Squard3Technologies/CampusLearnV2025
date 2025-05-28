@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>1.0.50.50</AssemblyVersion>
-    <FileVersion>1.0.50.50</FileVersion>
+    <AssemblyVersion>1.0.57.57</AssemblyVersion>
+    <FileVersion>1.0.57.57</FileVersion>
     <UserSecretsId>851c4371-d122-4d2c-9b9a-b1d99048d2a4</UserSecretsId>
   </PropertyGroup>
 
@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CampusLearn.Bootstrap\CampusLearn.Bootstrap.csproj" />
     <ProjectReference Include="..\CampusLearn.DataLayer\CampusLearn.DataLayer.csproj" />
     <ProjectReference Include="..\CampusLearn.DataModel\CampusLearn.DataModel.csproj" />
     <ProjectReference Include="..\CampusLearn.Services\CampusLearn.Services.csproj" />

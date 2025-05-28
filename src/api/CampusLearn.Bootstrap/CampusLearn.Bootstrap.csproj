@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>1.0.2.2</AssemblyVersion>
+    <FileVersion>1.0.2.2</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Sql\StoredProcedures\SP_ChangeAccountStatus.sql" />
+    <None Remove="Sql\StoredProcedures\SP_CreateMessage.sql" />
+    <None Remove="Sql\StoredProcedures\SP_CreateUserAccounts.sql" />
+    <None Remove="Sql\StoredProcedures\SP_GetPendingMessages.sql" />
+    <None Remove="Sql\StoredProcedures\SP_GetPendingRegistrations.sql" />
+    <None Remove="Sql\StoredProcedures\SP_GetUsers.sql" />
+    <None Remove="Sql\StoredProcedures\SP_UpdateMessageStatus.sql" />
+    <None Remove="Sql\StoredProcedures\SP_UpsetComment.sql" />
+    <None Remove="Sql\StoredProcedures\SP_UserLogin.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeAccountStatus.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_CreateMessage.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_CreateUserAccounts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetPendingMessages.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetPendingRegistrations.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUsers.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateMessageStatus.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetComment.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Sql\Tables\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CampusLearn.DataLayer\CampusLearn.DataLayer.csproj" />
+  </ItemGroup>
+
+</Project>

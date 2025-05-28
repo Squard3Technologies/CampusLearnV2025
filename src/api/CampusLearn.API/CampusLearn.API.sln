@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampusLearn.Services", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampusLearn.DataLayer", "..\CampusLearn.DataLayer\CampusLearn.DataLayer.csproj", "{76207524-5CCC-4217-8984-9816E58B4332}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampusLearn.DataModel", "..\CampusLearn.DataModel\CampusLearn.DataModel.csproj", "{3513D3B9-B4AD-47B1-A6F2-607DD1225590}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampusLearn.DataModel", "..\CampusLearn.DataModel\CampusLearn.DataModel.csproj", "{3513D3B9-B4AD-47B1-A6F2-607DD1225590}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampusLearn.Bootstrap", "..\CampusLearn.Bootstrap\CampusLearn.Bootstrap.csproj", "{7027087A-17D6-4522-84EE-AEDF35CFD145}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3513D3B9-B4AD-47B1-A6F2-607DD1225590}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3513D3B9-B4AD-47B1-A6F2-607DD1225590}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3513D3B9-B4AD-47B1-A6F2-607DD1225590}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7027087A-17D6-4522-84EE-AEDF35CFD145}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7027087A-17D6-4522-84EE-AEDF35CFD145}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7027087A-17D6-4522-84EE-AEDF35CFD145}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7027087A-17D6-4522-84EE-AEDF35CFD145}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,7 +14,6 @@ public class ModulesController : ControllerBase
 
     #region -- protected properties --
     protected readonly ILogger<ModulesController> logger;
-    //protected readonly IMessagingServices messagingServices;
 
     #endregion
 

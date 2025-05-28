@@ -17,4 +17,6 @@ public class UserViewModel
     public string Password { get; set; }
     public string ContactNumber { get; set; }
     public UserRoles Role { get; set; }
+    public Guid AccountStatusId { get; set; }
+    public string AccountStatusDescription { get; set; }
 }

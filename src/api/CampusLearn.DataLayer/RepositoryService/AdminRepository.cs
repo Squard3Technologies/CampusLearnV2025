@@ -1,23 +1,30 @@
-﻿namespace CampusLearn.DataLayer.RepositoryService;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
+using System.Threading.Tasks;
 
-public class UserRepository : IUserRepository
+namespace CampusLearn.DataLayer.RepositoryService;
+
+public class AdminRepository : IAdminRepository
 {
     #region -- protected properties --
 
-    protected readonly ILogger<UserRepository> logger;
+    protected readonly ILogger<AdminRepository> logger;
     protected readonly CampusLearnDbContext database;
 
     #endregion -- protected properties --
 
-    public UserRepository(ILogger<UserRepository> logger, CampusLearnDbContext database)
+    public AdminRepository(ILogger<AdminRepository> logger, CampusLearnDbContext database)
     {
         this.logger = logger;
         this.database = database;
     }
 
 
-
-    public async Task<GenericDbResponseViewModel> ChangeUserPasswordAsync(Guid userId, string password)
+    public async Task<GenericDbResponseViewModel> GetPendingRegistrationsAsync()
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
         try
@@ -29,61 +36,24 @@ public class UserRepository : IUserRepository
                 {
                     try
                     {
-                        string query = "dbo.SP_UserLogin";
-                        var parameters = new DynamicParameters();
-                        //parameters.Add("Name", batchSize, DbType.String);
-
-                        //response = await db.QueryAsync<MessageViewModel>(sql: query,
-                        //    param: parameters,
-                        //    commandType: CommandType.StoredProcedure,
-                        //    commandTimeout: 360,
-                        //    transaction: sqltrans);
-
-                        await sqltrans.CommitAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        await sqltrans.RollbackAsync();
-                        await db.CloseAsync();
-                        throw ex;
-                    }
-                }
-                await db.CloseAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-        }
-        return response;
-    }
-
-    public async Task<GenericDbResponseViewModel> CreateUserAccountAsync(CreateUserRequestModel user)
-    {
-        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
-        try
-        {
-            using (var db = database.CreateSqlConnection())
-            {
-                await db.OpenAsync();
-                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
-                {
-                    try
-                    {
-                        string query = "dbo.SP_CreateUserAccounts";
-                        var parameters = new DynamicParameters();
-                        parameters.Add("Name", user.FirstName, DbType.String);
-                        parameters.Add("Surname", user.Surname, DbType.String);
-                        parameters.Add("Email", user.EmailAddress, DbType.String);
-                        parameters.Add("ContactNumber", user.ContactNumber, DbType.String);
-                        parameters.Add("Password", user.Password, DbType.String);
-                        parameters.Add("Role", user.Role, DbType.Int16);
-
-                        response = await db.QueryFirstAsync<GenericDbResponseViewModel>(sql: query,
-                            param: parameters,
+                        string query = "dbo.SP_GetPendingRegistrations";
+                        var registrations = await db.QueryAsync<UserViewModel>(sql: query,
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,
                             transaction: sqltrans);
-
+                        if (registrations != null && registrations?.Any() != false)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = registrations.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "No pending registrations found on the system";
+                        }
                         await sqltrans.CommitAsync();
                     }
                     catch (Exception ex)
@@ -99,13 +69,15 @@ public class UserRepository : IUserRepository
         catch (Exception ex)
         {
             response.Status = false;
-            response.StatusCode = 500;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
             response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
         }
         return response;
     }
 
-    public async Task<GenericDbResponseViewModel> LoginAsync(string emailAddress)
+
+
+    public async Task<GenericDbResponseViewModel> ChangeUserAccountStatusAsync(Guid userId, Guid accountStatusId)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
         try
@@ -117,20 +89,15 @@ public class UserRepository : IUserRepository
                 {
                     try
                     {
-                        string query = "dbo.SP_UserLogin";
+                        string query = "dbo.SP_ChangeAccountStatus";
                         var parameters = new DynamicParameters();
-                        parameters.Add("EmailAddress", emailAddress, DbType.String);
-
-                        var dbUser = await db.QueryFirstOrDefaultAsync<UserViewModel>(sql: query,
+                        parameters.Add("userId", userId, DbType.Guid);
+                        parameters.Add("accountStatusId", accountStatusId, DbType.Guid);
+                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel>(sql: query,
                             param: parameters,
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,
                             transaction: sqltrans);
-                        if (dbUser != null)
-                        {
-                            response.Body = dbUser;
-                        }
-
                         await sqltrans.CommitAsync();
                     }
                     catch (Exception ex)
@@ -145,6 +112,61 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetUsersAsync()
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetUsers";
+                        var registrations = await db.QueryAsync<UserViewModel>(sql: query,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        if (registrations != null)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = registrations.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "No active users found on the system";
+                        }
+                        await sqltrans.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
         }
         return response;
     }

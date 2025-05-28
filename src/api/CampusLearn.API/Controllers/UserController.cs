@@ -1,16 +1,4 @@
-﻿using Asp.Versioning;
-using CampusLearn.DataModel.Models;
-using CampusLearn.DataModel.Models.Enums;
-using CampusLearn.DataModel.Models.User;
-using CampusLearn.Services.Domain.Users;
-using CampusLearn.Services.Domain.Utils;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-
-namespace CampusLearn.API.Controllers
+﻿namespace CampusLearn.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]

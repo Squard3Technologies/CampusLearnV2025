@@ -1,3 +1,6 @@
+using CampusLearn.Bootstrap;
+using CampusLearn.Services.Domain.Admin;
+
 var builder = WebApplication.CreateBuilder(args);
 
 #region -- custom configurations --
@@ -10,6 +13,7 @@ builder.Services.Configure<SMTPSettings>(builder.Configuration.GetSection("smtp"
 #region -- db context --
 
 builder.Services.AddSingleton<CampusLearnDbContext>();
+builder.Services.AddSingleton<Bootstraper>();
 
 #endregion -- db context --
 
@@ -17,6 +21,7 @@ builder.Services.AddSingleton<CampusLearnDbContext>();
 
 builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IAdminRepository, AdminRepository>();
 
 #endregion -- repositories --
 
@@ -27,6 +32,7 @@ builder.Services.AddSingleton<SMTPManager>();
 builder.Services.AddSingleton<ScheduleManager>();
 builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IAdminService, AdminService>();
 
 #endregion -- services --
 
@@ -178,6 +184,9 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint($"/swagger/v1/swagger.json", $"CAMPUS LEARN API v1");
     });
 }
+
+var boostrapper = app.Services.GetRequiredService<Bootstraper>();
+await boostrapper.Migrations();
 
 app.UseHttpsRedirection();
 
