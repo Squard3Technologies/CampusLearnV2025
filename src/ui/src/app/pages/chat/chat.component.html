@@ -3,7 +3,7 @@
   <aside class="chat-sidebar">
     <div class="sidebar-header">
       <h2>Conversations</h2>
-      <button class="new-chat-btn" title="Start a new chat">
+      <button class="new-chat-btn" title="Start a new chat" (click)="openNewChatModal()">
         <i class="fas fa-plus"></i> New Chat
       </button>
     </div>
@@ -60,4 +60,47 @@
       </div>
     </div>
   </main>
+</div>
+
+<!-- New Chat Modal -->
+<div class="modal-overlay" *ngIf="showNewChatModal" (click)="closeNewChatModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Start New Chat</h3>
+      <button class="close-btn" (click)="closeNewChatModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search for users by name, email, or role..."
+          [(ngModel)]="searchText"
+          (input)="searchUsers()">
+      </div>
+
+      <div class="users-list">
+        <div *ngIf="filteredUsers.length > 0; else noResults">
+          <div
+            *ngFor="let user of filteredUsers"
+            class="user-item"
+            (click)="startChatWithUser(user)">
+            <div class="user-info">
+              <div class="user-name">{{ user.name }}</div>
+              <div class="user-email">{{ user.email }}</div>
+              <div class="user-role">{{ user.role }}</div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noResults>
+          <div class="no-results">
+            <p>No users found</p>
+            <p>Try searching with different keywords</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>

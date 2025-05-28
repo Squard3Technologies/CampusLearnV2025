@@ -25,7 +25,10 @@ export class ApiService {
   }
 
   register(userData: any) {
-    return this.httpClient.post(`${this.apiUrl}/register`, userData);
+    const url = `${this.apiUrl}/user/createaccount`;
+    console.log('Making registration request to:', url);
+    console.log('Request body:', userData);
+    return this.httpClient.post(url, userData);
   }
 
   forgotPassword(email: { email: string }) {

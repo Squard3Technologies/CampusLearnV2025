@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center align-items-center">
-  <form class="container mt-5" style="max-width: 400px;" (ngSubmit)="onSubmit()">
+  <form class="container mt-5" style="max-width: 450px;" (ngSubmit)="onSubmit()">
     <h2 class="mb-4 text-center">Campus Learn Register</h2>
 
     <div class="alert alert-danger" *ngIf="errorMessage">
@@ -7,10 +7,31 @@
     </div>
 
     <div class="mb-3">
-      <label for="email" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="email"
-             placeholder="Enter email" required
-             [(ngModel)]="email" name="email">
+      <label for="firstName" class="form-label">First Name</label>
+      <input type="text" class="form-control" id="firstName"
+             placeholder="Enter first name" required
+             [(ngModel)]="firstName" name="firstName">
+    </div>
+
+    <div class="mb-3">
+      <label for="surname" class="form-label">Surname</label>
+      <input type="text" class="form-control" id="surname"
+             placeholder="Enter surname" required
+             [(ngModel)]="surname" name="surname">
+    </div>
+
+    <div class="mb-3">
+      <label for="emailAddress" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="emailAddress"
+             placeholder="Enter email address" required
+             [(ngModel)]="emailAddress" name="emailAddress">
+    </div>
+
+    <div class="mb-3">
+      <label for="contactNumber" class="form-label">Contact Number</label>
+      <input type="tel" class="form-control" id="contactNumber"
+             placeholder="Enter contact number (10 digits)" required
+             [(ngModel)]="contactNumber" name="contactNumber">
     </div>
 
     <div class="mb-3">
@@ -33,4 +54,6 @@
       <small class="text-muted">
         Already have an account? <a routerLink="/login">Login</a>
       </small>
+    </div>
+  </form>
 </div>

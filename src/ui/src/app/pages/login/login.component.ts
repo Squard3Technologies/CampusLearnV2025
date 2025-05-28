@@ -32,28 +32,18 @@ export class LoginComponent {
 
     console.log('Attempting login with email:', this.email);
 
-    // Call the API login method
+    // Call the enhanced login method that handles JWT processing
     this.userService.login(this.email, this.password).subscribe({
-      next: (response: any) => {
-        console.log('Login successful:', response);
-        // If login is successful, create user object from response
-        const user = {
-          id: response.id || '1',
-          name: response.name || 'User',
-          email: this.email,
-          role: response.role || 'student'
-        };
-
-        // Set the current user and navigate to home
-        this.userService.setCurrentUser(user);
+      next: (user) => {
+        console.log('Login successful for user:', user);
+        // Navigate to home page - user is already set in the service
         this.router.navigate(['/home']);
       },
       error: (error) => {
         // Handle login error
         console.error('Login error:', error);
-        console.error('Error details:', error.message);
-        this.errorMessage = 'Invalid email or password. Please try again.';
+        this.errorMessage = error.message || 'Invalid email or password. Please try again.';
       }
     });
-      }
+  }
 }
