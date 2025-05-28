@@ -10,11 +10,18 @@ export class ApiService {
   constructor(private httpClient: HttpClient) {
   }
 
-  private apiUrl = '/api';
+  private apiUrl = '/api/v1';
 
   // Authentication
   login(credentials: { email: string, password: string }) {
-    return this.httpClient.post(`${this.apiUrl}/login`, credentials);
+    const loginBody = {
+      username: credentials.email,
+      password: credentials.password
+    };
+    const url = `${this.apiUrl}/user/login`;
+    console.log('Making login request to:', url);
+    console.log('Request body:', loginBody);
+    return this.httpClient.post(url, loginBody);
   }
 
   register(userData: any) {
