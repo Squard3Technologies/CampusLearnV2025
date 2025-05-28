@@ -37,6 +37,7 @@ builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
 builder.Services.AddSingleton<IQuizRepository, QuizRepository>();
+builder.Services.AddSingleton<IChatRepository, ChatRepository>();
 
 #endregion -- repositories --
 
@@ -49,6 +50,7 @@ builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEnquiryService, EnquiryService>();
 builder.Services.AddSingleton<IQuizService, QuizService>();
+builder.Services.AddSingleton<IChatService, ChatService>();
 
 #endregion -- services --
 
