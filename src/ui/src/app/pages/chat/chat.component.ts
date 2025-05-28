@@ -18,6 +18,14 @@ interface Chat {
   messages: ChatMessage[];
 }
 
+// Simple user structure for search
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -34,9 +42,16 @@ export class ChatComponent implements OnInit {
   // Text being typed by the user
   newMessage: string = '';
 
+  // Modal properties
+  showNewChatModal: boolean = false;
+  searchText: string = '';
+  allUsers: User[] = [];
+  filteredUsers: User[] = [];
+
   // Called when component starts
   ngOnInit(): void {
     this.loadChats();
+    this.loadUsers();
   }
 
   // Load example chat data
@@ -90,6 +105,80 @@ export class ChatComponent implements OnInit {
         ]
       }
     ];
+  }
+
+  // Load example user data for search
+  loadUsers(): void {
+    // Sample users - in a real app, this would come from a database
+    this.allUsers = [
+      { id: '1', name: 'John Smith', email: 'john.smith@university.edu', role: 'student' },
+      { id: '2', name: 'Mary Johnson', email: 'mary.johnson@university.edu', role: 'tutor' },
+      { id: '3', name: 'David Brown', email: 'david.brown@university.edu', role: 'student' },
+      { id: '4', name: 'Sarah Wilson', email: 'sarah.wilson@university.edu', role: 'admin' },
+      { id: '5', name: 'Mike Davis', email: 'mike.davis@university.edu', role: 'student' },
+      { id: '6', name: 'Lisa Garcia', email: 'lisa.garcia@university.edu', role: 'tutor' },
+      { id: '7', name: 'Tom Miller', email: 'tom.miller@university.edu', role: 'student' },
+      { id: '8', name: 'Anna Taylor', email: 'anna.taylor@university.edu', role: 'tutor' }
+    ];
+    this.filteredUsers = this.allUsers; // Start with all users visible
+  }
+
+  // Open the new chat modal
+  openNewChatModal(): void {
+    this.showNewChatModal = true;
+    this.searchText = '';
+    this.filteredUsers = this.allUsers; // Reset to show all users
+  }
+
+  // Close the new chat modal
+  closeNewChatModal(): void {
+    this.showNewChatModal = false;
+    this.searchText = '';
+  }
+
+  // Search through users (basic raw sorting)
+  searchUsers(): void {
+    // If search is empty, show all users
+    if (!this.searchText || this.searchText.trim() === '') {
+      this.filteredUsers = this.allUsers;
+      return;
+    }
+
+    // Convert search text to lowercase for case-insensitive search
+    const searchLower = this.searchText.toLowerCase();
+
+    // Create empty array for results
+    this.filteredUsers = [];    // Loop through all users and check if they match
+    for (let i = 0; i < this.allUsers.length; i++) {
+      const user = this.allUsers[i];
+
+      // Check if name, email, or role contains search text
+      const nameMatch = user.name.toLowerCase().indexOf(searchLower) !== -1;
+      const emailMatch = user.email.toLowerCase().indexOf(searchLower) !== -1;
+      const roleMatch = user.role.toLowerCase().indexOf(searchLower) !== -1;
+
+      // If any field matches, add to results
+      if (nameMatch || emailMatch || roleMatch) {
+        this.filteredUsers.push(user);
+      }
+    }
+  }
+
+  // Start chat with selected user
+  startChatWithUser(user: User): void {
+    const newChatId = Date.now().toString(); // Use timestamp as ID
+    const newChat: Chat = {
+      id: newChatId,
+      title: `Chat with ${user.name}`,
+      timestamp: new Date(),
+      lastMessage: '',
+      messages: []
+    };
+
+    // Add to beginning of list
+    this.chats.unshift(newChat);
+    this.selectChat(newChatId);
+    this.closeNewChatModal();
   }
 
   // When user clicks on a chat in the list
