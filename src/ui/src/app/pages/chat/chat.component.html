@@ -33,15 +33,14 @@
     </div>
   </aside>
 
-  <!-- Main chat area -->
+
   <main class="chat-main">
-    <div *ngIf="selectedChatId; else welcomeMessage" class="chat-messages">
-      <!-- Chat header -->
+    <div *ngIf="selectedChatId" class="chat-messages">
+
       <div class="chat-header">
         <h3>{{ selectedChat?.title || 'New Conversation' }}</h3>
       </div>
 
-      <!-- Messages will go here -->
       <div class="messages-container">
         <div *ngFor="let message of selectedChat?.messages" class="message" [ngClass]="message.sender">
           <div class="message-content">{{ message.content }}</div>
@@ -49,7 +48,6 @@
         </div>
       </div>
 
-      <!-- Message input -->
       <div class="message-input-container">
         <textarea
           class="message-input"
@@ -61,12 +59,5 @@
         </button>
       </div>
     </div>
-
-    <ng-template #welcomeMessage>
-      <div class="welcome-container">
-        <h2>Welcome to CampusLearn Chat</h2>
-        <p>Select a conversation from the sidebar or start a new one</p>
-      </div>
-    </ng-template>
   </main>
 </div>

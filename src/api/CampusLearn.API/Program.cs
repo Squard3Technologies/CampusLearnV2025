@@ -9,6 +9,22 @@ builder.Services.Configure<SMTPSettings>(builder.Configuration.GetSection("smtp"
 
 #endregion -- custom configurations --
 
+#region -- cors configuration --
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
+#endregion -- cors configuration --
+
 #region -- db context --
 
 builder.Services.AddSingleton<CampusLearnDbContext>();

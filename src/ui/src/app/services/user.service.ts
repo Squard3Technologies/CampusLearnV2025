@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiService } from './api.service';
 
 // Simple user interface
 export interface User {
@@ -16,9 +17,14 @@ export class UserService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {
+  constructor(private apiService: ApiService) {
     // Check local storage when service starts
     this.loadUserFromStorage();
+  }
+
+  // Login method that calls the API
+  login(email: string, password: string): Observable<any> {
+    return this.apiService.login({ email, password });
   }
 
   // Set the current user after login
