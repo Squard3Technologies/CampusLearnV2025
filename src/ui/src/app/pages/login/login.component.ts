@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -27,15 +27,23 @@ export class LoginComponent {
       return;
     }
 
-    // For demo purposes, we'll just simulate a successful login
-    const user = {
-      id: '1',
-      name: 'Demo User',
-      email: this.email,
-      role: 'admin'  // or 'student', 'teacher', etc.
-    };
+    // Clear any previous error message
+    this.errorMessage = '';
 
-    this.userService.setCurrentUser(user);
-    this.router.navigate(['/home']);
+    console.log('Attempting login with email:', this.email);
+
+    // Call the enhanced login method that handles JWT processing
+    this.userService.login(this.email, this.password).subscribe({
+      next: (user) => {
+        console.log('Login successful for user:', user);
+        // Navigate to home page - user is already set in the service
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        // Handle login error
+        console.error('Login error:', error);
+        this.errorMessage = error.message || 'Invalid email or password. Please try again.';
+      }
+    });
   }
 }

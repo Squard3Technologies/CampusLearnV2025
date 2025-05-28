@@ -1,0 +1,46 @@
+// Footer component styling to match navbar
+
+// Primary color consistency (matching navbar)
+footer.bg-primary {
+  background-color: #AD0151 !important; // Campus Learn primary color
+}
+
+// Hover effects for links (similar to navbar)
+.hover-link {
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: white !important;
+    text-decoration: underline !important;
+  }
+}
+
+// Section headings
+h5, h6 {
+  color: white;
+  font-weight: 500;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container {
+    padding: 10px 5px !important;
+  }
+
+  .col-md-4 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}
+
+// Ensure footer sticks to bottom of page
+footer {
+  margin-top: auto;
+}
+
+// Link spacing
+ul li {
+  margin-bottom: 5px;
+}
+
+

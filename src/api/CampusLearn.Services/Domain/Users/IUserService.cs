@@ -1,10 +1,5 @@
 ﻿using CampusLearn.DataModel.Models;
 using CampusLearn.DataModel.Models.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CampusLearn.Services.Domain.Users;
 
@@ -15,4 +10,10 @@ public interface IUserService
     Task<GenericAPIResponse<CreateUserRequestModel>> CreateUserAccountAsync(CreateUserRequestModel user);
 
     Task<GenericAPIResponse<string>> ChangeUserPasswordAsync(Guid userId, string password);
+
+    Task<UserProfileViewModel?> GetUserProfileAsync(Guid userId, CancellationToken token);
+
+    Task UpdateUserProfileAsync(Guid userId, UserProfileRequestModel model, CancellationToken token);
+
+    Task ChangePasswordAsync(Guid userId, string newPassword, CancellationToken token);
 }

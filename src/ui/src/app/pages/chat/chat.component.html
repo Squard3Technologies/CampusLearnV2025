@@ -1,0 +1,106 @@
+<div class="chat-container">
+  <!-- Side navigation bar -->
+  <aside class="chat-sidebar">
+    <div class="sidebar-header">
+      <h2>Conversations</h2>
+      <button class="new-chat-btn" title="Start a new chat" (click)="openNewChatModal()">
+        <i class="fas fa-plus"></i> New Chat
+      </button>
+    </div>
+
+    <!-- Chat list -->
+    <div class="chat-list">
+      <div *ngIf="chats && chats.length > 0; else noChats">
+        <div
+          *ngFor="let chat of chats"
+          class="chat-item"
+          [class.active]="selectedChatId === chat.id"
+          (click)="selectChat(chat.id)">
+          <div class="chat-item-content">
+            <div class="chat-title">{{ chat.title || 'New Conversation' }}</div>
+            <div class="chat-preview">{{ chat.lastMessage }}</div>
+            <div class="chat-time">{{ chat.timestamp | date:'short' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noChats>
+        <div class="empty-state">
+          <p>No conversations yet</p>
+          <p>Start a new chat to begin</p>
+        </div>
+      </ng-template>
+    </div>
+  </aside>
+
+
+  <main class="chat-main">
+    <div *ngIf="selectedChatId" class="chat-messages">
+
+      <div class="chat-header">
+        <h3>{{ selectedChat?.title || 'New Conversation' }}</h3>
+      </div>
+
+      <div class="messages-container">
+        <div *ngFor="let message of selectedChat?.messages" class="message" [ngClass]="message.sender">
+          <div class="message-content">{{ message.content }}</div>
+          <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+        </div>
+      </div>
+
+      <div class="message-input-container">
+        <textarea
+          class="message-input"
+          placeholder="Type your message here..."
+          [(ngModel)]="newMessage">
+        </textarea>
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+          Send
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- New Chat Modal -->
+<div class="modal-overlay" *ngIf="showNewChatModal" (click)="closeNewChatModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Start New Chat</h3>
+      <button class="close-btn" (click)="closeNewChatModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search for users by name, email, or role..."
+          [(ngModel)]="searchText"
+          (input)="searchUsers()">
+      </div>
+
+      <div class="users-list">
+        <div *ngIf="filteredUsers.length > 0; else noResults">
+          <div
+            *ngFor="let user of filteredUsers"
+            class="user-item"
+            (click)="startChatWithUser(user)">
+            <div class="user-info">
+              <div class="user-name">{{ user.name }}</div>
+              <div class="user-email">{{ user.email }}</div>
+              <div class="user-role">{{ user.role }}</div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noResults>
+          <div class="no-results">
+            <p>No users found</p>
+            <p>Try searching with different keywords</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

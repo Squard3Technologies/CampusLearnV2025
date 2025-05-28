@@ -1,10 +1,10 @@
-﻿using CampusLearn.DataModel.ViewModels;
+﻿using System.Security.Claims;
+using System.Text;
+using CampusLearn.DataModel.Models.Enums;
+using CampusLearn.DataModel.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
 
 namespace CampusLearn.Services.Domain.Utils;
 
@@ -16,18 +16,24 @@ public class JwtTokenProvider(IConfiguration configuration)
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
         var credentials = new SigningCredentials(securityKey, algorithm: SecurityAlgorithms.HmacSha256);
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.EmailAddress),
+            new Claim(ClaimTypes.Name, user.FirstName),
+            new Claim(ClaimTypes.Surname, user.Surname),
+        };
+
+        foreach (var role in GetHierarchicalRoles(user.Role))
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+        }
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             SigningCredentials = credentials,
-            Subject = new ClaimsIdentity(
-                [
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.EmailAddress.ToString()),
-                new Claim(ClaimTypes.Name, user.FirstName.ToString()),
-                new Claim(ClaimTypes.Surname, user.Surname.ToString()),
-                //new Claim(JwtRegisteredClaimNames.FamilyName, user.Surname.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
-            ]),
+            Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:ExpirationInMinutes")),
             Issuer = configuration["Jwt:Issuer"],
             Audience = configuration["Jwt:Audience"]
@@ -40,7 +46,6 @@ public class JwtTokenProvider(IConfiguration configuration)
         return token;
     }
 
-
     //public UserViewModel GetUserViewModel()
     //{
     //    var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -48,4 +53,16 @@ public class JwtTokenProvider(IConfiguration configuration)
     //    // Gets list of claims.
     //    IEnumerable<Claim> claim = identity.Claims;
     //}
+
+    private List<UserRoles> GetHierarchicalRoles(UserRoles role)
+    {
+        return role switch
+        {
+            UserRoles.Administrator => [UserRoles.Administrator, UserRoles.Lecturer, UserRoles.Tutor, UserRoles.Learner],
+            UserRoles.Lecturer => [UserRoles.Lecturer, UserRoles.Tutor, UserRoles.Learner],
+            UserRoles.Tutor => [UserRoles.Tutor, UserRoles.Learner],
+            UserRoles.Learner => [UserRoles.Learner],
+            _ => []
+        };
+    }
 }
