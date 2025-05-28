@@ -1,1 +1,72 @@
-<p>chat works!</p>
+<div class="chat-container">
+  <!-- Side navigation bar -->
+  <aside class="chat-sidebar">
+    <div class="sidebar-header">
+      <h2>Conversations</h2>
+      <button class="new-chat-btn" title="Start a new chat">
+        <i class="fas fa-plus"></i> New Chat
+      </button>
+    </div>
+
+    <!-- Chat list -->
+    <div class="chat-list">
+      <div *ngIf="chats && chats.length > 0; else noChats">
+        <div
+          *ngFor="let chat of chats"
+          class="chat-item"
+          [class.active]="selectedChatId === chat.id"
+          (click)="selectChat(chat.id)">
+          <div class="chat-item-content">
+            <div class="chat-title">{{ chat.title || 'New Conversation' }}</div>
+            <div class="chat-preview">{{ chat.lastMessage }}</div>
+            <div class="chat-time">{{ chat.timestamp | date:'short' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noChats>
+        <div class="empty-state">
+          <p>No conversations yet</p>
+          <p>Start a new chat to begin</p>
+        </div>
+      </ng-template>
+    </div>
+  </aside>
+
+  <!-- Main chat area -->
+  <main class="chat-main">
+    <div *ngIf="selectedChatId; else welcomeMessage" class="chat-messages">
+      <!-- Chat header -->
+      <div class="chat-header">
+        <h3>{{ selectedChat?.title || 'New Conversation' }}</h3>
+      </div>
+
+      <!-- Messages will go here -->
+      <div class="messages-container">
+        <div *ngFor="let message of selectedChat?.messages" class="message" [ngClass]="message.sender">
+          <div class="message-content">{{ message.content }}</div>
+          <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+        </div>
+      </div>
+
+      <!-- Message input -->
+      <div class="message-input-container">
+        <textarea
+          class="message-input"
+          placeholder="Type your message here..."
+          [(ngModel)]="newMessage">
+        </textarea>
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+          Send
+        </button>
+      </div>
+    </div>
+
+    <ng-template #welcomeMessage>
+      <div class="welcome-container">
+        <h2>Welcome to CampusLearn Chat</h2>
+        <p>Select a conversation from the sidebar or start a new one</p>
+      </div>
+    </ng-template>
+  </main>
+</div>
