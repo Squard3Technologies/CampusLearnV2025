@@ -4,20 +4,20 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'CLDBAdmin')
-BEGIN
-    CREATE LOGIN CLDBAdmin WITH PASSWORD = 'SEN371';
-END;
-GO
+--IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'CLDBAdmin')
+--BEGIN
+--    CREATE LOGIN CLDBAdmin WITH PASSWORD = 'SEN371';
+--END;
+--GO
 
 USE CampusLearnDB;
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = N'CLDBAdmin')
-BEGIN
-    CREATE USER [CLDBAdmin] FOR LOGIN [CLDBAdmin]
-    EXEC sp_addrolemember N'db_owner', N'CLDBAdmin'
-END;
+--IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = N'CLDBAdmin')
+--BEGIN
+--    CREATE USER [CLDBAdmin] FOR LOGIN [CLDBAdmin]
+--    EXEC sp_addrolemember N'db_owner', N'CLDBAdmin'
+--END;
 
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'User')
 BEGIN
@@ -174,11 +174,15 @@ BEGIN
     CREATE TABLE Quiz (
         Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
         Title NVARCHAR(255) NOT NULL,
+        Description NVARCHAR(255) NOT NULL,
         CreatedByUserId UNIQUEIDENTIFIER NOT NULL,
         TopicId UNIQUEIDENTIFIER NOT NULL,
         DateCreated DATETIME DEFAULT GETDATE(),
         Duration TIME NULL,
+        RemovedByUserId UNIQUEIDENTIFIER NULL,
+        DateRemoved DATETIME NULL,
         FOREIGN KEY (CreatedByUserId) REFERENCES [User](Id),
+        FOREIGN KEY (RemovedByUserId) REFERENCES [User](Id),
         FOREIGN KEY (TopicId) REFERENCES Topic(Id),
         INDEX IX_DateCreated (DateCreated ASC) INCLUDE(CreatedByUserId, TopicId)
     );
@@ -189,10 +193,13 @@ BEGIN
     CREATE TABLE Question (
         Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
         QuizId UNIQUEIDENTIFIER NOT NULL,
+        Title NVARCHAR(255) NOT NULL,
         QuestionType INT NOT NULL,
         DateCreated DATETIME DEFAULT GETDATE(),
         DateRemoved DATETIME NULL,
+        RemovedByUserId UNIQUEIDENTIFIER NULL,
         FOREIGN KEY (QuizId) REFERENCES Quiz(Id),
+        FOREIGN KEY (RemovedByUserId) REFERENCES [User](Id),
         INDEX IX_DateCreated (DateCreated ASC) INCLUDE(QuizId, QuestionType)
     );
 END;
@@ -206,7 +213,9 @@ BEGIN
         IsCorrect BIT DEFAULT 0,
         DateCreated DATETIME DEFAULT GETDATE(),
         DateRemoved DATETIME NULL,
+        RemovedByUserId UNIQUEIDENTIFIER NULL,
         FOREIGN KEY (QuestionId) REFERENCES Question(Id),
+        FOREIGN KEY (RemovedByUserId) REFERENCES [User](Id),
         INDEX IX_DateCreated (DateCreated ASC) INCLUDE(QuestionId, IsCorrect)
     );
 END;
@@ -219,7 +228,6 @@ BEGIN
 		QuizId UNIQUEIDENTIFIER NOT NULL,
 		DateCreated DATETIME NOT NULL DEFAULT GETDATE(),
 		AssignedByUserId UNIQUEIDENTIFIER NOT NULL,
-		Status INT NOT NULL, -- 0: Assigned, 1: InProgress, 2: Completed
 		DateAttempted DATETIME NULL,
 		AttemptDuration TIME NULL,
 		FOREIGN KEY (UserId) REFERENCES [User](Id),

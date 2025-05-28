@@ -1,6 +1,4 @@
 ﻿using CampusLearn.DataModel.Models.Enquiries;
-using CampusLearn.DataModel.Models.Enums;
-using CampusLearn.DataModel.ViewModels;
 
 namespace CampusLearn.Services.Domain.Enquiries;
 

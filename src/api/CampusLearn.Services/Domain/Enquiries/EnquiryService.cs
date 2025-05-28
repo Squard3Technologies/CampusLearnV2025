@@ -1,7 +1,4 @@
-﻿using CampusLearn.DataLayer.IRepositoryService;
-using CampusLearn.DataModel.Models.Enquiries;
-using CampusLearn.DataModel.Models.Enums;
-using CampusLearn.DataModel.ViewModels;
+﻿using CampusLearn.DataModel.Models.Enquiries;
 
 namespace CampusLearn.Services.Domain.Enquiries;
 
