@@ -20,7 +20,6 @@ public class EnquiriesController : ControllerBase
         _enquiryService = enquiryService;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpGet]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetEnquiries(CancellationToken token)
@@ -60,6 +59,7 @@ public class EnquiriesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpGet("active")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetActiveEnquiries(CancellationToken token)
@@ -68,6 +68,7 @@ public class EnquiriesController : ControllerBase
         return results != null ? Ok(results) : NoContent();
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpPost("{id}/resolve")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> ResolveEnquiry(Guid id, [FromBody] ResolveEnquiryRequestModel model, CancellationToken token)
@@ -83,6 +84,7 @@ public class EnquiriesController : ControllerBase
         return Ok();
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
     [HttpGet("resolved")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetResolvedEnquiries(CancellationToken token)
