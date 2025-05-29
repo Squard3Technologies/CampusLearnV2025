@@ -72,7 +72,7 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetComment.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetDiscussionComment.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_AddUserModule.sql">

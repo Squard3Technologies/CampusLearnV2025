@@ -1,5 +1,4 @@
-
-CREATE OR ALTER PROC SP_UpsetComment
+CREATE OR ALTER PROCEDURE dbo.SP_UpsetDiscussionComment
 (
 	@Id UNIQUEIDENTIFIER = NULL,
 	@Content NVARCHAR(MAX),
