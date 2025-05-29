@@ -36,8 +36,10 @@ export class UserService {
 
   // Process login response and extract user data from JWT token
   private processLoginResponse(response: any, email: string): User {
-    // Check if the response has a 200 status code
-    if (response.statusCode && response.statusCode !== 200) {
+
+    console.log("Processing Response: " ,response.status);
+    if (response.statusCode !== 200) {
+      console.log("here")
       throw new Error(response.statusMessage || 'Login failed');
     }
 
