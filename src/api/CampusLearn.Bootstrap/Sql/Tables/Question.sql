@@ -1,0 +1,12 @@
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Question')
+BEGIN
+    CREATE TABLE Question (
+        Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+        QuizId UNIQUEIDENTIFIER NOT NULL,
+        QuestionType INT NOT NULL,
+        DateCreated DATETIME DEFAULT GETDATE(),
+        DateRemoved DATETIME NULL,
+        FOREIGN KEY (QuizId) REFERENCES Quiz(Id),
+        INDEX IX_DateCreated (DateCreated ASC) INCLUDE(QuizId, QuestionType)
+    )
+END
