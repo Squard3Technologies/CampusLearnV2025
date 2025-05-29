@@ -52,31 +52,40 @@ public class NotificationService : INotificationService
     public async Task SendAccountApprovedAsync(Guid userId, NotificationTypes notificationType, CancellationToken token)
     {
         var template = await _notificationRepository.GetEmailTemplate(NotificationContentTypes.AccountApproved);
-        await SendMessageAsync(new SendMessageRequest()
+        var result = await SendMessageAsync(new SendMessageRequest()
         {
+            SenderId = Constants.AdminUserIdentifier,
             RecieverId = userId,
             MessageContent = template
         }, notificationType, NotificationContentTypes.AccountApproved, token);
+        if (!result.Status)
+            Console.WriteLine(result.StatusMessage);
     }
 
     public async Task SendAccountRejectedAsync(Guid userId, NotificationTypes notificationType, CancellationToken token)
     {
         var template = await _notificationRepository.GetEmailTemplate(NotificationContentTypes.AccountRejected);
-        await SendMessageAsync(new SendMessageRequest()
+        var result = await SendMessageAsync(new SendMessageRequest()
         {
+            SenderId = Constants.AdminUserIdentifier,
             RecieverId = userId,
             MessageContent = template
         }, notificationType, NotificationContentTypes.AccountRejected, token);
+        if (!result.Status)
+            Console.WriteLine(result.StatusMessage);
     }
 
     public async Task SendAccountDeactivatedAsync(Guid userId, NotificationTypes notificationType, CancellationToken token)
     {
         var template = await _notificationRepository.GetEmailTemplate(NotificationContentTypes.AccountDeactivated);
-        await SendMessageAsync(new SendMessageRequest()
+        var result = await SendMessageAsync(new SendMessageRequest()
         {
+            SenderId = Constants.AdminUserIdentifier,
             RecieverId = userId,
             MessageContent = template
         }, notificationType, NotificationContentTypes.AccountDeactivated, token);
+        if (!result.Status)
+            Console.WriteLine(result.StatusMessage);
     }
 
     public async Task SendTopicCreatedAsync(Guid createdByUserId, Guid topicId, NotificationTypes notificationType, CancellationToken token)
@@ -88,11 +97,13 @@ public class NotificationService : INotificationService
 
         foreach (var userIdentifier in subscribedUserIdentifiers)
         {
-            await SendMessageAsync(new SendMessageRequest()
+            var result = await SendMessageAsync(new SendMessageRequest()
             {
                 RecieverId = userIdentifier,
                 MessageContent = template
             }, notificationType, NotificationContentTypes.TopicCreated, token);
+            if (!result.Status)
+                Console.WriteLine(result.StatusMessage);
         }
     }
 

@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace CampusLearn.DataLayer.RepositoryService;
+﻿namespace CampusLearn.DataLayer.RepositoryService;
 
 public class UserRepository : IUserRepository
 {
@@ -16,8 +14,6 @@ public class UserRepository : IUserRepository
         this.logger = logger;
         this.database = database;
     }
-
-
 
     public async Task<GenericDbResponseViewModel> ChangeUserPasswordAsync(Guid userId, string password)
     {
@@ -130,25 +126,25 @@ public class UserRepository : IUserRepository
                             transaction: sqltrans);
                         if (dbUser != null)
                         {
-                            if(dbUser.AccountStatusId == Guid.Parse("2C1904BB-07F2-4A0E-8CB4-ECB768239D19"))
+                            if (dbUser.AccountStatusId == AccountStatus.INACTIVE)
                             {
                                 response.Status = false;
                                 response.StatusCode = 404;
                                 response.StatusMessage = "Account is inactive";
                             }
-                            else if (dbUser.AccountStatusId == Guid.Parse("DF799A11-8237-4EEE-AC51-94FCEB369978"))
+                            else if (dbUser.AccountStatusId == AccountStatus.LOCKED)
                             {
                                 response.Status = false;
                                 response.StatusCode = 404;
                                 response.StatusMessage = "Account not locked";
                             }
-                            else if (dbUser.AccountStatusId == Guid.Parse("7DCF4027-85AA-4C08-92FF-F3A669DFF157"))
+                            else if (dbUser.AccountStatusId == AccountStatus.PENDING)
                             {
                                 response.Status = false;
                                 response.StatusCode = 404;
                                 response.StatusMessage = "Account pending activation by administrator";
                             }
-                            else if (dbUser.AccountStatusId == Guid.Parse("285DE8D3-0DA3-4D50-A32D-3502010062E7"))
+                            else if (dbUser.AccountStatusId == AccountStatus.REJECTED)
                             {
                                 response.Status = false;
                                 response.StatusCode = 404;
@@ -242,7 +238,6 @@ public class UserRepository : IUserRepository
             );
         });
     }
-
 
     public async Task<GenericDbResponseViewModel> GetUsersAsync()
     {

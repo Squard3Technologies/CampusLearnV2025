@@ -1,9 +1,4 @@
 ﻿using CampusLearn.DataModel.Models.Modules;
-using CampusLearn.Services.Domain.Admin;
-using CampusLearn.Services.Domain.Modules;
-using CampusLearn.Services.Domain.Users;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CampusLearn.API.Controllers
 {
@@ -30,26 +25,23 @@ namespace CampusLearn.API.Controllers
             this.userService = userService;
         }
 
-
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("registrations")]
         [MapToApiVersion(1)]
         public async Task<IActionResult> GetPendingRegistrationsAsync()
         {
-            var apiResponse = await adminService.GetPendingRegistrationsAsync();            
+            var apiResponse = await adminService.GetPendingRegistrationsAsync();
             return Ok(apiResponse);
         }
-
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("registrations/status")]
         [MapToApiVersion(1)]
-        public async Task<IActionResult> ChangeAccountStatusAsync([FromBody] ChangeAccountRequest request)
+        public async Task<IActionResult> ChangeAccountStatusAsync([FromBody] ChangeAccountRequest request, CancellationToken token)
         {
-            var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId);            
+            var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId, token);
             return Ok(apiResponse);
         }
-
 
         #region -- user management --
 
@@ -62,16 +54,14 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("users/status")]
         [MapToApiVersion(1)]
-        public async Task<IActionResult> ChangeUserAccountStatusAsync([FromBody] ChangeAccountRequest request)
+        public async Task<IActionResult> ChangeUserAccountStatusAsync([FromBody] ChangeAccountRequest request, CancellationToken token)
         {
-            var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId);
+            var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId, token);
             return Ok(apiResponse);
         }
-
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("users/update")]
@@ -82,9 +72,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        #endregion
-
-
+        #endregion -- user management --
 
         #region -- MODULES API --
 
@@ -97,8 +85,6 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-
-
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("modules")]
         [MapToApiVersion(1)]
@@ -107,8 +93,6 @@ namespace CampusLearn.API.Controllers
             var apiResponse = await moduleService.GetModulesAsync();
             return Ok(apiResponse);
         }
-
-
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPut("modules")]
@@ -119,7 +103,6 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("modules/{id}/deactivate")]
         [MapToApiVersion(1)]
@@ -128,7 +111,6 @@ namespace CampusLearn.API.Controllers
             var apiResponse = await moduleService.ChangeModuleStatusAsync(id, false);
             return Ok(apiResponse);
         }
-
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("modules/{id}/activate")]
@@ -139,8 +121,6 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-
-        #endregion
-
+        #endregion -- MODULES API --
     }
 }
