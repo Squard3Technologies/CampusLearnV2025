@@ -4,7 +4,7 @@ namespace CampusLearn.Services.Domain.Notifications;
 
 public interface INotificationService
 {
-    Task<GenericDbResponseViewModel> SendMessageAsync(SendMessageRequest model, NotificationTypes notificationType);
+    Task<GenericDbResponseViewModel> SendMessageAsync(SendMessageRequest model, NotificationTypes notificationType, NotificationContentTypes notificationContentType);
 
     Task StartEmailingServiceAsync();
 

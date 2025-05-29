@@ -21,7 +21,6 @@
     <None Remove="Sql\StoredProcedures\SP_GetUserModules.sql" />
     <None Remove="Sql\StoredProcedures\SP_GetUsers.sql" />
     <None Remove="Sql\StoredProcedures\SP_UpdateMessageStatus.sql" />
-    <None Remove="Sql\StoredProcedures\SP_UpsetComment.sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy (3).sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy.sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin.sql" />
@@ -62,7 +61,7 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetComment.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetDiscussionComment.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_AddUserModule.sql">
