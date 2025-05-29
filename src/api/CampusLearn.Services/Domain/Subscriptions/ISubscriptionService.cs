@@ -15,4 +15,6 @@ public interface ISubscriptionService
     Task<Guid?> SubscribeToTopic(Guid userId, Guid topicId, CancellationToken token);
 
     Task UnsubscribeFromTopic(Guid userId, Guid topicId, CancellationToken token);
+
+    Task<List<Guid>> GetSubscribedUserIdentifiers(Guid? userId, Guid? tutorId, CancellationToken token);
 }

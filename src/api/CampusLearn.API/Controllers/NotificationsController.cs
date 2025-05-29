@@ -17,17 +17,17 @@ public class NotificationsController : ControllerBase
 
     [HttpPost("sms")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> SendSMSMessageAsync(SendMessageRequest messageRequest)
+    public async Task<IActionResult> SendSMSMessageAsync(SendMessageRequest messageRequest, CancellationToken token)
     {
-        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS, NotificationContentTypes.None);
+        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS, NotificationContentTypes.None, token);
         return Ok(response);
     }
 
     [HttpPost("email")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> SendEmailMessageAsync(SendMessageRequest messageRequest)
+    public async Task<IActionResult> SendEmailMessageAsync(SendMessageRequest messageRequest, CancellationToken token)
     {
-        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email, NotificationContentTypes.None);
+        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email, NotificationContentTypes.None, token);
         return Ok(response);
     }
 }

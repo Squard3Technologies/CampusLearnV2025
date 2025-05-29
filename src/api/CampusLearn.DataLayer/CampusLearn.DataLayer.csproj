@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.37.37</AssemblyVersion>
-    <FileVersion>1.0.37.37</FileVersion>
+    <AssemblyVersion>1.0.39.39</AssemblyVersion>
+    <FileVersion>1.0.39.39</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +18,48 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CampusLearn.DataModel\CampusLearn.DataModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Constants\EmailTemplates\AccountApproved.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\AccountDeactivated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\AccountRejected.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\ChatMessageCreated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\EnquiryCreated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\EnquiryResolved.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicCommentCreated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicCreated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicDiscussionCreated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicLearningMaterialUploaded.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicQuizAssigned.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicQuizCreated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Constants\EmailTemplates\TopicQuizUpdated.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

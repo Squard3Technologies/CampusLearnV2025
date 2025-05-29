@@ -2,6 +2,7 @@
 global using CampusLearn.DataLayer.DbContext;
 global using CampusLearn.DataLayer.Extensions;
 global using CampusLearn.DataLayer.IRepositoryService;
+global using CampusLearn.DataModel.Constants;
 global using CampusLearn.DataModel.Models.Chats;
 global using CampusLearn.DataModel.Models.Enquiries;
 global using CampusLearn.DataModel.Models.Enums;

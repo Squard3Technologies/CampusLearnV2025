@@ -1,5 +1,4 @@
 ﻿using CampusLearn.DataModel.Models.Modules;
-using CampusLearn.Services.Domain.Modules;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -33,7 +32,6 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-
     [HttpPost("createAccount")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
@@ -59,7 +57,6 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("profile")]
     [ProducesResponseType(typeof(UserProfileViewModel), StatusCodes.Status200OK)]
@@ -75,8 +72,6 @@ public class UserController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
-
-
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("profile")]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UserProfileRequestModel model, CancellationToken token)
@@ -88,7 +83,6 @@ public class UserController : ControllerBase
         await _userService.UpdateUserProfileAsync(userIdentifier.Value, model, token);
         return Ok();
     }
-
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("change-password")]
@@ -102,7 +96,6 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("get")]
     [MapToApiVersion(1)]
@@ -111,8 +104,6 @@ public class UserController : ControllerBase
         var apiResponse = await _userService.GetUsersAsync();
         return Ok(apiResponse);
     }
-
-
 
     #region -- MODULES API --
 
@@ -125,8 +116,6 @@ public class UserController : ControllerBase
         return Ok(apiResponse);
     }
 
-
-
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("modules/{id}")]
     [MapToApiVersion(1)]
@@ -135,8 +124,6 @@ public class UserController : ControllerBase
         var apiResponse = await moduleService.GetUserModulesAsync(userId: id);
         return Ok(apiResponse);
     }
-
-
 
     #endregion
 }

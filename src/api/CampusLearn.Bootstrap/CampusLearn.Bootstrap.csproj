@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.28.28</AssemblyVersion>
-    <FileVersion>1.0.28.28</FileVersion>
+    <AssemblyVersion>1.0.30.30</AssemblyVersion>
+    <FileVersion>1.0.30.30</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -217,6 +217,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sql\StoredProcedures\SP_UpdateNotificationStatus.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_GetSubscribedUserIdentifiers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sql\StoredProcedures\subscriptions\SP_GetAvailableTutors.sql">
