@@ -45,6 +45,26 @@ public class SubscriptionRepository : ISubscriptionRepository
         });
     }
 
+    public async Task<List<Guid>> GetSubscribedUserIdentifiers(Guid? userId, Guid? tutorId, CancellationToken token)
+    {
+        return await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", userId, DbType.Guid);
+            parameters.Add("TutorId", tutorId, DbType.Guid);
+
+            var results = await db.QueryAsync<Guid>(
+                "dbo.SP_GetSubscribedUserIdentifiers",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return results?.ToList() ?? [];
+        });
+    }
+
     public async Task<List<TopicSubscriptionViewModel>> GetTopics(Guid userId, CancellationToken token)
     {
         return await _database.ExecuteTransactionAsync(async (db, transaction) =>

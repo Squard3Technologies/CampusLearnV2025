@@ -207,6 +207,9 @@
     <None Update="Sql\StoredProcedures\SP_UpdateNotificationStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_GetSubscribedUserIdentifiers.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sql\StoredProcedures\subscriptions\SP_GetAvailableTutors.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -110,6 +110,27 @@ public class NotificationRepository : INotificationRepository
         return response;
     }
 
+    public async Task<string> GetEmailTemplate(NotificationContentTypes notificationContentType)
+    {
+        return notificationContentType switch
+        {
+            NotificationContentTypes.AccountApproved => FileExtensions.GetEmailTemplate("AccountApproved.html"),
+            NotificationContentTypes.AccountRejected => FileExtensions.GetEmailTemplate("AccountRejected.html"),
+            NotificationContentTypes.AccountDeactivated => FileExtensions.GetEmailTemplate("AccountDeactivated.html"),
+            NotificationContentTypes.TopicCreated => FileExtensions.GetEmailTemplate("TopicCreated.html"),
+            NotificationContentTypes.TopicQuizCreated => FileExtensions.GetEmailTemplate("TopicQuizCreated.html"),
+            NotificationContentTypes.TopicQuizUpdated => FileExtensions.GetEmailTemplate("TopicQuizUpdated.html"),
+            NotificationContentTypes.TopicDiscussionCreated => FileExtensions.GetEmailTemplate("TopicDiscussionCreated.html"),
+            NotificationContentTypes.TopicCommentCreated => FileExtensions.GetEmailTemplate("TopicCommentCreated.html"),
+            NotificationContentTypes.TopicLearningMaterialUploaded => FileExtensions.GetEmailTemplate("TopicLearningMaterialUploaded.html"),
+            NotificationContentTypes.TopicQuizAssigned => FileExtensions.GetEmailTemplate("TopicQuizAssigned.html"),
+            NotificationContentTypes.EnquiryCreated => FileExtensions.GetEmailTemplate("EnquiryCreated.html"),
+            NotificationContentTypes.EnquiryResolved => FileExtensions.GetEmailTemplate("EnquiryResolved.html"),
+            NotificationContentTypes.ChatMessageCreated => FileExtensions.GetEmailTemplate("ChatMessageCreated.html"),
+            _ => "",
+        };
+    }
+
     public async Task UpdateNotificationStatusAsync(NotificationViewModel model, int statusCode, string statusMessage)
     {
         try

@@ -43,4 +43,9 @@ public class SubscriptionService : ISubscriptionService
     {
         await _subscriptionRepository.UnsubscribeFromTutor(userId, tutorId, token);
     }
+
+    public async Task<List<Guid>> GetSubscribedUserIdentifiers(Guid? userId, Guid? tutorId, CancellationToken token)
+    {
+        return await _subscriptionRepository.GetSubscribedUserIdentifiers(userId, tutorId, token);
+    }
 }
