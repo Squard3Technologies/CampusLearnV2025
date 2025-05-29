@@ -1,1 +1,88 @@
-<p>enquiries works!</p>
+<div class="page-wrapper">
+
+  <!-- Header Title -->
+  <div class="page-header">
+    <h1>My Inquiries for Module Code</h1>
+    <button class="action-btn top-right" (click)="openModal()">+ Create Inquiry</button>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs">
+    <span>Modules / Module 1</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" placeholder="Search" />
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <!-- Table -->
+  <table class="enquiry-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Inquiry Title</th>
+        <th>Date Created</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Need help with assignment 1</td>
+        <td>2025-05-23</td>
+        <td>Open</td>
+        <td><button>View</button></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Clarification on Quiz 2</td>
+        <td>2025-05-20</td>
+        <td>Resolved</td>
+        <td><button>View</button></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Lecture Slides Missing</td>
+        <td>2025-05-18</td>
+        <td>Pending</td>
+        <td><button>View</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <span class="bubble">Previous</span>
+    <span class="bubble">1</span>
+    <span class="bubble">2</span>
+    <span class="bubble">3</span>
+    <span class="bubble">Next</span>
+  </div>
+
+  <!-- Back Button -->
+  <div class="bottom-btn">
+    <button class="action-btn">Back to My Modules</button>
+  </div>
+
+  <!-- Modal -->
+<div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal-content">
+    <h2>New Enquiry for Module Name</h2>
+
+    <label for="title">Title</label>
+    <input type="text" id="title" [(ngModel)]="enquiryTitle" placeholder="Enter enquiry title">
+
+    <label for="description">Description</label>
+    <textarea id="description" rows="5" [(ngModel)]="enquiryDescription" placeholder="Enter enquiry details"></textarea>
+
+    <div class="modal-buttons">
+      <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+      <button class="submit-btn" (click)="submitInquiry()">Submit</button>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -8,5 +8,28 @@ import { Component } from '@angular/core';
   styleUrl: './enquiries.component.scss'
 })
 export class EnquiriesComponent {
+  showModal = false;
+  enquiryTitle = '';
+  enquiryDescription = '';
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
+  submitInquiry() {
+    console.log('Enquiry submitted:', this.enquiryTitle, this.enquiryDescription);
+
+    // Reset form and close modal
+    this.enquiryTitle = '';
+    this.enquiryDescription = '';
+    this.showModal = false;
+  }                   
 
 }
+
+
+
