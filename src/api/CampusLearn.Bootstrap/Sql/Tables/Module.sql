@@ -4,6 +4,14 @@ BEGIN
     CREATE TABLE Module (
         Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
         Code NVARCHAR(50) NOT NULL UNIQUE,
-        Name NVARCHAR(255) NOT NULL
+        Name NVARCHAR(255) NOT NULL,
+        Status BIT DEFAULT(1)
     )
+END
+ELSE
+BEGIN        
+	IF NOT EXISTS (SELECT * FROM syscolumns WHERE ID=OBJECT_ID('dbo.Module') AND NAME='Status')
+	BEGIN
+		ALTER TABLE [dbo].[Module] ADD [Status] BIT DEFAULT(1)
+	END 
 END

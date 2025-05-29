@@ -18,14 +18,16 @@ namespace CampusLearn.API.Controllers
         protected readonly ILogger<AdminController> logger;
         protected readonly IAdminService adminService;
         protected readonly IModuleService moduleService;
+        protected readonly IUserService userService;
 
         #endregion -- protected properties --
 
-        public AdminController(ILogger<AdminController> logger, IAdminService adminService, IModuleService moduleService)
+        public AdminController(ILogger<AdminController> logger, IAdminService adminService, IModuleService moduleService, IUserService userService)
         {
             this.logger = logger;
             this.adminService = adminService;
             this.moduleService = moduleService;
+            this.userService = userService;
         }
 
 
@@ -51,7 +53,7 @@ namespace CampusLearn.API.Controllers
 
         #region -- user management --
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("users")]
         [MapToApiVersion(1)]
         public async Task<IActionResult> GetUsersAsync()
@@ -72,12 +74,12 @@ namespace CampusLearn.API.Controllers
 
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
-        [HttpPost("users/manage")]
+        [HttpPost("users/update")]
         [MapToApiVersion(1)]
-        public async Task<IActionResult> ManageUserAsync([FromBody] UserModel request)
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UserModel request)
         {
-
-            return Ok();
+            var apiResponse = await adminService.UpdateUserAsync(request);
+            return Ok(apiResponse);
         }
 
         #endregion
@@ -111,9 +113,9 @@ namespace CampusLearn.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPut("modules")]
         [MapToApiVersion(1)]
-        public async Task<IActionResult> UpdateModulesAsync([FromBody] ModuleViewModel model)
+        public async Task<IActionResult> UpdateModulesAsync([FromBody] CreateModuleRequest model)
         {
-            var apiResponse = await moduleService.GetModulesAsync();
+            var apiResponse = await moduleService.UpdateModuleAsync(model);
             return Ok(apiResponse);
         }
 
@@ -123,7 +125,7 @@ namespace CampusLearn.API.Controllers
         [MapToApiVersion(1)]
         public async Task<IActionResult> DeactivateModuleAsync(Guid id)
         {
-            var apiResponse = await moduleService.GetModulesAsync();
+            var apiResponse = await moduleService.ChangeModuleStatusAsync(id, false);
             return Ok(apiResponse);
         }
 
@@ -133,7 +135,7 @@ namespace CampusLearn.API.Controllers
         [MapToApiVersion(1)]
         public async Task<IActionResult> ActivateModuleAsync(Guid id)
         {
-            var apiResponse = await moduleService.GetModulesAsync();
+            var apiResponse = await moduleService.ChangeModuleStatusAsync(id, true);
             return Ok(apiResponse);
         }
 

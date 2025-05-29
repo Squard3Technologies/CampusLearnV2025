@@ -13,4 +13,5 @@ public interface IAdminRepository
     Task<GenericDbResponseViewModel> ChangeUserAccountStatusAsync(Guid userId, Guid accountStatusId);
 
     Task<GenericDbResponseViewModel> GetUsersAsync();
+    Task<GenericDbResponseViewModel> UpdateUserAsync(UserViewModel model);
 }

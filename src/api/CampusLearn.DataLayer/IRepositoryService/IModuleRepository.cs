@@ -9,6 +9,9 @@ namespace CampusLearn.DataLayer.IRepositoryService;
 public interface IModuleRepository
 {
     Task<GenericDbResponseViewModel> AddModuleAsync(ModuleViewModel module);
+    Task<GenericDbResponseViewModel> UpdateModuleAsync(ModuleViewModel module);
+
+    Task<GenericDbResponseViewModel> ChangeModuleStatusAsync(Guid moduleId, bool status);
 
     Task<GenericDbResponseViewModel> AddUserModuleAsync(Guid userId, Guid moduleId);
 
