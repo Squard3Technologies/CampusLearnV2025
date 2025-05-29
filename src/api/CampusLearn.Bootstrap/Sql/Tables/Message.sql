@@ -4,6 +4,7 @@ BEGIN
         Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
         SenderId UNIQUEIDENTIFIER NOT NULL,
         ReceiverId UNIQUEIDENTIFIER NOT NULL,
+	    MessageType varchar(50) NOT NULL,
         Content NVARCHAR(MAX) NOT NULL,
         DateCreated DATETIME DEFAULT GETDATE(),
         StatusCode INT DEFAULT(-1),
@@ -15,6 +16,11 @@ BEGIN
 END
 ELSE
 BEGIN
+        
+	IF NOT EXISTS (SELECT * FROM syscolumns WHERE ID=OBJECT_ID('dbo.Message') AND NAME='MessageType')
+	BEGIN
+		ALTER TABLE [dbo].[Message] ADD [MessageType] varchar(50) DEFAULT('')
+	END 
         
 	IF NOT EXISTS (SELECT * FROM syscolumns WHERE ID=OBJECT_ID('dbo.Message') AND NAME='StatusCode')
 	BEGIN

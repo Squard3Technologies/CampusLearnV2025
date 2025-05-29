@@ -182,7 +182,7 @@ public class ModuleRepository : IModuleRepository
                         string query = "dbo.SP_GetUserModules";
                         var parameters = new DynamicParameters();
                         parameters.Add("userId", userId, DbType.Guid);
-                        var userModules = await db.QueryAsync<UserModuleViewModel>(sql: query,
+                        var userModules = await db.QueryAsync<UsersModuleViewModel>(sql: query,
                             param: parameters,
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,

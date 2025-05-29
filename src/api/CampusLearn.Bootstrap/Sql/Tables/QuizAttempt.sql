@@ -6,11 +6,10 @@ BEGIN
 		QuizId UNIQUEIDENTIFIER NOT NULL,
 		DateCreated DATETIME NOT NULL DEFAULT GETDATE(),
 		AssignedByUserId UNIQUEIDENTIFIER NOT NULL,
-		Status INT NOT NULL, -- 0: Assigned, 1: InProgress, 2: Completed
 		DateAttempted DATETIME NULL,
 		AttemptDuration TIME NULL,
 		FOREIGN KEY (UserId) REFERENCES [User](Id),
 		FOREIGN KEY (QuizId) REFERENCES Quiz(Id),
 		FOREIGN KEY (AssignedByUserId) REFERENCES [User](Id)
-	)
-END
+	);
+END;

@@ -23,8 +23,20 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			INSERT INTO dbo.[Message] (Id, SenderId, ReceiverId, MessageType, Content)
-			VALUES (NEWID(), @SenderId, @ReceiverId, @MessageType, @Content);
+			INSERT INTO dbo.[Message] (
+                Id,
+                SenderId,
+                ReceiverId,
+                MessageType,
+                Content
+            )
+			VALUES (
+                NEWID(),
+                @SenderId,
+                @ReceiverId, 
+                @MessageType,
+                @Content
+            );
 			SET @Status = 1
 			SET @StatusCode = 200
 			SET @StatusMessage = 'Successfully queue message for processing'

@@ -67,15 +67,15 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-    public async Task<GenericAPIResponse<IEnumerable<UserModuleViewModel>>> GetUserModulesAsync(Guid userId)
+    public async Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModulesAsync(Guid userId)
     {
-        GenericAPIResponse<IEnumerable<UserModuleViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<UserModuleViewModel>>();
+        GenericAPIResponse<IEnumerable<UsersModuleViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<UsersModuleViewModel>>();
         var dbResponse = await moduleRepository.GetUserModulesAsync(userId);
 
         apiResponse.Status = dbResponse.Status;
         apiResponse.StatusCode = dbResponse.StatusCode;
         apiResponse.StatusMessage = dbResponse.StatusMessage;
-        apiResponse.Body = (dbResponse.Body != null) ? (List<UserModuleViewModel>)dbResponse.Body : null;
+        apiResponse.Body = (dbResponse.Body != null) ? (List<UsersModuleViewModel>)dbResponse.Body : null;
         return apiResponse;
     }
 }

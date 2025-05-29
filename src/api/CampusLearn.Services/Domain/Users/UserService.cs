@@ -64,8 +64,8 @@ public class UserService : IUserService
         {
             response = new GenericAPIResponse<string>()
             {
-                Status = false,
-                StatusCode = 404,
+                Status = dbResponse.Status,
+                StatusCode = dbResponse.StatusCode,
                 StatusMessage = dbResponse.StatusMessage ?? $"Email address {emailAddress} is not registered",
                 Body = "",
                 StatusDetailedMessage = ""

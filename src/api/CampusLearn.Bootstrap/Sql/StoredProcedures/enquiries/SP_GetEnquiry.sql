@@ -1,0 +1,8 @@
+CREATE OR ALTER PROCEDURE dbo.SP_GetEnquiry
+(
+    @Id UNIQUEIDENTIFIER
+)
+AS
+BEGIN
+    SELECT * FROM Enquiry WHERE Id = @Id;
+END;

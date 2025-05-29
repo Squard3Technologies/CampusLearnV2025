@@ -128,9 +128,38 @@ public class UserRepository : IUserRepository
                             transaction: sqltrans);
                         if (dbUser != null)
                         {
-                            response.Body = dbUser;
+                            if(dbUser.AccountStatusId == Guid.Parse("2C1904BB-07F2-4A0E-8CB4-ECB768239D19"))
+                            {
+                                response.Status = false;
+                                response.StatusCode = 404;
+                                response.StatusMessage = "Account is inactive";
+                            }
+                            else if (dbUser.AccountStatusId == Guid.Parse("DF799A11-8237-4EEE-AC51-94FCEB369978"))
+                            {
+                                response.Status = false;
+                                response.StatusCode = 404;
+                                response.StatusMessage = "Account not locked";
+                            }
+                            else if (dbUser.AccountStatusId == Guid.Parse("7DCF4027-85AA-4C08-92FF-F3A669DFF157"))
+                            {
+                                response.Status = false;
+                                response.StatusCode = 404;
+                                response.StatusMessage = "Account pending activation by administrator";
+                            }
+                            else if (dbUser.AccountStatusId == Guid.Parse("285DE8D3-0DA3-4D50-A32D-3502010062E7"))
+                            {
+                                response.Status = false;
+                                response.StatusCode = 404;
+                                response.StatusMessage = "Account registration rejected by administrator";
+                            }
+                            else
+                            {
+                                response.Status = true;
+                                response.StatusCode = 200;
+                                response.StatusMessage = "Login successful";
+                                response.Body = dbUser;
+                            }
                         }
-
                         await sqltrans.CommitAsync();
                     }
                     catch (Exception ex)

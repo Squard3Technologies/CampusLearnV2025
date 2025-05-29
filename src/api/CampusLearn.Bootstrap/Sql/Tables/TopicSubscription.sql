@@ -1,4 +1,3 @@
-
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TopicSubscription')
 BEGIN
     CREATE TABLE TopicSubscription (
@@ -9,5 +8,5 @@ BEGIN
         FOREIGN KEY (UserId) REFERENCES [User](Id),
         FOREIGN KEY (TopicId) REFERENCES Topic(Id),
         INDEX IX_DateSubscribed (DateSubscribed ASC) INCLUDE(UserId, TopicId)
-    )
-END
+    );
+END;

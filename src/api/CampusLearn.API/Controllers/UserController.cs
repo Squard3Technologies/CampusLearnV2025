@@ -33,8 +33,8 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Learner, Tutor")]
-    [HttpPost("CreateAccount")]
+
+    [HttpPost("register")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
     {

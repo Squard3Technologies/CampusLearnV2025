@@ -16,5 +16,5 @@ public interface IModuleService
 
     Task<GenericAPIResponse<IEnumerable<ModuleViewModel>>> GetModulesAsync();
 
-    Task<GenericAPIResponse<IEnumerable<UserModuleViewModel>>> GetUserModulesAsync(Guid userId);
+    Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModulesAsync(Guid userId);
 }
