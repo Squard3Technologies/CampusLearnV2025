@@ -294,6 +294,38 @@ namespace CampusLearn.Bootstrap
                     #endregion
 
 
+                    #region -- SP_AddModule --
+                    sqlQuery = GetSqlScript(basePath, "SP_AddModule.sql");
+                    if (string.IsNullOrEmpty(sqlQuery))
+                        throw new Exception(@"Could not find SP_AddModule.sql");
+                    await db.ExecuteAsync(sql: sqlQuery, commandTimeout: 0, commandType: System.Data.CommandType.Text);
+                    #endregion
+
+
+                    #region -- SP_AddUserModule --
+                    sqlQuery = GetSqlScript(basePath, "SP_AddUserModule.sql");
+                    if (string.IsNullOrEmpty(sqlQuery))
+                        throw new Exception(@"Could not find SP_AddUserModule.sql");
+                    await db.ExecuteAsync(sql: sqlQuery, commandTimeout: 0, commandType: System.Data.CommandType.Text);
+                    #endregion
+
+
+                    #region -- SP_GetModules --
+                    sqlQuery = GetSqlScript(basePath, "SP_GetModules.sql");
+                    if (string.IsNullOrEmpty(sqlQuery))
+                        throw new Exception(@"Could not find SP_GetModules.sql");
+                    await db.ExecuteAsync(sql: sqlQuery, commandTimeout: 0, commandType: System.Data.CommandType.Text);
+                    #endregion
+
+
+                    #region -- SP_GetUserModules --
+                    sqlQuery = GetSqlScript(basePath, "SP_GetUserModules.sql");
+                    if (string.IsNullOrEmpty(sqlQuery))
+                        throw new Exception(@"Could not find SP_GetUserModules.sql");
+                    await db.ExecuteAsync(sql: sqlQuery, commandTimeout: 0, commandType: System.Data.CommandType.Text);
+                    #endregion
+
+
                     await db.CloseAsync();
                 }
             }

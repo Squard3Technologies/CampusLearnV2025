@@ -1,4 +1,6 @@
-﻿using CampusLearn.Services.Domain.Admin;
+﻿using CampusLearn.DataModel.Models.Modules;
+using CampusLearn.Services.Domain.Admin;
+using CampusLearn.Services.Domain.Modules;
 using CampusLearn.Services.Domain.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +17,15 @@ namespace CampusLearn.API.Controllers
 
         protected readonly ILogger<AdminController> logger;
         protected readonly IAdminService adminService;
+        protected readonly IModuleService moduleService;
 
         #endregion -- protected properties --
 
-        public AdminController(ILogger<AdminController> logger, IAdminService adminService)
+        public AdminController(ILogger<AdminController> logger, IAdminService adminService, IModuleService moduleService)
         {
             this.logger = logger;
             this.adminService = adminService;
+            this.moduleService = moduleService;
         }
 
 
@@ -75,6 +79,64 @@ namespace CampusLearn.API.Controllers
 
             return Ok();
         }
+
+        #endregion
+
+
+
+        #region -- MODULES API --
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [HttpPost("modules")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> AddModuleAsync([FromBody] CreateModuleRequest request)
+        {
+            var apiResponse = await moduleService.AddModuleAsync(request);
+            return Ok(apiResponse);
+        }
+
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [HttpGet("modules")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> GetModulesAsync()
+        {
+            var apiResponse = await moduleService.GetModulesAsync();
+            return Ok(apiResponse);
+        }
+
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [HttpPut("modules")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> UpdateModulesAsync([FromBody] ModuleViewModel model)
+        {
+            var apiResponse = await moduleService.GetModulesAsync();
+            return Ok(apiResponse);
+        }
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [HttpPost("modules/{id}/deactivate")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> DeactivateModuleAsync(Guid id)
+        {
+            var apiResponse = await moduleService.GetModulesAsync();
+            return Ok(apiResponse);
+        }
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [HttpPost("modules/{id}/activate")]
+        [MapToApiVersion(1)]
+        public async Task<IActionResult> ActivateModuleAsync(Guid id)
+        {
+            var apiResponse = await moduleService.GetModulesAsync();
+            return Ok(apiResponse);
+        }
+
 
         #endregion
 

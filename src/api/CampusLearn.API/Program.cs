@@ -2,6 +2,7 @@ using CampusLearn.Services.Domain.Quizzes;
 
 using CampusLearn.Bootstrap;
 using CampusLearn.Services.Domain.Admin;
+using CampusLearn.Services.Domain.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
 builder.Services.AddSingleton<IQuizRepository, QuizRepository>();
 builder.Services.AddSingleton<IChatRepository, ChatRepository>();
 builder.Services.AddSingleton<IAdminRepository, AdminRepository>();
+builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
 
 #endregion -- repositories --
 
@@ -57,6 +59,7 @@ builder.Services.AddSingleton<IEnquiryService, EnquiryService>();
 builder.Services.AddSingleton<IQuizService, QuizService>();
 builder.Services.AddSingleton<IChatService, ChatService>();
 builder.Services.AddSingleton<IAdminService, AdminService>();
+builder.Services.AddSingleton<IModuleService, ModuleService>();
 
 #endregion -- services --
 

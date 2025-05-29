@@ -39,7 +39,7 @@ public static class ServiceCollectionExtensions
              c.SwaggerDoc("v1", new OpenApiInfo
              {
                  Version = $"v1",
-                 Title = "CAMPUS LEARN API API v1",
+                 Title = "CAMPUS LEARN API v1",
                  Description = "The Campus Learn System API provides RESTful endpoints to manage users, courses, enrollments, assignments, submissions, and grades. It is designed to integrate with student portals, faculty dashboards, and mobile learning apps."
              });
              c.ResolveConflictingActions(x => x.GetEnumerator().Current);

@@ -1,4 +1,7 @@
-﻿[ApiController]
+﻿using CampusLearn.DataModel.Models.Modules;
+using CampusLearn.Services.Domain.Modules;
+
+[ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
 public class UserController : ControllerBase
@@ -7,13 +10,15 @@ public class UserController : ControllerBase
 
     protected readonly ILogger<UserController> logger;
     protected readonly IUserService _userService;
+    protected readonly IModuleService moduleService;
 
     #endregion -- protected properties --
 
-    public UserController(ILogger<UserController> logger, IUserService userService)
+    public UserController(ILogger<UserController> logger, IUserService userService, IModuleService moduleService)
     {
         this.logger = logger;
         _userService = userService;
+        this.moduleService = moduleService;
     }
 
     [HttpPost("Login")]
@@ -89,4 +94,32 @@ public class UserController : ControllerBase
         await _userService.ChangePasswordAsync(userIdentifier.Value, model.NewPassword, token);
         return Ok();
     }
+
+
+
+    #region -- MODULES API --
+
+
+    [HttpPost("modules")]
+    [MapToApiVersion(1)]
+    public async Task<IActionResult> AddUserModuleAsync([FromBody] CreateUserModuleRequest request)
+    {
+        var apiResponse = await moduleService.AddUserModuleAsync(userId: request.UserId, moduleId: request.ModuleId);
+        return Ok(apiResponse);
+    }
+
+
+
+
+    [HttpGet("modules/{id}")]
+    [MapToApiVersion(1)]
+    public async Task<IActionResult> GetUserModuleAsync(Guid id)
+    {
+        var apiResponse = await moduleService.GetUserModulesAsync(userId: id);
+        return Ok(apiResponse);
+    }
+
+
+
+    #endregion
 }
