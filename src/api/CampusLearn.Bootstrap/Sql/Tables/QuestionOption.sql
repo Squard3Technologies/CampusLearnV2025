@@ -7,7 +7,9 @@ BEGIN
         IsCorrect BIT DEFAULT 0,
         DateCreated DATETIME DEFAULT GETDATE(),
         DateRemoved DATETIME NULL,
+        RemovedByUserId UNIQUEIDENTIFIER NULL,
         FOREIGN KEY (QuestionId) REFERENCES Question(Id),
+        FOREIGN KEY (RemovedByUserId) REFERENCES [User](Id),
         INDEX IX_DateCreated (DateCreated ASC) INCLUDE(QuestionId, IsCorrect)
     );
 END;

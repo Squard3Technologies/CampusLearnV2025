@@ -126,4 +126,85 @@
     <ProjectReference Include="..\CampusLearn.DataLayer\CampusLearn.DataLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Sql\StoredProcedures\chats\SP_CreateChatMessage.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\chats\SP_GetChatMessages.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\chats\SP_GetChatsByUser.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\enquiries\SP_CreateEnquiry.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\enquiries\SP_EnquiriesByStatus.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\enquiries\SP_EnquiriesByUser.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\enquiries\SP_GetEnquiry.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\enquiries\SP_ResolveEnquiry.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_CreateQuizAttempt.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_GetActiveQuizzes.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_GetQuizAttemptHistory.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_GetQuizDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_GetQuizzesAttemptHistory.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_GetQuizzesByTopic.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_UpsertQuiz.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_UpsertQuizQuestion.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_GetAvailableTutors.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_GetSubscribedTopics.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_GetSubscribedTutors.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_SubscribeToTopic.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_SubscribeToTutor.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_UnsubscribeFromTopic.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\subscriptions\SP_UnsubscribeFromTutor.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\users\SP_ChangePassword.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\users\SP_GetUserProfile.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\users\SP_UpdateUserProfile.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

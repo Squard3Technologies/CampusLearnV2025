@@ -1,4 +1,3 @@
-
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'QuizAttemptQuestionAnswer')
 BEGIN
 	CREATE TABLE QuizAttemptQuestionAnswer (
@@ -10,5 +9,5 @@ BEGIN
 		FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id),
 		FOREIGN KEY (QuestionId) REFERENCES Question(Id),
 		FOREIGN KEY (QuestionOptionId) REFERENCES QuestionOption(Id)
-	)
-END
+	);
+END;

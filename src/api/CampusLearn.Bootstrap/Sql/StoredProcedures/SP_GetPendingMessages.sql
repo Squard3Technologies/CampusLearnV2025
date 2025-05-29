@@ -15,15 +15,15 @@ BEGIN
 			R.Name AS ReceiverName, 
 			R.Surname AS ReceiverSurname,
 			R.Email AS ReceiverEmailAddress,
-			M.Content AS MessageBody,
-			M.MessageType AS MessageType
+			M.Content AS MessageBody
+			--M.MessageType AS MessageType
 	FROM dbo.[Message] M WITH(NOLOCK) 
 	INNER JOIN dbo.[User] S WITH(NOLOCK) ON S.Id = M.SenderId
 	INNER JOIN dbo.[User] R WITH(NOLOCK) ON R.Id = M.ReceiverId
 	WHERE 
 	(
-		M.MessageType = @messageType
-		AND 
+		--M.MessageType = @messageType
+		--AND 
 		M.StatusCode = -1
 		AND
 		ISNULL(M.StatusMessage,'') = ''

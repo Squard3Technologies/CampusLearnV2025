@@ -7,5 +7,5 @@ BEGIN
         DateSubscribed DATETIME DEFAULT GETDATE(),
         FOREIGN KEY (UserId) REFERENCES [User](Id),
         FOREIGN KEY (TutorId) REFERENCES [User](Id)
-    )
-END
+    );
+END;

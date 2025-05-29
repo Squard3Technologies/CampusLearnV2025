@@ -3,10 +3,13 @@ BEGIN
     CREATE TABLE Question (
         Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
         QuizId UNIQUEIDENTIFIER NOT NULL,
+        Title NVARCHAR(255) NOT NULL,
         QuestionType INT NOT NULL,
         DateCreated DATETIME DEFAULT GETDATE(),
         DateRemoved DATETIME NULL,
+        RemovedByUserId UNIQUEIDENTIFIER NULL,
         FOREIGN KEY (QuizId) REFERENCES Quiz(Id),
+        FOREIGN KEY (RemovedByUserId) REFERENCES [User](Id),
         INDEX IX_DateCreated (DateCreated ASC) INCLUDE(QuizId, QuestionType)
-    )
-END
+    );
+END;
