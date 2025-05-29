@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.24.24</AssemblyVersion>
-    <FileVersion>1.0.24.24</FileVersion>
+    <AssemblyVersion>1.0.28.28</AssemblyVersion>
+    <FileVersion>1.0.28.28</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,8 @@
     <None Remove="Sql\StoredProcedures\SP_UpdateUserDetails.sql" />
     <None Remove="Sql\StoredProcedures\SP_UpsetComment.sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin.sql" />
+    <None Remove="Sql\StoredProcedures\topics\SP_CreateTopic.sql" />
+    <None Remove="Sql\StoredProcedures\topics\SP_GetModuleTopics.sql" />
     <None Remove="Sql\StoredProcedures\users\SP_GetAllActiveUsers.sql" />
     <None Remove="Sql\Tables\Comment.sql" />
     <None Remove="Sql\Tables\Discussion.sql" />
@@ -88,6 +90,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\topics\SP_GetModuleTopics.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\topics\SP_CreateTopic.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\users\SP_GetAllActiveUsers.sql">

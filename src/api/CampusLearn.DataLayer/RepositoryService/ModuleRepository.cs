@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CampusLearn.DataModel.Models.Topic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -309,4 +310,116 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
+
+
+
+
+    #region -- topic section --
+
+    public async Task<GenericDbResponseViewModel> AddTopicAsync(Guid userId, CreateTopicRequest module)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_CreateTopic";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("authorId", userId, DbType.Guid);
+                        parameters.Add("id", Guid.NewGuid(), DbType.Guid);
+                        parameters.Add("moduleId", module.ModuleId, DbType.Guid);
+                        parameters.Add("title", module.Title, DbType.String);
+                        parameters.Add("description", module.Description, DbType.String);
+                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
+
+    public async Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetModuleTopics";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("moduleId", moduleId, DbType.Guid);
+                        var topics = await db.QueryAsync<TopicViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+
+                        if (topics?.Any() == true)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = topics.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "There are no topics for this module found on the system";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
+
+    #endregion
+
 }

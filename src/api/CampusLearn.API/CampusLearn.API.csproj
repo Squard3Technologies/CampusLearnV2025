@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>1.0.100.100</AssemblyVersion>
-    <FileVersion>1.0.100.100</FileVersion>
+    <AssemblyVersion>1.0.106.106</AssemblyVersion>
+    <FileVersion>1.0.106.106</FileVersion>
     <UserSecretsId>851c4371-d122-4d2c-9b9a-b1d99048d2a4</UserSecretsId>
   </PropertyGroup>
 
