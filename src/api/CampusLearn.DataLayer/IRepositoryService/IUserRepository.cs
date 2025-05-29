@@ -13,4 +13,6 @@ public interface IUserRepository
     Task UpdateUserProfileAsync(Guid userId, UserProfileRequestModel model, CancellationToken token);
 
     Task ChangePasswordAsync(Guid userId, string newPassword, CancellationToken token);
+
+    Task<GenericDbResponseViewModel> GetUsersAsync();
 }

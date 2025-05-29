@@ -97,6 +97,16 @@ public class UserController : ControllerBase
 
 
 
+    [HttpGet("get")]
+    [MapToApiVersion(1)]
+    public async Task<IActionResult> GetUsersAsync()
+    {
+        var apiResponse = await _userService.GetUsersAsync();
+        return Ok(apiResponse);
+    }
+
+
+
     #region -- MODULES API --
 
 

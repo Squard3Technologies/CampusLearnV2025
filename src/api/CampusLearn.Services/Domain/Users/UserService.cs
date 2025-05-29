@@ -153,4 +153,48 @@ public class UserService : IUserService
 
         await userRepository.ChangePasswordAsync(userId, hashedPassword, token);
     }
+
+
+    public async Task<GenericAPIResponse<IEnumerable<UserViewModel>>> GetUsersAsync()
+    {
+        GenericAPIResponse<IEnumerable<UserViewModel>> response = new GenericAPIResponse<IEnumerable<UserViewModel>>();
+        try
+        {
+            var dbResponse = await userRepository.GetUsersAsync();
+            if (dbResponse?.Status == true)
+            {
+                response = new GenericAPIResponse<IEnumerable<UserViewModel>>()
+                {
+                    Status = dbResponse.Status,
+                    StatusCode = dbResponse.StatusCode,
+                    StatusMessage = dbResponse.StatusMessage,
+                    Body = (IEnumerable<UserViewModel>)dbResponse.Body,
+                    StatusDetailedMessage = ""
+                };
+            }
+            else
+            {
+                response = new GenericAPIResponse<IEnumerable<UserViewModel>>()
+                {
+                    Status = dbResponse.Status,
+                    StatusCode = dbResponse.StatusCode,
+                    StatusMessage = dbResponse.StatusMessage,
+                    Body = null,
+                    StatusDetailedMessage = ""
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            response = new GenericAPIResponse<IEnumerable<UserViewModel>>()
+            {
+                Status = false,
+                StatusCode = 400,
+                StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}",
+                Body = null,
+                StatusDetailedMessage = ""
+            };
+        }
+        return response;
+    }
 }
