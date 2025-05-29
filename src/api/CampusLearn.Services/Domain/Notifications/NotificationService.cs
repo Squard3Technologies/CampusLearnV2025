@@ -1,5 +1,4 @@
 ﻿using CampusLearn.DataModel.Models.Messages;
-using CampusLearn.Services.Domain.Utils;
 
 namespace CampusLearn.Services.Domain.Notifications;
 
@@ -20,7 +19,7 @@ public class NotificationService : INotificationService
 
     public bool SMSServiceBusy() => _smsBusy;
 
-    public async Task<GenericDbResponseViewModel> SendMessageAsync(SendMessageRequest model, NotificationTypes notificationType)
+    public async Task<GenericDbResponseViewModel> SendMessageAsync(SendMessageRequest model, NotificationTypes notificationType, NotificationContentTypes notificationContentType)
     {
         return await _notificationRepository.CreateNotificationAsync(model, notificationType);
     }

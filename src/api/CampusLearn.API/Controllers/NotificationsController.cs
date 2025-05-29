@@ -19,7 +19,7 @@ public class NotificationsController : ControllerBase
     [MapToApiVersion(1)]
     public async Task<IActionResult> SendSMSMessageAsync(SendMessageRequest messageRequest)
     {
-        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS);
+        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS, NotificationContentTypes.None);
         return Ok(response);
     }
 
@@ -27,7 +27,7 @@ public class NotificationsController : ControllerBase
     [MapToApiVersion(1)]
     public async Task<IActionResult> SendEmailMessageAsync(SendMessageRequest messageRequest)
     {
-        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email);
+        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email, NotificationContentTypes.None);
         return Ok(response);
     }
 }
