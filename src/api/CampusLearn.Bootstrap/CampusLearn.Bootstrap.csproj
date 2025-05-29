@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.17.17</AssemblyVersion>
-    <FileVersion>1.0.17.17</FileVersion>
+    <AssemblyVersion>1.0.18.18</AssemblyVersion>
+    <FileVersion>1.0.18.18</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,7 @@
     <None Remove="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy (3).sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy.sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin.sql" />
+    <None Remove="Sql\StoredProcedures\users\SP_GetAllActiveUsers.sql" />
     <None Remove="Sql\Tables\Comment.sql" />
     <None Remove="Sql\Tables\Discussion.sql" />
     <None Remove="Sql\Tables\Enquiry.sql" />
@@ -91,6 +92,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_GetAllActiveUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\Tables\LearningMaterial.sql">

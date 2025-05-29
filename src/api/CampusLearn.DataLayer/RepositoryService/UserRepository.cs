@@ -1,4 +1,6 @@
-﻿namespace CampusLearn.DataLayer.RepositoryService;
+﻿using System.Net.Mail;
+
+namespace CampusLearn.DataLayer.RepositoryService;
 
 public class UserRepository : IUserRepository
 {
@@ -239,5 +241,54 @@ public class UserRepository : IUserRepository
                 commandType: CommandType.StoredProcedure
             );
         });
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetUsersAsync()
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetAllActiveUsers";
+                        var activeUsers = await db.QueryAsync<UserViewModel>(sql: query,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        if (activeUsers != null && activeUsers.Any())
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = activeUsers.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "No active users found on the system";
+                        }
+                        await sqltrans.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+        return response;
     }
 }
