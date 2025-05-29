@@ -192,6 +192,15 @@ public class Bootstraper
 
                 #endregion -- TutorSubscription --
 
+                #region -- Notification --
+
+                sqlQuery = GetSqlScript(basePath, "Notification.sql");
+                if (string.IsNullOrEmpty(sqlQuery))
+                    throw new Exception(@"Could not find Notification.sql");
+                await db.ExecuteAsync(sql: sqlQuery, commandTimeout: 0, commandType: System.Data.CommandType.Text);
+
+                #endregion -- Notification --
+
                 await db.CloseAsync();
             }
         }

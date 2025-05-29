@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CampusLearn.Services.Domain.Utils;
+﻿namespace CampusLearn.Services.Domain.Utils;
 
 public class SecurePasswordHasher
 {
     #region -- private properties --
+
     private const int SaltSize = 16;
     private const int HashSize = 32;
     private const int Iterations = 100000;
     private readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
-    #endregion
 
+    #endregion -- private properties --
 
     public string HashPassword(string plainPassword)
     {
@@ -24,7 +18,6 @@ public class SecurePasswordHasher
 
         return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
     }
-
 
     public bool Verify(string plainPassword, string passwordHash)
     {
@@ -36,5 +29,4 @@ public class SecurePasswordHasher
 
         return CryptographicOperations.FixedTimeEquals(hash, inputHash);
     }
-
 }

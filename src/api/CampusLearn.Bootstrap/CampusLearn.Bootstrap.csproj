@@ -31,6 +31,7 @@
     <None Remove="Sql\Tables\LearningMaterial.sql" />
     <None Remove="Sql\Tables\Message.sql" />
     <None Remove="Sql\Tables\Module.sql" />
+    <None Remove="Sql\Tables\Notification.sql" />
     <None Remove="Sql\Tables\Question.sql" />
     <None Remove="Sql\Tables\QuestionOption.sql" />
     <None Remove="Sql\Tables\Quiz.sql" />
@@ -51,22 +52,13 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeAccountStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_CreateMessage.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_CreateUserAccounts.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetPendingMessages.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetPendingRegistrations.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUsers.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateMessageStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetComment.sql">
@@ -94,6 +86,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\Tables\LearningMaterial.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\Tables\Notification.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\Tables\Topic.sql">
@@ -197,6 +192,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sql\StoredProcedures\quizzes\SP_UpsertQuizQuestion.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\SP_CreateNotification.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\SP_GetPendingNotifications.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\SP_UpdateNotificationStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sql\StoredProcedures\subscriptions\SP_GetAvailableTutors.sql">

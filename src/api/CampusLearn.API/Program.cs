@@ -1,8 +1,7 @@
-using CampusLearn.Services.Domain.Quizzes;
-
 using CampusLearn.Bootstrap;
 using CampusLearn.Services.Domain.Admin;
 using CampusLearn.Services.Domain.Modules;
+using CampusLearn.Services.Domain.Quizzes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +37,7 @@ builder.Services.AddSingleton<Bootstraper>();
 
 #region -- repositories --
 
-builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
+builder.Services.AddSingleton<INotificationRepository, NotificationRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
 builder.Services.AddSingleton<IQuizRepository, QuizRepository>();
@@ -53,7 +52,7 @@ builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
 builder.Services.AddSingleton<JwtTokenProvider>();
 builder.Services.AddSingleton<SMTPManager>();
 builder.Services.AddSingleton<ScheduleManager>();
-builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEnquiryService, EnquiryService>();
 builder.Services.AddSingleton<IQuizService, QuizService>();

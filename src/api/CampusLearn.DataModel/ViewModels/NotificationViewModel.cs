@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CampusLearn.DataModel.ViewModels;
 
-namespace CampusLearn.DataModel.ViewModels;
-
-public class MessageViewModel
+public class NotificationViewModel
 {
     public Guid ID { get; set; }
     public Guid SenderID { get; set; }
@@ -18,5 +12,5 @@ public class MessageViewModel
     public string ReceiverSurname { get; set; }
     public string ReceiverEmailAddress { get; set; }
     public string MessageBody { get; set; }
-    public string MessageType { get; set; }
+    public NotificationTypes NotificationType { get; set; }
 }

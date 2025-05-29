@@ -1,8 +1,8 @@
-CREATE OR ALTER PROCEDURE dbo.SP_CreateMessage
+CREATE OR ALTER PROCEDURE dbo.SP_CreateNotification
 (
     @SenderId UNIQUEIDENTIFIER,
     @ReceiverId UNIQUEIDENTIFIER,
-    @MessageType VARCHAR(50),
+    @NotificationType INT,
     @Content NVARCHAR(MAX)
 )
 AS
@@ -23,18 +23,18 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			INSERT INTO dbo.[Message] (
+			INSERT INTO dbo.[Notification] (
                 Id,
                 SenderId,
                 ReceiverId,
-                MessageType,
+                NotificationType,
                 Content
             )
 			VALUES (
                 NEWID(),
                 @SenderId,
                 @ReceiverId, 
-                @MessageType,
+                @NotificationType,
                 @Content
             );
 			SET @Status = 1

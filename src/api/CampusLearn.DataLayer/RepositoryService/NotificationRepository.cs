@@ -1,15 +1,15 @@
 ﻿namespace CampusLearn.DataLayer.RepositoryService;
 
-public class MessagingRepository : IMessagingRepository
+public class NotificationRepository : INotificationRepository
 {
     protected readonly CampusLearnDbContext database;
 
-    public MessagingRepository(CampusLearnDbContext database)
+    public NotificationRepository(CampusLearnDbContext database)
     {
         this.database = database;
     }
 
-    public async Task<GenericDbResponseViewModel> SendMessageAsync(SendMessageRequest model, string messageType)
+    public async Task<GenericDbResponseViewModel> CreateNotificationAsync(SendMessageRequest model, NotificationTypes notificationType)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
         try
@@ -21,12 +21,12 @@ public class MessagingRepository : IMessagingRepository
                 {
                     try
                     {
-                        string query = "dbo.SP_CreateMessage";
+                        string query = "dbo.SP_CreateNotification";
 
                         var parameters = new DynamicParameters();
                         parameters.Add("SenderId", model.SenderId, DbType.Guid);
                         parameters.Add("ReceiverId", model.RecieverId, DbType.Guid);
-                        parameters.Add("MessageType", messageType, DbType.String);
+                        parameters.Add("NotificationType", notificationType, DbType.Int16);
                         parameters.Add("Content", model.MessageContent, DbType.String);
 
                         response = await db.QueryFirstAsync<GenericDbResponseViewModel>(sql: query,
@@ -56,7 +56,7 @@ public class MessagingRepository : IMessagingRepository
         return response;
     }
 
-    public async Task<GenericDbResponseViewModel> GetAllPendingMessagesAsync(string messageType, int batchSize = 100)
+    public async Task<GenericDbResponseViewModel> GetAllPendingNotificationAsync(NotificationTypes notificationType, int batchSize = 100)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
         try
@@ -68,12 +68,12 @@ public class MessagingRepository : IMessagingRepository
                 {
                     try
                     {
-                        string query = "dbo.SP_GetPendingMessages";
+                        string query = "dbo.SP_GetPendingNotifications";
                         var parameters = new DynamicParameters();
-                        parameters.Add("messageType", messageType, DbType.String);
+                        parameters.Add("notificationType", notificationType, DbType.Int16);
                         parameters.Add("batchSize", batchSize, DbType.Int16);
 
-                        var dbResponse = await db.QueryAsync<MessageViewModel>(sql: query,
+                        var dbResponse = await db.QueryAsync<NotificationViewModel>(sql: query,
                             param: parameters,
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,
@@ -87,7 +87,7 @@ public class MessagingRepository : IMessagingRepository
                         {
                             response.Status = false;
                             response.StatusCode = 404;
-                            response.StatusMessage = $"No pending messages found for message type: {messageType}";
+                            response.StatusMessage = $"No pending messages found for message type: {Enum.GetName(notificationType)}";
                         }
                         await sqltrans.CommitAsync();
                     }
@@ -110,7 +110,7 @@ public class MessagingRepository : IMessagingRepository
         return response;
     }
 
-    public async Task UpdateMessageStatusAsync(MessageViewModel model, int statusCode, string statusMessage)
+    public async Task UpdateNotificationStatusAsync(NotificationViewModel model, int statusCode, string statusMessage)
     {
         try
         {
@@ -121,7 +121,7 @@ public class MessagingRepository : IMessagingRepository
                 {
                     try
                     {
-                        string query = "dbo.SP_UpdateMessageStatus";
+                        string query = "dbo.SP_UpdateNotificationStatus";
                         var parameters = new DynamicParameters();
                         parameters.Add("id", model.ID, DbType.Guid);
                         parameters.Add("statusCode", statusCode, DbType.String);

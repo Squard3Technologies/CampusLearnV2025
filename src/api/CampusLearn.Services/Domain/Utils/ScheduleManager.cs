@@ -1,33 +1,18 @@
-﻿using CampusLearn.DataModel.Models.Configurations;
-using CampusLearn.Services.Domain.Emailing;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CampusLearn.Services.Domain.Utils;
+﻿namespace CampusLearn.Services.Domain.Utils;
 
 public class ScheduleManager
 {
-    #region -- protected properties --
-    protected readonly ILogger<ScheduleManager> logger;
-    protected readonly ScheduleSetting scheduleSettings;
-    protected readonly IMessagingServices emailingServices;
+    private readonly ScheduleSetting _scheduleSettings;
+    private readonly ILogger<ScheduleManager> _logger;
+    private readonly INotificationService _notificationService;
     public static IDictionary<string, ScheduleSetting> customSchedules = new Dictionary<string, ScheduleSetting>();
-    #endregion
 
-
-    public ScheduleManager(ILogger<ScheduleManager> logger, IOptions<ScheduleSetting> options, IMessagingServices emailingServices)
+    public ScheduleManager(ILogger<ScheduleManager> logger, IOptions<ScheduleSetting> options, INotificationService notificationService)
     {
-        this.logger = logger;
-        this.scheduleSettings = options.Value;
-        this.emailingServices = emailingServices;
+        _scheduleSettings = options.Value;
+        _logger = logger;
+        _notificationService = notificationService;
     }
-
-
 
     #region -- public schedules functions --
 
@@ -37,38 +22,36 @@ public class ScheduleManager
     /// <returns></returns>
     public Task ConfigureSchedulesAsync(bool autoStart = false)
     {
-        logger.LogInformation($"Start {this}");
+        _logger.LogInformation($"Start {this}");
         return Task.Run(() =>
         {
-            var schedule = scheduleSettings;
+            var schedule = _scheduleSettings;
             //foreach (var schedule in scheduleSettings)
             {
-                logger.LogInformation($"************************************");
-                logger.LogInformation($"Schedule Name: {schedule.Name}");
-                logger.LogInformation($"Schedule Hour: {schedule.Hour}");
-                logger.LogInformation($"Schedule Minutes: {schedule.Minutes}");
-                logger.LogInformation($"Schedule Interval: {schedule.Interval}");
-                logger.LogInformation($"Schedule Active: {schedule.Active}");
-                logger.LogInformation($"************************************");
-                logger.LogInformation($"{Environment.NewLine}");
+                _logger.LogInformation($"************************************");
+                _logger.LogInformation($"Schedule Name: {schedule.Name}");
+                _logger.LogInformation($"Schedule Hour: {schedule.Hour}");
+                _logger.LogInformation($"Schedule Minutes: {schedule.Minutes}");
+                _logger.LogInformation($"Schedule Interval: {schedule.Interval}");
+                _logger.LogInformation($"Schedule Active: {schedule.Active}");
+                _logger.LogInformation($"************************************");
+                _logger.LogInformation($"{Environment.NewLine}");
 
                 Action action = () => { };
                 if (schedule.ID.ToUpper() == "3696E8A9-6AE9-40C1-A2A0-83201A0CE3B8" || schedule.Name.ToUpper() == "EMIALING")
                 {
                     action = async () =>
                     {
-                        if (!emailingServices.EMAILServiceBusy())
+                        if (!_notificationService.EMAILServiceBusy())
                         {
-                            await emailingServices.StartEmailingServiceAsync();
+                            await _notificationService.StartEmailingServiceAsync();
                         }
                     };
                 }
                 ScheduleBasicTaskV2(schedule: schedule, task: action, autoStart: autoStart);
             }
-
         });
     }
-
 
     /// <summary>
     /// Stopping all running customSchedules.
@@ -89,7 +72,6 @@ public class ScheduleManager
         });
     }
 
-
     /// <summary>
     /// Starting all available customSchedules.
     /// </summary>
@@ -109,9 +91,7 @@ public class ScheduleManager
         });
     }
 
-    #endregion
-
-
+    #endregion -- public schedules functions --
 
     #region -- protected schedules functions --
 
@@ -136,6 +116,7 @@ public class ScheduleManager
             double intervalInMilliseconds = ((schedule.Interval * 60) * 1000);
 
             #region -- using System.Timers.Timer --
+
             var timerV2 = new System.Timers.Timer();
             timerV2.Interval = intervalInMilliseconds;
             timerV2.Elapsed += (s, e) => { task.Invoke(); };
@@ -157,7 +138,8 @@ public class ScheduleManager
                     customSchedules[schedule.ID.ToString().ToUpper()].timer.Start();
                 }
             }
-            #endregion
+
+            #endregion -- using System.Timers.Timer --
         }
         else
         {
@@ -173,6 +155,5 @@ public class ScheduleManager
         ScheduleTaskV2(schedule, task, autoStart);
     }
 
-    #endregion
-
+    #endregion -- protected schedules functions --
 }

@@ -1,28 +1,19 @@
-﻿using CampusLearn.Services.Domain.Utils;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CampusLearn.Services.Domain;
+﻿namespace CampusLearn.Services.Domain;
 
 public class PersonalHostedService : IHostedLifecycleService
 {
     #region -- protected properties --
+
     protected readonly ILogger<PersonalHostedService> logger;
     private readonly ScheduleManager scheduleManager;
 
-    #endregion
+    #endregion -- protected properties --
 
     public PersonalHostedService(ILogger<PersonalHostedService> logger, ScheduleManager scheduleManager)
     {
         this.logger = logger;
         this.scheduleManager = scheduleManager;
     }
-
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
