@@ -1,37 +1,22 @@
-﻿using CampusLearn.DataModel.Models;
-using CampusLearn.DataModel.Models.Configurations;
-using Microsoft.Extensions.Logging;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Net;
-using Newtonsoft.Json;
-using CampusLearn.DataModel.ViewModels;
-using Microsoft.Extensions.Options;
-
-namespace CampusLearn.Services.Domain.Utils;
+﻿namespace CampusLearn.Services.Domain.Utils;
 
 public class SMTPManager
 {
-    #region -- protected properties --
-    protected readonly ILogger<SMTPManager> logger;
-    protected readonly SMTPSettings smtpSettings;
-    #endregion
+    private readonly ILogger<SMTPManager> _logger;
+    private readonly SMTPSettings _smtpSettings;
 
     public SMTPManager(ILogger<SMTPManager> logger, IOptions<SMTPSettings> smtpSettings)
     {
-        this.logger = logger;
-        this.smtpSettings = smtpSettings.Value;
+        _logger = logger;
+        _smtpSettings = smtpSettings.Value;
     }
 
-
-
-
-    public async Task<GenericAPIResponse<object>> SendEmailAsync(MessageViewModel msg)
+    public async Task<GenericAPIResponse<object>> SendEmailAsync(NotificationViewModel msg)
     {
         GenericAPIResponse<object> response = new GenericAPIResponse<object>();
         try
         {
-            if (string.IsNullOrEmpty(smtpSettings.Host))
+            if (string.IsNullOrEmpty(_smtpSettings.Host))
             {
                 response.Status = false;
                 response.StatusCode = -1;
@@ -39,7 +24,7 @@ public class SMTPManager
                 return response;
             }
 
-            if (string.IsNullOrEmpty(smtpSettings.Username))
+            if (string.IsNullOrEmpty(_smtpSettings.Username))
             {
                 response.Status = false;
                 response.StatusCode = -1;
@@ -47,7 +32,7 @@ public class SMTPManager
                 return response;
             }
 
-            if (string.IsNullOrEmpty(smtpSettings.Password))
+            if (string.IsNullOrEmpty(_smtpSettings.Password))
             {
                 response.Status = false;
                 response.StatusCode = -1;
@@ -55,37 +40,35 @@ public class SMTPManager
                 return response;
             }
 
-
             if (!ValidationUtils.IsValidEmailAddress(msg.SenderEmailAddress))
             {
                 response.Status = false;
                 response.StatusCode = -1;
                 response.StatusMessage = "Invalid sender email address.";
-                logger.LogError("Email address not correctly formulated", "EmailEngineService v2 SendEmailAsync", new Exception($"Invalid email address detected {msg.SenderEmailAddress} while attempting to send email with id {msg.ID.ToString()}."));
+                _logger.LogError("Email address not correctly formulated", "EmailEngineService v2 SendEmailAsync", new Exception($"Invalid email address detected {msg.SenderEmailAddress} while attempting to send email with id {msg.ID.ToString()}."));
                 return response;
             }
-
 
             if (!ValidationUtils.IsValidEmailAddress(msg.ReceiverEmailAddress))
             {
                 response.Status = false;
                 response.StatusCode = -1;
                 response.StatusMessage = "Invalid recipient email address.";
-                logger.LogError("Email address not correctly formulated", "EmailEngineService v2 SendEmailAsync", new Exception($"Invalid email address detected {msg.ReceiverEmailAddress} while attempting to send email with id {msg.ID.ToString()}."));
+                _logger.LogError("Email address not correctly formulated", "EmailEngineService v2 SendEmailAsync", new Exception($"Invalid email address detected {msg.ReceiverEmailAddress} while attempting to send email with id {msg.ID.ToString()}."));
                 return response;
             }
 
-            SmtpClient client = new SmtpClient(smtpSettings.Host, smtpSettings.Port);
+            SmtpClient client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port);
             //client.Credentials = CredentialCache.DefaultNetworkCredentials;
-            client.Credentials = new System.Net.NetworkCredential(smtpSettings.Username, smtpSettings.Password);
+            client.Credentials = new System.Net.NetworkCredential(_smtpSettings.Username, _smtpSettings.Password);
             client.EnableSsl = true;
 
-            MailAddress fromAddress = new MailAddress(smtpSettings.Username, $"{smtpSettings.DisplayName}", System.Text.Encoding.UTF8);
+            MailAddress fromAddress = new MailAddress(_smtpSettings.Username, $"{_smtpSettings.DisplayName}", System.Text.Encoding.UTF8);
             MailMessage message = new MailMessage();
             message.From = fromAddress;
             message.Priority = MailPriority.High;
-            message.To.Add(msg.ReceiverEmailAddress);
-            message.CC.Add(msg.SenderEmailAddress);
+            message.To.Add(new MailAddress(msg.ReceiverEmailAddress));
+            message.CC.Add(new MailAddress(msg.SenderEmailAddress));
             message.IsBodyHtml = true;
             message.BodyEncoding = System.Text.Encoding.UTF8;
             message.Subject = $"RE: MESSAGE FROM {msg.SenderName.ToUpper()} {msg.SenderSurname.ToUpper()}";
@@ -117,5 +100,4 @@ public class SMTPManager
         }
         return response;
     }
-
 }

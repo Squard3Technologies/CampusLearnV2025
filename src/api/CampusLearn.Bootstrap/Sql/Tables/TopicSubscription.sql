@@ -1,0 +1,12 @@
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TopicSubscription')
+BEGIN
+    CREATE TABLE TopicSubscription (
+        Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+        UserId UNIQUEIDENTIFIER NOT NULL,
+        TopicId UNIQUEIDENTIFIER NOT NULL,
+        DateSubscribed DATETIME DEFAULT GETDATE(),
+        FOREIGN KEY (UserId) REFERENCES [User](Id),
+        FOREIGN KEY (TopicId) REFERENCES Topic(Id),
+        INDEX IX_DateSubscribed (DateSubscribed ASC) INCLUDE(UserId, TopicId)
+    );
+END;

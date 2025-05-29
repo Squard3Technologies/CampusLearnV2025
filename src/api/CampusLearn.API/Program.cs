@@ -1,3 +1,8 @@
+using CampusLearn.Bootstrap;
+using CampusLearn.Services.Domain.Admin;
+using CampusLearn.Services.Domain.Modules;
+using CampusLearn.Services.Domain.Quizzes;
+
 var builder = WebApplication.CreateBuilder(args);
 
 #region -- custom configurations --
@@ -7,17 +12,38 @@ builder.Services.Configure<SMTPSettings>(builder.Configuration.GetSection("smtp"
 
 #endregion -- custom configurations --
 
+#region -- cors configuration --
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
+#endregion -- cors configuration --
+
 #region -- db context --
 
 builder.Services.AddSingleton<CampusLearnDbContext>();
+builder.Services.AddSingleton<Bootstraper>();
 
 #endregion -- db context --
 
 #region -- repositories --
 
-builder.Services.AddSingleton<IMessagingRepository, MessagingRepository>();
+builder.Services.AddSingleton<INotificationRepository, NotificationRepository>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
+builder.Services.AddSingleton<IQuizRepository, QuizRepository>();
+builder.Services.AddSingleton<IChatRepository, ChatRepository>();
+builder.Services.AddSingleton<IAdminRepository, AdminRepository>();
+builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
 
 #endregion -- repositories --
 
@@ -26,9 +52,13 @@ builder.Services.AddSingleton<IEnquiryRepository, EnquiryRepository>();
 builder.Services.AddSingleton<JwtTokenProvider>();
 builder.Services.AddSingleton<SMTPManager>();
 builder.Services.AddSingleton<ScheduleManager>();
-builder.Services.AddSingleton<IMessagingServices, MessagingServices>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEnquiryService, EnquiryService>();
+builder.Services.AddSingleton<IQuizService, QuizService>();
+builder.Services.AddSingleton<IChatService, ChatService>();
+builder.Services.AddSingleton<IAdminService, AdminService>();
+builder.Services.AddSingleton<IModuleService, ModuleService>();
 
 #endregion -- services --
 
@@ -141,6 +171,9 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint($"/swagger/v1/swagger.json", $"CAMPUS LEARN API v1");
     });
 }
+
+var boostrapper = app.Services.GetRequiredService<Bootstraper>();
+await boostrapper.Migrations();
 
 app.UseHttpsRedirection();
 

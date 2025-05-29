@@ -1,0 +1,36 @@
+// Basic styling for forgot password page to match login page
+
+.container {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+// Focus styling for input
+.form-control:focus {
+  border-color: #AD0151;
+  box-shadow: 0 0 0 0.2rem rgba(173, 1, 81, 0.25);
+}
+
+// Primary button styling
+.btn-primary {
+  background-color: #AD0151;
+  border-color: #AD0151;
+
+  &:hover {
+    background-color: #8b0142;
+    border-color: #8b0142;
+  }
+}
+
+// Link styling
+.btn-link {
+  color: #AD0151;
+  text-decoration: none;
+
+  &:hover {
+    color: #8b0142;
+    text-decoration: underline;
+  }
+}

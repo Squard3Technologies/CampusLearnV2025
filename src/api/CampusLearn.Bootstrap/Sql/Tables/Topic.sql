@@ -1,0 +1,15 @@
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Topic')
+BEGIN
+    CREATE TABLE Topic (
+        Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+        CreatedByUserId UNIQUEIDENTIFIER NOT NULL,
+        Title NVARCHAR(255) NOT NULL,
+        Description NVARCHAR(MAX),
+        DateCreated DATETIME DEFAULT GETDATE(),
+        ModuleId UNIQUEIDENTIFIER NOT NULL,
+        FOREIGN KEY (CreatedByUserId) REFERENCES [User](Id),
+        FOREIGN KEY (ModuleId) REFERENCES Module(Id),
+        INDEX IX_DateCreated (DateCreated ASC) INCLUDE(ModuleId, CreatedByUserId)
+    )
+END

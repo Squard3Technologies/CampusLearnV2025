@@ -1,12 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
-using CampusLearn.DataModel.Models.Enums;
-using CampusLearn.DataModel.ViewModels;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
-
-namespace CampusLearn.Services.Domain.Utils;
+﻿namespace CampusLearn.Services.Domain.Utils;
 
 public class JwtTokenProvider(IConfiguration configuration)
 {

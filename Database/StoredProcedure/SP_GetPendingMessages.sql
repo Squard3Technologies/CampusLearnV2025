@@ -5,7 +5,8 @@ CREATE OR ALTER PROCEDURE dbo.SP_GetPendingMessages
 )
 AS
 BEGIN
-	SELECT	M.Id AS ID, 
+	SELECT	TOP (@batchSize)
+			M.Id AS ID, 
 			S.Id AS SenderID,
 			S.Name AS SenderName, 
 			S.Surname AS SenderSurname,

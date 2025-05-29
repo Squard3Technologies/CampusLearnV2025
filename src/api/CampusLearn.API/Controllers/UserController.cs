@@ -1,4 +1,5 @@
-﻿namespace CampusLearn.API.Controllers;
+﻿using CampusLearn.DataModel.Models.Modules;
+using CampusLearn.Services.Domain.Modules;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -8,14 +9,16 @@ public class UserController : ControllerBase
     #region -- protected properties --
 
     protected readonly ILogger<UserController> logger;
-    protected readonly IUserService userService;
+    protected readonly IUserService _userService;
+    protected readonly IModuleService moduleService;
 
     #endregion -- protected properties --
 
-    public UserController(ILogger<UserController> logger, IUserService userService)
+    public UserController(ILogger<UserController> logger, IUserService userService, IModuleService moduleService)
     {
         this.logger = logger;
-        this.userService = userService;
+        _userService = userService;
+        this.moduleService = moduleService;
     }
 
     [HttpPost("Login")]
@@ -26,12 +29,12 @@ public class UserController : ControllerBase
         {
             return BadRequest("Both username and Password are required");
         }
-        var response = await userService.LoginAsync(loginRequest.Username, loginRequest.Password);
+        var response = await _userService.LoginAsync(loginRequest.Username, loginRequest.Password);
         return Ok(response);
     }
 
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Learner, Tutor")]
-    [HttpPost("CreateAccount")]
+
+    [HttpPost("register")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
     {
@@ -51,26 +54,82 @@ public class UserController : ControllerBase
             return BadRequest(response);
         }
 
-        response = await userService.CreateUserAccountAsync(model);
+        response = await _userService.CreateUserAccountAsync(model);
 
         return Ok(response);
     }
 
     [HttpGet("profile")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> GetUserProfile()
+    [ProducesResponseType(typeof(UserProfileViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> GetUserProfile(CancellationToken token)
     {
-        var userIdentifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdentifier = User.GetUserIdentifier();
+        if (userIdentifier == null)
+            return BadRequest("Could not determine UserIdentifier");
 
-        return Ok();
+        var result = await _userService.GetUserProfileAsync(userIdentifier.Value, token);
+
+        return result != null ? Ok(result) : NoContent();
     }
 
     [HttpPut("profile")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> UpdateUserProfile()
+    public async Task<IActionResult> UpdateUserProfile([FromBody] UserProfileRequestModel model, CancellationToken token)
     {
-        var userIdentifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdentifier = User.GetUserIdentifier();
+        if (userIdentifier == null)
+            return BadRequest("Could not determine UserIdentifier");
 
+        await _userService.UpdateUserProfileAsync(userIdentifier.Value, model, token);
         return Ok();
     }
+
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model, CancellationToken token)
+    {
+        var userIdentifier = User.GetUserIdentifier();
+        if (userIdentifier == null)
+            return BadRequest("Could not determine UserIdentifier");
+
+        await _userService.ChangePasswordAsync(userIdentifier.Value, model.NewPassword, token);
+        return Ok();
+    }
+
+
+
+    [HttpGet("get")]
+    [MapToApiVersion(1)]
+    public async Task<IActionResult> GetUsersAsync()
+    {
+        var apiResponse = await _userService.GetUsersAsync();
+        return Ok(apiResponse);
+    }
+
+
+
+    #region -- MODULES API --
+
+
+    [HttpPost("modules")]
+    [MapToApiVersion(1)]
+    public async Task<IActionResult> AddUserModuleAsync([FromBody] CreateUserModuleRequest request)
+    {
+        var apiResponse = await moduleService.AddUserModuleAsync(userId: request.UserId, moduleId: request.ModuleId);
+        return Ok(apiResponse);
+    }
+
+
+
+
+    [HttpGet("modules/{id}")]
+    [MapToApiVersion(1)]
+    public async Task<IActionResult> GetUserModuleAsync(Guid id)
+    {
+        var apiResponse = await moduleService.GetUserModulesAsync(userId: id);
+        return Ok(apiResponse);
+    }
+
+
+
+    #endregion
 }

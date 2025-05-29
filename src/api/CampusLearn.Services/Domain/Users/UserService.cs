@@ -1,7 +1,5 @@
-﻿using CampusLearn.DataLayer.IRepositoryService;
-using CampusLearn.DataModel.Models;
+﻿using CampusLearn.DataModel.Models;
 using CampusLearn.DataModel.Models.User;
-using CampusLearn.DataModel.ViewModels;
 using CampusLearn.Services.Domain.Utils;
 using Microsoft.Extensions.Logging;
 
@@ -66,8 +64,8 @@ public class UserService : IUserService
         {
             response = new GenericAPIResponse<string>()
             {
-                Status = false,
-                StatusCode = 404,
+                Status = dbResponse.Status,
+                StatusCode = dbResponse.StatusCode,
                 StatusMessage = dbResponse.StatusMessage ?? $"Email address {emailAddress} is not registered",
                 Body = "",
                 StatusDetailedMessage = ""
@@ -137,5 +135,66 @@ public class UserService : IUserService
     public Task<GenericAPIResponse<string>> ChangeUserPasswordAsync(Guid userId, string password)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<UserProfileViewModel?> GetUserProfileAsync(Guid userId, CancellationToken token)
+    {
+        return await userRepository.GetUserProfileAsync(userId, token);
+    }
+
+    public async Task UpdateUserProfileAsync(Guid userId, UserProfileRequestModel model, CancellationToken token)
+    {
+        await userRepository.UpdateUserProfileAsync(userId, model, token);
+    }
+
+    public async Task ChangePasswordAsync(Guid userId, string newPassword, CancellationToken token)
+    {
+        var hashedPassword = passwordHasher.HashPassword(plainPassword: newPassword);
+
+        await userRepository.ChangePasswordAsync(userId, hashedPassword, token);
+    }
+
+
+    public async Task<GenericAPIResponse<IEnumerable<UserViewModel>>> GetUsersAsync()
+    {
+        GenericAPIResponse<IEnumerable<UserViewModel>> response = new GenericAPIResponse<IEnumerable<UserViewModel>>();
+        try
+        {
+            var dbResponse = await userRepository.GetUsersAsync();
+            if (dbResponse?.Status == true)
+            {
+                response = new GenericAPIResponse<IEnumerable<UserViewModel>>()
+                {
+                    Status = dbResponse.Status,
+                    StatusCode = dbResponse.StatusCode,
+                    StatusMessage = dbResponse.StatusMessage,
+                    Body = (IEnumerable<UserViewModel>)dbResponse.Body,
+                    StatusDetailedMessage = ""
+                };
+            }
+            else
+            {
+                response = new GenericAPIResponse<IEnumerable<UserViewModel>>()
+                {
+                    Status = dbResponse.Status,
+                    StatusCode = dbResponse.StatusCode,
+                    StatusMessage = dbResponse.StatusMessage,
+                    Body = null,
+                    StatusDetailedMessage = ""
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            response = new GenericAPIResponse<IEnumerable<UserViewModel>>()
+            {
+                Status = false,
+                StatusCode = 400,
+                StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}",
+                Body = null,
+                StatusDetailedMessage = ""
+            };
+        }
+        return response;
     }
 }
