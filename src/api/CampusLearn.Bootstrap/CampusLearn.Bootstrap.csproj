@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.18.18</AssemblyVersion>
-    <FileVersion>1.0.18.18</FileVersion>
+    <AssemblyVersion>1.0.24.24</AssemblyVersion>
+    <FileVersion>1.0.24.24</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +13,7 @@
     <None Remove="Sql\StoredProcedures\SP_AddModule.sql" />
     <None Remove="Sql\StoredProcedures\SP_AddUserModule.sql" />
     <None Remove="Sql\StoredProcedures\SP_ChangeAccountStatus.sql" />
+    <None Remove="Sql\StoredProcedures\SP_ChangeModuleStatus.sql" />
     <None Remove="Sql\StoredProcedures\SP_CreateMessage.sql" />
     <None Remove="Sql\StoredProcedures\SP_CreateUserAccounts.sql" />
     <None Remove="Sql\StoredProcedures\SP_GetModules.sql" />
@@ -21,9 +22,9 @@
     <None Remove="Sql\StoredProcedures\SP_GetUserModules.sql" />
     <None Remove="Sql\StoredProcedures\SP_GetUsers.sql" />
     <None Remove="Sql\StoredProcedures\SP_UpdateMessageStatus.sql" />
+    <None Remove="Sql\StoredProcedures\SP_UpdateModule.sql" />
+    <None Remove="Sql\StoredProcedures\SP_UpdateUserDetails.sql" />
     <None Remove="Sql\StoredProcedures\SP_UpsetComment.sql" />
-    <None Remove="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy (3).sql" />
-    <None Remove="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy.sql" />
     <None Remove="Sql\StoredProcedures\SP_UserLogin.sql" />
     <None Remove="Sql\StoredProcedures\users\SP_GetAllActiveUsers.sql" />
     <None Remove="Sql\Tables\Comment.sql" />
@@ -50,6 +51,15 @@
     <EmbeddedResource Include="Sql\Seeders\TableSeeders.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeModuleStatus.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateUserDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeAccountStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -62,19 +72,13 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetComment.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetDiscussionComment.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_AddUserModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUserModules.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy (3).sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin - Copy (3) - Copy.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_GetModules.sql">

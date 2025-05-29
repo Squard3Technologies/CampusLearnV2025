@@ -12,6 +12,10 @@ public interface IModuleService
 {
     Task<GenericAPIResponse<string>> AddModuleAsync(CreateModuleRequest module);
 
+    Task<GenericAPIResponse<string>> UpdateModuleAsync(CreateModuleRequest module);
+
+    Task<GenericAPIResponse<string>> ChangeModuleStatusAsync(Guid moduleId, bool status);
+
     Task<GenericAPIResponse<string>> AddUserModuleAsync(Guid userId, Guid moduleId);
 
     Task<GenericAPIResponse<IEnumerable<ModuleViewModel>>> GetModulesAsync();

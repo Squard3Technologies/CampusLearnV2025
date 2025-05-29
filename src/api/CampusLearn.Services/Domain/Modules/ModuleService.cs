@@ -44,6 +44,37 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
+    public async Task<GenericAPIResponse<string>> UpdateModuleAsync(CreateModuleRequest module)
+    {
+        ModuleViewModel moduleViewModel = new ModuleViewModel()
+        {
+            Id = module.Id.Value,
+            Name = module.Name,
+            Code = module.Code,
+        };
+
+        GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
+        var dbResponse = await moduleRepository.UpdateModuleAsync(moduleViewModel);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+
+        return apiResponse;
+    }
+
+
+    public async Task<GenericAPIResponse<string>> ChangeModuleStatusAsync(Guid moduleId, bool status)
+    {        
+        GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
+        var dbResponse = await moduleRepository.ChangeModuleStatusAsync(moduleId, status);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        return apiResponse;
+    }
+
     public async Task<GenericAPIResponse<string>> AddUserModuleAsync(Guid userId, Guid moduleId)
     {
         GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();

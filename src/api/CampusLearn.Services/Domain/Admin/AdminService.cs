@@ -62,4 +62,27 @@ public class AdminService : IAdminService
         apiResponse.Body = (dbResponse.Body != null) ? (List<UserViewModel>)dbResponse.Body : null;
         return apiResponse;
     }
+
+
+
+    public async Task<GenericAPIResponse<string>> UpdateUserAsync(UserModel model)
+    {
+        GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
+
+        var userViewModel = new UserViewModel()
+        {
+            Id = model.Id.Value,
+            FirstName = model.FirstName,
+            Surname = model.LastName,
+            ContactNumber = model.ContactNumber,
+            EmailAddress = model.EmailAddress,
+        };
+
+        var dbResponse = await adminRepository.UpdateUserAsync(userViewModel);
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        return apiResponse;
+    }
+
 }

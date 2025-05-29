@@ -17,4 +17,6 @@ public interface IAdminService
 
     Task<GenericAPIResponse<IEnumerable<UserViewModel>>> GetUsersAsync();
 
+    Task<GenericAPIResponse<string>> UpdateUserAsync(UserModel model);
+
 }

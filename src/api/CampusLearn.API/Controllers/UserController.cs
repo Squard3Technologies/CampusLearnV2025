@@ -59,6 +59,8 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("profile")]
     [ProducesResponseType(typeof(UserProfileViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -73,6 +75,9 @@ public class UserController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("profile")]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UserProfileRequestModel model, CancellationToken token)
     {
@@ -84,6 +89,8 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model, CancellationToken token)
     {
@@ -96,7 +103,7 @@ public class UserController : ControllerBase
     }
 
 
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("get")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetUsersAsync()
@@ -109,7 +116,7 @@ public class UserController : ControllerBase
 
     #region -- MODULES API --
 
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("modules")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> AddUserModuleAsync([FromBody] CreateUserModuleRequest request)
@@ -120,7 +127,7 @@ public class UserController : ControllerBase
 
 
 
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("modules/{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetUserModuleAsync(Guid id)

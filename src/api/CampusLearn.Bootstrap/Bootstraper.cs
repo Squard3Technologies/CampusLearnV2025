@@ -174,7 +174,6 @@ public class Bootstraper
 
                 #endregion -- QuizAttemptQuestionAnswer --
 
-
                 #region -- TopicSubscription --
 
                 sqlQuery = GetSqlScript(basePath, "TopicSubscription.sql");
@@ -183,7 +182,6 @@ public class Bootstraper
                 await db.ExecuteAsync(sql: sqlQuery, commandTimeout: 0, commandType: System.Data.CommandType.Text);
 
                 #endregion -- TopicSubscription --
-
 
                 #region -- TutorSubscription --
 
