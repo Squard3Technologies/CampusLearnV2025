@@ -11,17 +11,19 @@ public class QuizzesController : ControllerBase
 {
     #region -- protected properties --
 
-    protected readonly ILogger<TopicsController> _logger;
+    protected readonly ILogger<QuizzesController> _logger;
     private readonly IQuizService _quizService;
 
     #endregion -- protected properties --
 
-    public QuizzesController(ILogger<TopicsController> logger,
+    public QuizzesController(ILogger<QuizzesController> logger,
         IQuizService quizService)
     {
         _logger = logger;
         _quizService = quizService;
     }
+
+
 
     [HttpGet("topic/{topicId}")]
     [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
@@ -35,6 +37,8 @@ public class QuizzesController : ControllerBase
         return results != null ? Ok(results) : NoContent();
     }
 
+
+
     [HttpGet("{id}/details")]
     [ProducesResponseType(typeof(QuizDetailViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -46,6 +50,8 @@ public class QuizzesController : ControllerBase
         var result = await _quizService.GetQuizDetails(id, token);
         return result != null ? Ok(result) : NoContent();
     }
+
+
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost]
@@ -60,6 +66,8 @@ public class QuizzesController : ControllerBase
         var result = await _quizService.CreateQuiz(userIdentifier.Value, model, token);
         return result != null ? Ok(result) : NoContent();
     }
+
+
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}")]
@@ -77,6 +85,8 @@ public class QuizzesController : ControllerBase
         return Ok();
     }
 
+
+
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("{id}/questions")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
@@ -93,6 +103,8 @@ public class QuizzesController : ControllerBase
         var result = await _quizService.CreateQuizQuestion(id, userIdentifier.Value, model, token);
         return result != null ? Ok(result) : NoContent();
     }
+
+
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}/questions/{questionId}")]
@@ -113,6 +125,8 @@ public class QuizzesController : ControllerBase
         return Ok();
     }
 
+
+
     [HttpGet("active")]
     [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -125,6 +139,8 @@ public class QuizzesController : ControllerBase
         var results = await _quizService.GetActiveQuizzes(userIdentifier.Value, token);
         return results != null ? Ok(results) : NoContent();
     }
+
+
 
     [HttpPost("{id}/attempt")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
@@ -142,6 +158,7 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+
     [HttpGet("attempt-history")]
     [ProducesResponseType(typeof(List<QuizHistoryViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -154,6 +171,8 @@ public class QuizzesController : ControllerBase
         var results = await _quizService.GetQuizzesAttemptHistory(userIdentifier.Value, token);
         return results != null ? Ok(results) : NoContent();
     }
+
+
 
     [HttpGet("attempt-history/{id}")]
     [ProducesResponseType(typeof(QuizAttemptHistoryViewModel), StatusCodes.Status200OK)]
