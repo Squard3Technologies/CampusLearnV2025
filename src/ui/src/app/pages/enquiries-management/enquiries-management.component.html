@@ -1,6 +1,6 @@
 <div class="layout">
 <aside class="sidebar">
-  <h3>Inquiry Management</h3>
+  <h3>Enquiry Management</h3>
   <ul>
     <li><a [routerLink]="['/enquiries-history']" > History</a></li>
     <li><a [routerLink]="['/enquiries-management']" > Pending Inquiries</a></li>
@@ -38,7 +38,7 @@
    <ng-container>
 <div class="modal" *ngIf="isViewModalOpen">
   <div class="modal-content">
-    <h2 class="modal-title">Resolve Inquiry</h2>
+    <h2 class="modal-title">Resolve Enquiry</h2>
 
     <label for="view-title">Title</label>
     <input id="view-title" type="text" [(ngModel)]="selectedInquiry.title" >
