@@ -39,7 +39,7 @@ selectedEnquiry: any = {};
 
 
 
-inquiries = [
+Enquiries = [
   {
     id: 1,
     title: 'Need help with assignment 1',
