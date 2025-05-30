@@ -34,7 +34,7 @@ public class UserController : ControllerBase
     }
 
 
-    [HttpPost("register")]
+    [HttpPost("createaccount")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
     {

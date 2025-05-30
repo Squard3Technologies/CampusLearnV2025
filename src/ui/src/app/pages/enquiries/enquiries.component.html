@@ -19,38 +19,18 @@
 
   <!-- Table -->
   <table class="enquiry-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Inquiry Title</th>
-        <th>Date Created</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>Need help with assignment 1</td>
-        <td>2025-05-23</td>
-        <td>Open</td>
-        <td><button>View</button></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Clarification on Quiz 2</td>
-        <td>2025-05-20</td>
-        <td>Resolved</td>
-        <td><button>View</button></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Lecture Slides Missing</td>
-        <td>2025-05-18</td>
-        <td>Pending</td>
-        <td><button>View</button></td>
-      </tr>
-    </tbody>
+  <tr *ngFor="let inquiry of inquiries">
+    <td>{{inquiry.id}}</td>
+    <td>{{inquiry.title}}</td>
+    <td>{{inquiry.dateCreated}}</td>
+    <td>{{inquiry.status}}</td>
+    <td>
+      <button (click)="openViewModal(inquiry)">View</button>
+    </td>
+  </tr>
+</tbody>
+
   </table>
 
   <!-- Pagination -->
@@ -67,7 +47,7 @@
     <button class="action-btn" [routerLink]="['/modules']">Back to My Modules</button>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal New enquiry-->
   <ng-container *ngIf="showModal">
     <div class="modal-backdrop">
       <div class="modal-content">
@@ -81,9 +61,41 @@
 
         <div class="modal-buttons">
           <button class="cancel-btn" (click)="closeModal()">Cancel</button>
-          <button class="submit-btn" (click)="submitInquiry()">Submit</button>
+          <button class="submit-btn" (click)="submitEnquiry()">Submit</button>
         </div>
       </div>
     </div>
   </ng-container>
+
+  <!-- View Inquiry Modal -->
+   <ng-container>
+<div class="modal" *ngIf="isViewModalOpen">
+  <div class="modal-content">
+    <h2 class="modal-title">View Inquiry</h2>
+
+    <label for="view-title">Title</label>
+    <input id="view-title" type="text" [(ngModel)]="selectedInquiry.title" >
+
+    <label for="view-description">Description</label>
+    <textarea id="view-description" rows="3" [(ngModel)]="selectedInquiry.description" ></textarea>
+
+    <label for="view-description">Resolution Action</label>
+    <select id="resolution-action" [(ngModel)]="selectedInquiry.resolutionAction">
+      <option value="New Topic">New Topic</option>
+      <option value="Link To Existing Topic">Link To Existing Topic</option>
+      <option value="No Action Required">No Action Required</option>
+    </select>
+
+
+    <label for="linked-topic">Linked Topic</label>
+    <input id="linked-topic" type="text" [(ngModel)]="selectedInquiry.linkedTopic" >
+
+    <label for="resolution-response">Resolution Response</label>
+    <textarea id="resolution-response" rows="4" [(ngModel)]="selectedInquiry.resolutionResponse" ></textarea>
+
+    <button (click)="closeViewModal()">Back</button>
+  </div>
+</div>
+</ng-container>
+
 </div>

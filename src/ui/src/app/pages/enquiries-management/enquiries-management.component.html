@@ -1,9 +1,9 @@
 <div class="layout">
 <aside class="sidebar">
-  <h3>Inquiry Navigation</h3>
+  <h3>Inquiry Management</h3>
   <ul>
-    <li routerLink="/enquiries-history" routerLinkActive="active">Inquiry History</li>
-    <li routerLink="/enquiries-management" routerLinkActive="active">Pending Inquiries</li>
+    <li><a [routerLink]="['/enquiries-history']" > History</a></li>
+    <li><a [routerLink]="['/enquiries-management']" > Pending Inquiries</a></li>
   </ul>
 </aside>
   <div class="main-content">
@@ -14,7 +14,7 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button class="resolve-btn">Resolve</button>
+      <button class="resolve-btn" (click)="openViewModal(selectedInquiry)">Resolve</button>
     </div>
 <br>
     <div class="pending-card">
@@ -22,7 +22,7 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button class="resolve-btn">Resolve</button>
+      <button class="resolve-btn" (click)="openViewModal(selectedInquiry)">Resolve</button>
     </div>
 <br>
     <div class="pending-card">
@@ -30,7 +30,39 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button class="resolve-btn">Resolve</button>
+      <button class="resolve-btn" (click)="openViewModal(selectedInquiry)">Resolve</button>
     </div>
   </div>
+
+  <!--Resolve enquiry popup-->
+   <ng-container>
+<div class="modal" *ngIf="isViewModalOpen">
+  <div class="modal-content">
+    <h2 class="modal-title">Resolve Inquiry</h2>
+
+    <label for="view-title">Title</label>
+    <input id="view-title" type="text" [(ngModel)]="selectedInquiry.title" >
+
+    <label for="view-description">Description</label>
+    <textarea id="view-description" rows="3" [(ngModel)]="selectedInquiry.description" ></textarea>
+
+    <label for="view-description">Select Resolution Action</label>
+    <select id="resolution-action" [(ngModel)]="selectedInquiry.resolutionAction">
+      <option value="New Topic">New Topic</option>
+      <option value="Link To Existing Topic">Link To Existing Topic</option>
+      <option value="No Action Required">No Action Required</option>
+    </select>
+
+
+    <label for="linked-topic">Select Topic Link</label>
+    <input id="linked-topic" type="text" [(ngModel)]="selectedInquiry.linkedTopic" >
+
+    <label for="resolution-response">Resolution Response</label>
+    <textarea id="resolution-response" rows="4" [(ngModel)]="selectedInquiry.resolutionResponse" ></textarea>
+
+    <button (click)="closeViewModal()">Back</button>
+  </div>
+</div>
+</ng-container>
+
 </div>
