@@ -23,7 +23,7 @@ export class ApiService {
   }
 
   register(userData: any) {
-    const url = `${this.apiUrl}/user/createaccount`;
+    const url = `${this.apiUrl}/user/register`;
     return this.httpClient.post(url, userData);
   }
 
