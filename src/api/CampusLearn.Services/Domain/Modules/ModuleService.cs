@@ -1,5 +1,7 @@
 ﻿using CampusLearn.DataModel.Models;
 using CampusLearn.DataModel.Models.Modules;
+using CampusLearn.DataModel.Models.Topic;
+using CampusLearn.DataModel.ViewModels;
 using CampusLearn.Services.Domain.Admin;
 using CampusLearn.Services.Domain.Utils;
 using Microsoft.Extensions.Logging;
@@ -109,4 +111,34 @@ public class ModuleService : IModuleService
         apiResponse.Body = (dbResponse.Body != null) ? (List<UsersModuleViewModel>)dbResponse.Body : null;
         return apiResponse;
     }
+
+
+
+    #region -- topic section --
+
+    public async Task<GenericAPIResponse<string>> AddTopicAsync(Guid userId, CreateTopicRequest model)
+    {
+        GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
+        var dbResponse = await moduleRepository.AddTopicAsync(userId, model);
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        return apiResponse;
+    }
+
+
+
+    public async Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId)
+    {
+        GenericAPIResponse<IEnumerable<TopicViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<TopicViewModel>>();
+        var dbResponse = await moduleRepository.GetModuleTopicAsync(moduleId);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        apiResponse.Body = (dbResponse.Body != null) ? (List<TopicViewModel>)dbResponse.Body : null;
+        return apiResponse;
+    }
+    #endregion
+
 }

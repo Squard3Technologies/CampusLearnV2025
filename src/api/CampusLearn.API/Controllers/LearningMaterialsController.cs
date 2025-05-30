@@ -1,4 +1,6 @@
-﻿namespace CampusLearn.API.Controllers;
+﻿using CampusLearn.DataModel.Models.LearningMaterial;
+
+namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -25,9 +27,28 @@ public class LearningMaterialsController : ControllerBase
 
     [HttpPost("topic/{id}")]
     [MapToApiVersion(1)]
-    public async Task<IActionResult> CreateLearningMaterial(Guid id)
+    public async Task<IActionResult> CreateLearningMaterial(Guid id, IFormFile file)
     {
-        return Ok();
+        var authUser = User.GetUserIdentifier();
+
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "API", "Uploads");
+
+        if (!Directory.Exists(uploadPath))
+            Directory.CreateDirectory(uploadPath);
+
+        var filePath = Path.Combine(uploadPath, file.FileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        //save the details to the database.
+
+        return Ok(new { filePath });
     }
 
     [HttpDelete("{id}")]

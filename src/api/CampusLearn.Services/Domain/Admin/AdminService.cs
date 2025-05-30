@@ -1,32 +1,26 @@
-﻿using CampusLearn.DataLayer.IRepositoryService;
-using CampusLearn.DataModel.Models;
-using CampusLearn.DataModel.Models.User;
-using CampusLearn.DataModel.ViewModels;
-using CampusLearn.Services.Domain.Users;
-using CampusLearn.Services.Domain.Utils;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CampusLearn.Services.Domain.Admin;
+﻿namespace CampusLearn.Services.Domain.Admin;
 
 public class AdminService : IAdminService
 {
     #region -- protected properties --
+
     protected readonly ILogger<AdminService> logger;
     protected readonly IAdminRepository adminRepository;
     private readonly SecurePasswordHasher passwordHasher = new SecurePasswordHasher();
     private readonly JwtTokenProvider tokenProvider;
-    #endregion
+    private readonly INotificationService _notificationService;
 
-    public AdminService(ILogger<AdminService> logger, IAdminRepository adminRepository, JwtTokenProvider tokenProvider)
+    #endregion -- protected properties --
+
+    public AdminService(ILogger<AdminService> logger,
+        IAdminRepository adminRepository,
+        JwtTokenProvider tokenProvider,
+        INotificationService notificationService)
     {
         this.logger = logger;
         this.adminRepository = adminRepository;
         this.tokenProvider = tokenProvider;
+        _notificationService = notificationService;
     }
 
     public async Task<GenericAPIResponse<IEnumerable<UserViewModel>>> GetPendingRegistrationsAsync()
@@ -40,17 +34,28 @@ public class AdminService : IAdminService
         return apiResponse;
     }
 
-
-    public async Task<GenericAPIResponse<string>> ProcessRegistrationAsync(Guid userId, Guid accountStatusId)
+    public async Task<GenericAPIResponse<string>> ProcessRegistrationAsync(Guid userId, Guid accountStatusId, CancellationToken token)
     {
         GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
         var dbResponse = await adminRepository.ChangeUserAccountStatusAsync(userId, accountStatusId);
+
+        if (dbResponse.Status)
+        {
+            if (accountStatusId == AccountStatus.ACTIVE)
+                await _notificationService.SendAccountApprovedAsync(userId, NotificationTypes.Email, token);
+
+            if (accountStatusId == AccountStatus.INACTIVE)
+                await _notificationService.SendAccountDeactivatedAsync(userId, NotificationTypes.Email, token);
+
+            if (accountStatusId == AccountStatus.REJECTED)
+                await _notificationService.SendAccountRejectedAsync(userId, NotificationTypes.Email, token);
+        }
+
         apiResponse.Status = dbResponse.Status;
         apiResponse.StatusCode = dbResponse.StatusCode;
         apiResponse.StatusMessage = dbResponse.StatusMessage;
         return apiResponse;
     }
-
 
     public async Task<GenericAPIResponse<IEnumerable<UserViewModel>>> GetUsersAsync()
     {
@@ -62,8 +67,6 @@ public class AdminService : IAdminService
         apiResponse.Body = (dbResponse.Body != null) ? (List<UserViewModel>)dbResponse.Body : null;
         return apiResponse;
     }
-
-
 
     public async Task<GenericAPIResponse<string>> UpdateUserAsync(UserModel model)
     {
@@ -84,5 +87,4 @@ public class AdminService : IAdminService
         apiResponse.StatusMessage = dbResponse.StatusMessage;
         return apiResponse;
     }
-
 }

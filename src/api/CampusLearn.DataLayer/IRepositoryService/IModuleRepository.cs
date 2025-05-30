@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CampusLearn.DataModel.Models.Topic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,4 +19,12 @@ public interface IModuleRepository
     Task<GenericDbResponseViewModel> GetModulesAsync();
 
     Task<GenericDbResponseViewModel> GetUserModulesAsync(Guid userId);
+
+
+    #region -- topic section --
+
+    Task<GenericDbResponseViewModel> AddTopicAsync(Guid userId, CreateTopicRequest module);
+    Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId);
+
+    #endregion
 }
