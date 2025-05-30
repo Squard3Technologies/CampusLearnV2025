@@ -14,6 +14,7 @@ global using CampusLearn.DataModel.ViewModels;
 global using CampusLearn.Services.Domain.Notifications;
 global using CampusLearn.Services.Domain.Subscriptions;
 global using CampusLearn.Services.Domain.Utils;
+global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;

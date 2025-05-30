@@ -1,4 +1,5 @@
-﻿using CampusLearn.DataModel.Models.Modules;
+﻿using CampusLearn.DataLayer.Constants;
+using CampusLearn.DataModel.Models.Modules;
 
 namespace CampusLearn.API.Controllers
 {
@@ -6,6 +7,7 @@ namespace CampusLearn.API.Controllers
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion(1)]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         #region -- protected properties --
@@ -25,7 +27,7 @@ namespace CampusLearn.API.Controllers
             this.userService = userService;
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpGet("registrations")]
         [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UserViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPendingRegistrationsAsync()
@@ -34,7 +36,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("registrations/status")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ChangeAccountStatusAsync([FromBody] ChangeAccountRequest request, CancellationToken token)
@@ -45,7 +47,6 @@ namespace CampusLearn.API.Controllers
 
         #region -- user management --
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("users")]
         [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UserViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUsersAsync()
@@ -54,7 +55,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("users/status")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ChangeUserAccountStatusAsync([FromBody] ChangeAccountRequest request, CancellationToken token)
@@ -63,7 +64,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("users/update")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UserModel request)
@@ -76,7 +77,7 @@ namespace CampusLearn.API.Controllers
 
         #region -- MODULES API --
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("modules")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddModuleAsync([FromBody] CreateModuleRequest request)
@@ -85,7 +86,6 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("modules")]
         [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<ModuleViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetModulesAsync()
@@ -94,7 +94,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPut("modules")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateModulesAsync([FromBody] CreateModuleRequest model)
@@ -103,7 +103,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("modules/{id}/deactivate")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeactivateModuleAsync(Guid id)
@@ -112,7 +112,7 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("modules/{id}/activate")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ActivateModuleAsync(Guid id)

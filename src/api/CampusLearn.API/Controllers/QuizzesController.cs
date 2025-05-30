@@ -1,4 +1,5 @@
-﻿using CampusLearn.DataModel.Models.Quizzes;
+﻿using CampusLearn.DataLayer.Constants;
+using CampusLearn.DataModel.Models.Quizzes;
 
 namespace CampusLearn.API.Controllers;
 
@@ -46,6 +47,7 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -59,6 +61,7 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateQuiz(Guid id, [FromBody] CreateQuizRequestModel model, CancellationToken token)
@@ -74,6 +77,7 @@ public class QuizzesController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("{id}/questions")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -90,6 +94,7 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}/questions/{questionId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateQuizQuestion(Guid id, Guid questionId, [FromBody] CreateQuizQuestionRequestModel model, CancellationToken token)

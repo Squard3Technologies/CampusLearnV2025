@@ -15,12 +15,8 @@ public class JwtTokenProvider(IConfiguration configuration)
             new Claim(ClaimTypes.Email, user.EmailAddress),
             new Claim(ClaimTypes.Name, user.FirstName),
             new Claim(ClaimTypes.Surname, user.Surname),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
         };
-
-        foreach (var role in GetHierarchicalRoles(user.Role))
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
-        }
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

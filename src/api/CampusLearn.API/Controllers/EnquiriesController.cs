@@ -1,4 +1,6 @@
-﻿namespace CampusLearn.API.Controllers;
+﻿using CampusLearn.DataLayer.Constants;
+
+namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -63,7 +65,7 @@ public class EnquiriesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpGet("active")]
     [ProducesResponseType(typeof(List<EnquiryViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -74,7 +76,7 @@ public class EnquiriesController : ControllerBase
         return results != null ? Ok(results) : NoContent();
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("{id}/resolve")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [MapToApiVersion(1)]
@@ -91,7 +93,7 @@ public class EnquiriesController : ControllerBase
         return Ok();
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpGet("resolved")]
     [ProducesResponseType(typeof(List<EnquiryViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

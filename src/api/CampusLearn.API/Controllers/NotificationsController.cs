@@ -1,9 +1,9 @@
 ﻿namespace CampusLearn.API.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class NotificationsController : ControllerBase
 {
     private readonly ILogger<NotificationsController> _logger;
