@@ -29,7 +29,7 @@ BEGIN
 		END
 		ELSE IF(NOT EXISTS(SELECT * FROM dbo.[User] U WITH(NOLOCK) WHERE U.Id = @authorId))
 		BEGIN
-			SET @Status = 0
+			SET @Status = 0 
 			SET @StatusCode = 404
 			SET @StatusMessage = 'The specied user does not exists'
 		END
@@ -48,5 +48,5 @@ BEGIN
 		SET @StatusCode = 500
 		SET @StatusMessage = ERROR_MESSAGE()
 	END CATCH
-	SELECT @Status AS [Status], @StatusCode AS [StatusCode], @StatusMessage AS [StatusMessage]
+	SELECT @Status AS [Status], @StatusCode AS [StatusCode], @StatusMessage AS [StatusMessage], @id AS [Body]
 END;

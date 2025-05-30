@@ -36,12 +36,9 @@ export class LoginComponent {
     this.userService.login(this.email, this.password).subscribe({
       next: (user) => {
         console.log('Login successful for user:', user);
-        // Navigate to home page - user is already set in the service
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        // Handle login error
-        console.error('Login error:', error);
         this.errorMessage = error.message || 'Invalid email or password. Please try again.';
       }
     });

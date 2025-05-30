@@ -16,7 +16,7 @@ public class NotificationsController : ControllerBase
     }
 
     [HttpPost("sms")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(GenericDbResponseViewModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> SendSMSMessageAsync(SendMessageRequest messageRequest, CancellationToken token)
     {
         var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS, NotificationContentTypes.None, token);
@@ -24,7 +24,7 @@ public class NotificationsController : ControllerBase
     }
 
     [HttpPost("email")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(GenericDbResponseViewModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> SendEmailMessageAsync(SendMessageRequest messageRequest, CancellationToken token)
     {
         var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email, NotificationContentTypes.None, token);

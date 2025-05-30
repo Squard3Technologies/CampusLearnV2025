@@ -27,7 +27,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("registrations")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UserViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPendingRegistrationsAsync()
         {
             var apiResponse = await adminService.GetPendingRegistrationsAsync();
@@ -36,7 +36,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("registrations/status")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ChangeAccountStatusAsync([FromBody] ChangeAccountRequest request, CancellationToken token)
         {
             var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId, token);
@@ -47,7 +47,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("users")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UserViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUsersAsync()
         {
             var apiResponse = await adminService.GetUsersAsync();
@@ -56,7 +56,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("users/status")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ChangeUserAccountStatusAsync([FromBody] ChangeAccountRequest request, CancellationToken token)
         {
             var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId, token);
@@ -65,7 +65,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("users/update")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UserModel request)
         {
             var apiResponse = await adminService.UpdateUserAsync(request);
@@ -78,7 +78,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("modules")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddModuleAsync([FromBody] CreateModuleRequest request)
         {
             var apiResponse = await moduleService.AddModuleAsync(request);
@@ -87,7 +87,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpGet("modules")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<ModuleViewModel>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetModulesAsync()
         {
             var apiResponse = await moduleService.GetModulesAsync();
@@ -96,7 +96,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPut("modules")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateModulesAsync([FromBody] CreateModuleRequest model)
         {
             var apiResponse = await moduleService.UpdateModuleAsync(model);
@@ -105,7 +105,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("modules/{id}/deactivate")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeactivateModuleAsync(Guid id)
         {
             var apiResponse = await moduleService.ChangeModuleStatusAsync(id, false);
@@ -114,7 +114,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         [HttpPost("modules/{id}/activate")]
-        [MapToApiVersion(1)]
+        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ActivateModuleAsync(Guid id)
         {
             var apiResponse = await moduleService.ChangeModuleStatusAsync(id, true);

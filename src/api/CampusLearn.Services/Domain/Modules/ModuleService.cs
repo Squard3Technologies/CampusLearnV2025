@@ -1,31 +1,26 @@
-﻿using CampusLearn.DataModel.Models;
-using CampusLearn.DataModel.Models.Modules;
+﻿using CampusLearn.DataModel.Models.Modules;
 using CampusLearn.DataModel.Models.Topic;
-using CampusLearn.DataModel.ViewModels;
-using CampusLearn.Services.Domain.Admin;
-using CampusLearn.Services.Domain.Utils;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CampusLearn.Services.Domain.Modules;
 
 public class ModuleService : IModuleService
 {
     #region -- protected properties --
+
     protected readonly ILogger<ModuleService> logger;
     protected readonly IModuleRepository moduleRepository;
-    #endregion
+    private readonly INotificationService _notificationService;
 
-    public ModuleService(ILogger<ModuleService> logger, IModuleRepository moduleRepository)
+    #endregion -- protected properties --
+
+    public ModuleService(ILogger<ModuleService> logger,
+        IModuleRepository moduleRepository,
+        INotificationService notificationService)
     {
         this.logger = logger;
-        this.moduleRepository = moduleRepository;        
+        this.moduleRepository = moduleRepository;
+        _notificationService = notificationService;
     }
-
 
     public async Task<GenericAPIResponse<string>> AddModuleAsync(CreateModuleRequest module)
     {
@@ -65,9 +60,8 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-
     public async Task<GenericAPIResponse<string>> ChangeModuleStatusAsync(Guid moduleId, bool status)
-    {        
+    {
         GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
         var dbResponse = await moduleRepository.ChangeModuleStatusAsync(moduleId, status);
 
@@ -112,21 +106,18 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-
-
-    #region -- topic section --
-
-    public async Task<GenericAPIResponse<string>> AddTopicAsync(Guid userId, CreateTopicRequest model)
+    public async Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest model, CancellationToken token)
     {
-        GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
+        GenericAPIResponse<Guid?> apiResponse = new GenericAPIResponse<Guid?>();
         var dbResponse = await moduleRepository.AddTopicAsync(userId, model);
+        if (dbResponse.Body != null)
+            await _notificationService.SendTopicCreatedAsync(userId, dbResponse.Body.Value, NotificationTypes.Email, token);
         apiResponse.Status = dbResponse.Status;
         apiResponse.StatusCode = dbResponse.StatusCode;
         apiResponse.StatusMessage = dbResponse.StatusMessage;
+        apiResponse.Body = dbResponse.Body;
         return apiResponse;
     }
-
-
 
     public async Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId)
     {
@@ -139,6 +130,4 @@ public class ModuleService : IModuleService
         apiResponse.Body = (dbResponse.Body != null) ? (List<TopicViewModel>)dbResponse.Body : null;
         return apiResponse;
     }
-    #endregion
-
 }
