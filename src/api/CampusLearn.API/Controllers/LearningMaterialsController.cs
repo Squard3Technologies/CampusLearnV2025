@@ -1,6 +1,4 @@
-﻿using CampusLearn.DataModel.Models.LearningMaterial;
-
-namespace CampusLearn.API.Controllers;
+﻿namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -26,7 +24,7 @@ public class LearningMaterialsController : ControllerBase
     }
 
     [HttpPost("topic/{id}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateLearningMaterial(Guid id, IFormFile file)
     {
         var authUser = User.GetUserIdentifier();

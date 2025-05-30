@@ -20,8 +20,8 @@ public class UserController : ControllerBase
         this.moduleService = moduleService;
     }
 
-    [HttpPost("Login")]
-    [MapToApiVersion(1)]
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> LoginAsync(LoginRequestModel loginRequest)
     {
         if (string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
@@ -32,8 +32,8 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("createAccount")]
-    [MapToApiVersion(1)]
+    [HttpPost("register")]
+    [ProducesResponseType(typeof(GenericAPIResponse<CreateUserRequestModel>), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserRequestModel model)
     {
         var response = new GenericAPIResponse<CreateUserRequestModel>();
@@ -74,6 +74,7 @@ public class UserController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("profile")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UserProfileRequestModel model, CancellationToken token)
     {
         var userIdentifier = User.GetUserIdentifier();
@@ -86,6 +87,7 @@ public class UserController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("change-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model, CancellationToken token)
     {
         var userIdentifier = User.GetUserIdentifier();
@@ -98,7 +100,7 @@ public class UserController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("get")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UserViewModel>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUsersAsync()
     {
         var apiResponse = await _userService.GetUsersAsync();
@@ -109,7 +111,7 @@ public class UserController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("modules")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddUserModuleAsync([FromBody] CreateUserModuleRequest request)
     {
         var apiResponse = await moduleService.AddUserModuleAsync(userId: request.UserId, moduleId: request.ModuleId);
@@ -118,12 +120,12 @@ public class UserController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("modules/{id}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UsersModuleViewModel>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserModuleAsync(Guid id)
     {
         var apiResponse = await moduleService.GetUserModulesAsync(userId: id);
         return Ok(apiResponse);
     }
 
-    #endregion
+    #endregion -- MODULES API --
 }

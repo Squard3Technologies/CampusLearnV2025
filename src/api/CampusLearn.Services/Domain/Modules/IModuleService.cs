@@ -1,11 +1,5 @@
-﻿using CampusLearn.DataModel.Models;
-using CampusLearn.DataModel.Models.Modules;
+﻿using CampusLearn.DataModel.Models.Modules;
 using CampusLearn.DataModel.Models.Topic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CampusLearn.Services.Domain.Modules;
 
@@ -23,12 +17,7 @@ public interface IModuleService
 
     Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModulesAsync(Guid userId);
 
+    Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module, CancellationToken token);
 
-    #region -- topic section --
-
-    Task<GenericAPIResponse<string>> AddTopicAsync(Guid userId, CreateTopicRequest module);
     Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId);
-
-    #endregion
-
 }

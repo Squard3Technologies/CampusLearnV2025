@@ -1,15 +1,11 @@
 ﻿using CampusLearn.DataModel.Models.Topic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CampusLearn.DataLayer.IRepositoryService;
 
 public interface IModuleRepository
 {
     Task<GenericDbResponseViewModel> AddModuleAsync(ModuleViewModel module);
+
     Task<GenericDbResponseViewModel> UpdateModuleAsync(ModuleViewModel module);
 
     Task<GenericDbResponseViewModel> ChangeModuleStatusAsync(Guid moduleId, bool status);
@@ -20,11 +16,7 @@ public interface IModuleRepository
 
     Task<GenericDbResponseViewModel> GetUserModulesAsync(Guid userId);
 
+    Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module);
 
-    #region -- topic section --
-
-    Task<GenericDbResponseViewModel> AddTopicAsync(Guid userId, CreateTopicRequest module);
     Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId);
-
-    #endregion
 }

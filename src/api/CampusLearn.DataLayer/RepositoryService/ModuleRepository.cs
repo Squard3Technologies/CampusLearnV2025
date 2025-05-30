@@ -1,11 +1,5 @@
-﻿using CampusLearn.DataModel.Models.Topic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
+using CampusLearn.DataModel.Models.Topic;
 
 namespace CampusLearn.DataLayer.RepositoryService;
 
@@ -23,7 +17,6 @@ public class ModuleRepository : IModuleRepository
         this.logger = logger;
         this.database = database;
     }
-
 
     public async Task<GenericDbResponseViewModel> AddModuleAsync(ModuleViewModel module)
     {
@@ -68,8 +61,6 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-    
-
     public async Task<GenericDbResponseViewModel> UpdateModuleAsync(ModuleViewModel module)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
@@ -112,7 +103,6 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
-    
 
     public async Task<GenericDbResponseViewModel> ChangeModuleStatusAsync(Guid moduleId, bool status)
     {
@@ -156,9 +146,6 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-
-
-
     public async Task<GenericDbResponseViewModel> AddUserModuleAsync(Guid userId, Guid moduleId)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
@@ -200,8 +187,6 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
-
-
 
     public async Task<GenericDbResponseViewModel> GetModulesAsync()
     {
@@ -254,7 +239,6 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
-
 
     public async Task<GenericDbResponseViewModel> GetUserModulesAsync(Guid userId)
     {
@@ -311,14 +295,11 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-
-
-
     #region -- topic section --
 
-    public async Task<GenericDbResponseViewModel> AddTopicAsync(Guid userId, CreateTopicRequest module)
+    public async Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module)
     {
-        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        GenericDbResponseViewModel<Guid?> response = new GenericDbResponseViewModel<Guid?>();
         try
         {
             using (var db = database.CreateSqlConnection())
@@ -335,7 +316,7 @@ public class ModuleRepository : IModuleRepository
                         parameters.Add("moduleId", module.ModuleId, DbType.Guid);
                         parameters.Add("title", module.Title, DbType.String);
                         parameters.Add("description", module.Description, DbType.String);
-                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel>(sql: query,
+                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel<Guid?>>(sql: query,
                             param: parameters,
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,
@@ -360,8 +341,6 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
-
-
 
     public async Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId)
     {
@@ -418,8 +397,5 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-
-
-    #endregion
-
+    #endregion -- topic section --
 }
