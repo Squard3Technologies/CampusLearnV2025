@@ -16,12 +16,11 @@
             <th scope="col">Topic Name</th>
             <th scope="col">Actions</th>
           </tr>
-        </thead>
-        <tbody>
+        </thead>        <tbody>
           <tr *ngFor="let topic of topics">
             <td>{{ topic.title }}</td>
             <td>
-              <button class="btn btn-sm btn-primary" [routerLink]="['/topic', topic.id]">View</button>
+              <button class="btn btn-sm btn-primary" [routerLink]="['/topic', topic.id]" [queryParams]="{ moduleId: moduleId, moduleName: moduleName }">View</button>
             </td>
           </tr>
           <tr *ngIf="topics?.length === 0">
