@@ -14,7 +14,7 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button class="resolve-btn" (click)="openViewModal(selectedInquiry)">Resolve</button>
+      <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
     </div>
 <br>
     <div class="pending-card">
@@ -22,7 +22,7 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button class="resolve-btn" (click)="openViewModal(selectedInquiry)">Resolve</button>
+      <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
     </div>
 <br>
     <div class="pending-card">
@@ -30,7 +30,7 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button class="resolve-btn" (click)="openViewModal(selectedInquiry)">Resolve</button>
+      <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
     </div>
   </div>
 
@@ -41,13 +41,13 @@
     <h2 class="modal-title">Resolve Enquiry</h2>
 
     <label for="view-title">Title</label>
-    <input id="view-title" type="text" [(ngModel)]="selectedInquiry.title" >
+    <input id="view-title" type="text" [(ngModel)]="selectedEnquiry.title" >
 
     <label for="view-description">Description</label>
-    <textarea id="view-description" rows="3" [(ngModel)]="selectedInquiry.description" ></textarea>
+    <textarea id="view-description" rows="3" [(ngModel)]="selectedEnquiry.description" ></textarea>
 
     <label for="view-description">Select Resolution Action</label>
-    <select id="resolution-action" [(ngModel)]="selectedInquiry.resolutionAction">
+    <select id="resolution-action" [(ngModel)]="selectedEnquiry.resolutionAction">
       <option value="New Topic">New Topic</option>
       <option value="Link To Existing Topic">Link To Existing Topic</option>
       <option value="No Action Required">No Action Required</option>
@@ -55,10 +55,10 @@
 
 
     <label for="linked-topic">Select Topic Link</label>
-    <input id="linked-topic" type="text" [(ngModel)]="selectedInquiry.linkedTopic" >
+    <input id="linked-topic" type="text" [(ngModel)]="selectedEnquiry.linkedTopic" >
 
     <label for="resolution-response">Resolution Response</label>
-    <textarea id="resolution-response" rows="4" [(ngModel)]="selectedInquiry.resolutionResponse" ></textarea>
+    <textarea id="resolution-response" rows="4" [(ngModel)]="selectedEnquiry.resolutionResponse" ></textarea>
 
     <button (click)="closeViewModal()">Back</button>
   </div>

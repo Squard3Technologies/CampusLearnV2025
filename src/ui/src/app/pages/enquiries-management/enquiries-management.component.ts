@@ -11,10 +11,10 @@ import { RouterModule } from '@angular/router';
 })
 export class EnquiriesManagementComponent {
   isViewModalOpen: boolean = false;
-selectedInquiry: any = {};
+selectedEnquiry: any = {};
 
 openViewModal(inquiry: any) {
-  this.selectedInquiry = { ...inquiry };
+  this.selectedEnquiry = { ...inquiry };
   this.isViewModalOpen = true;
 }
 
