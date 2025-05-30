@@ -1,10 +1,12 @@
-﻿using CampusLearn.DataModel.Models.Topic;
+﻿using CampusLearn.DataLayer.Constants;
+using CampusLearn.DataModel.Models.Topic;
 
 namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class TopicsController : ControllerBase
 {
     #region -- protected properties --
@@ -20,7 +22,7 @@ public class TopicsController : ControllerBase
         this.moduleService = moduleService;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

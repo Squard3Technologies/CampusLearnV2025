@@ -1,8 +1,11 @@
-﻿namespace CampusLearn.API.Controllers;
+﻿using CampusLearn.DataLayer.Constants;
+
+namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class LearningMaterialsController : ControllerBase
 {
     #region -- protected properties --
@@ -23,6 +26,7 @@ public class LearningMaterialsController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("topic/{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateLearningMaterial(Guid id, IFormFile file)
@@ -49,6 +53,7 @@ public class LearningMaterialsController : ControllerBase
         return Ok(new { filePath });
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpDelete("{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> RemoveLearningMaterial(Guid id)
