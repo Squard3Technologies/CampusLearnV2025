@@ -1,1 +1,122 @@
-<p>enquiries works!</p>
+<div class="enquiries-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Module 1 Enquiries</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header-section">
+      <h2>My Enquiries for Module Code</h2>
+      <div class="action-buttons">
+        <button class="create-btn" (click)="openModal()">+ Create Enquiry</button>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-bar">
+        <input type="text" placeholder="Search enquiries..." />
+        <span class="search-icon">🔍</span>
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="table-container">
+      <table class="enquiry-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Date Created</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inquiry of Enquiries">
+            <td>{{inquiry.id}}</td>
+            <td>{{inquiry.title}}</td>
+            <td>{{inquiry.dateCreated}}</td>
+            <td><span class="status-badge" [class]="'status-' + inquiry.status.toLowerCase()">{{inquiry.status}}</span></td>
+            <td>
+              <button class="view-btn" (click)="openViewModal(inquiry)">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="bubble">Previous</span>
+      <span class="bubble">1</span>
+      <span class="bubble">2</span>
+      <span class="bubble">3</span>
+      <span class="bubble">Next</span>
+    </div>
+
+    <!-- Back Button -->
+    <div class="bottom-actions">
+      <button class="back-btn" [routerLink]="['/modules']">Back to My Modules</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Modal New enquiry-->
+  <ng-container *ngIf="showModal">
+    <div class="modal-backdrop">
+      <div class="modal-content">
+        <h2>New Enquiry for Module Name</h2>
+
+        <label for="title">Title</label>
+        <input type="text" id="title" [(ngModel)]="enquiryTitle" placeholder="Enter enquiry title">
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="5" [(ngModel)]="enquiryDescription" placeholder="Enter enquiry details"></textarea>
+
+        <div class="modal-buttons">
+          <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+          <button class="submit-btn" (click)="submitEnquiry()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- View Enquiry Modal -->
+   <ng-container>
+<div class="modal" *ngIf="isViewModalOpen">
+  <div class="modal-content">
+    <h2 class="modal-title">View Enquiry</h2>
+
+    <label for="view-title">Title</label>
+    <input id="view-title" type="text" [(ngModel)]="selectedEnquiry.title" >
+
+    <label for="view-description">Description</label>
+    <textarea id="view-description" rows="3" [(ngModel)]="selectedEnquiry.description" ></textarea>
+
+    <label for="view-description">Resolution Action</label>
+    <select id="resolution-action" [(ngModel)]="selectedEnquiry.resolutionAction">
+      <option value="New Topic">New Topic</option>
+      <option value="Link To Existing Topic">Link To Existing Topic</option>
+      <option value="No Action Required">No Action Required</option>
+    </select>
+
+
+    <label for="linked-topic">Linked Topic</label>
+    <input id="linked-topic" type="text" [(ngModel)]="selectedEnquiry.linkedTopic" >
+
+    <label for="resolution-response">Resolution Response</label>
+    <textarea id="resolution-response" rows="4" [(ngModel)]="selectedEnquiry.resolutionResponse" ></textarea>
+
+    <button (click)="closeViewModal()">Back</button>
+  </div>
+</div>
+</ng-container>
+

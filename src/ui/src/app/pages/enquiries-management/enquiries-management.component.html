@@ -1,1 +1,81 @@
-<p>enquiries-management works!</p>
+<div class="enquiries-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Enquiry Management</li>
+      </ol>
+    </nav>  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Enquiry Management</h3>
+      <ul class="tabs">
+        <li class="tab active">Pending Enquiries</li>
+        <li class="tab clickable" (click)="navigateToHistory()">History</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <h2>Pending Enquiries</h2>
+      
+      <div class="pending-card">
+        <h3>Heading</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
+      </div>
+
+      <div class="pending-card">
+        <h3>Heading</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
+      </div>
+
+      <div class="pending-card">
+        <h3>Heading</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
+      </div>
+    </div>
+  </div>
+
+  <!--Resolve enquiry popup-->
+  <ng-container>
+    <div class="modal" *ngIf="isViewModalOpen">
+      <div class="modal-content">
+        <h2 class="modal-title">Resolve Enquiry</h2>
+
+        <label for="view-title">Title</label>
+        <input id="view-title" type="text" [(ngModel)]="selectedEnquiry.title" >
+
+        <label for="view-description">Description</label>
+        <textarea id="view-description" rows="3" [(ngModel)]="selectedEnquiry.description" ></textarea>
+
+        <label for="view-description">Select Resolution Action</label>
+        <select id="resolution-action" [(ngModel)]="selectedEnquiry.resolutionAction">
+          <option value="New Topic">New Topic</option>
+          <option value="Link To Existing Topic">Link To Existing Topic</option>
+          <option value="No Action Required">No Action Required</option>
+        </select>
+
+        <label for="linked-topic">Select Topic Link</label>
+        <input id="linked-topic" type="text" [(ngModel)]="selectedEnquiry.linkedTopic" >
+
+        <label for="resolution-response">Resolution Response</label>
+        <textarea id="resolution-response" rows="4" [(ngModel)]="selectedEnquiry.resolutionResponse" ></textarea>
+
+        <button (click)="closeViewModal()">Back</button>
+      </div>
+    </div>
+  </ng-container>

@@ -144,7 +144,7 @@ export class ChatComponent implements OnInit {
       this.chats[chatIndex].timestamp = new Date();
 
       // Fake response after 1 second
-      setTimeout(() => {
+      /*setTimeout(() => {
         const systemResponse: ChatMessage = {
           content: 'This is a test response. In a real app, this would come from your backend.',
           timestamp: new Date(),
@@ -154,7 +154,7 @@ export class ChatComponent implements OnInit {
         this.chats[chatIndex].messages.push(systemResponse);
         this.chats[chatIndex].lastMessage = systemResponse.content;
         this.chats[chatIndex].timestamp = new Date();
-      }, 1000);
+      }, 1000);*/
 
       // Clear the input box
       this.newMessage = '';

@@ -5,7 +5,7 @@ namespace CampusLearn.Services.Domain.Modules;
 
 public interface IModuleService
 {
-    Task<GenericAPIResponse<string>> AddModuleAsync(CreateModuleRequest module);
+    Task<GenericAPIResponse<Guid?>> AddModuleAsync(CreateModuleRequest module);
 
     Task<GenericAPIResponse<string>> UpdateModuleAsync(CreateModuleRequest module);
 
@@ -22,8 +22,8 @@ public interface IModuleService
     Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId);
 
     #region -- learing material section --
+
     Task<GenericAPIResponse<string>> AddLearningMaterialAsync(LearningMaterialViewModel model);
 
-    #endregion
-
+    #endregion -- learing material section --
 }

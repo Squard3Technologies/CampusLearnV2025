@@ -28,7 +28,7 @@ public class QuizzesController : ControllerBase
     [HttpGet("topic/{topicId}")]
     [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> GetQuizzesByTopic([FromQuery] Guid topicId, CancellationToken token)
+    public async Task<IActionResult> GetQuizzesByTopic(Guid topicId, CancellationToken token)
     {
         if (topicId == Guid.Empty)
             return BadRequest("Provide valud TopicId");
@@ -175,7 +175,7 @@ public class QuizzesController : ControllerBase
 
 
     [HttpGet("attempt-history/{id}")]
-    [ProducesResponseType(typeof(List<QuizAttemptViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(QuizAttemptHistoryViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetQuizAttemptHistory(Guid id, CancellationToken token)
     {
