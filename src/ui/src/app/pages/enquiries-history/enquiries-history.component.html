@@ -1,1 +1,82 @@
-<p>enquiries-history works!</p>
+<div class="layout">
+<aside class="sidebar">
+  <h3>Inquiry Navigation</h3>
+  <ul>
+     <li><a [routerLink]="['/enquiries-history']" > History</a></li>
+    <li><a [routerLink]="['/enquiries-management']" > Pending Inquiries</a></li>
+  </ul>
+</aside>
+
+<div class="main-content">
+    <div class="page-wrapper">
+
+  <!-- Header Title -->
+  <div class="page-header">
+    <h1>My Inquiries for Module Code</h1>
+    <button class="action-btn top-right">+ Create Inquiry</button>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs">
+    <span>Modules / Module 1</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" placeholder="Search" />
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <!-- Table -->
+  <table class="inquiry-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Inquiry Title</th>
+        <th>Date Created</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Need help with assignment 1</td>
+        <td>2025-05-23</td>
+        <td>Open</td>
+        <td><button>View</button></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Clarification on Quiz 2</td>
+        <td>2025-05-20</td>
+        <td>Resolved</td>
+        <td><button>View</button></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Lecture Slides Missing</td>
+        <td>2025-05-18</td>
+        <td>Pending</td>
+        <td><button>View</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <span class="bubble">Previous</span>
+    <span class="bubble">1</span>
+    <span class="bubble">2</span>
+    <span class="bubble">3</span>
+    <span class="bubble">Next</span>
+  </div>
+
+  <!-- Back Button -->
+  <div class="bottom-btn">
+    <button class="action-btn">Back to My Modules</button>
+  </div>
+
+</div>
+
+</div>

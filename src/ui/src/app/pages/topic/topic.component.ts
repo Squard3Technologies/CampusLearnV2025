@@ -26,11 +26,33 @@ export class TopicComponent implements OnInit {
       this.moduleName = queryParams.get('moduleName');
     });
   }
-
   navigateToDiscussions() {
     if (this.topicId) {
       // Navigate to discussions with module context as query parameters
       this.router.navigate(['/topic', this.topicId, 'discussions'], {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName
+        }
+      });
+    }
+  }
+  navigateToMaterials() {
+    if (this.topicId) {
+      // Navigate to learning materials with module context as query parameters
+      this.router.navigate(['/topic', this.topicId, 'learning-material'], {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName
+        }
+      });
+    }
+  }
+
+  navigateToQuizzes() {
+    if (this.topicId) {
+      // Navigate to quizzes with module context as query parameters
+      this.router.navigate(['/topic', this.topicId, 'quizzes'], {
         queryParams: {
           moduleId: this.moduleId,
           moduleName: this.moduleName

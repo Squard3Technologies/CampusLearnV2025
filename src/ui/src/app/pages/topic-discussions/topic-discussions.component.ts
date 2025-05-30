@@ -130,11 +130,33 @@ export class TopicDiscussionsComponent implements OnInit {
       }
     }
   }
-
   navigateToTopicOverview() {
     if (this.topicId) {
       // Navigate back to topic overview with module context as query parameters
       this.router.navigate(['/topic', this.topicId], {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName
+        }
+      });
+    }
+  }
+  navigateToMaterials() {
+    if (this.topicId) {
+      // Navigate to learning materials with module context as query parameters
+      this.router.navigate(['/topic', this.topicId, 'learning-material'], {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName
+        }
+      });
+    }
+  }
+
+  navigateToQuizzes() {
+    if (this.topicId) {
+      // Navigate to quizzes with module context as query parameters
+      this.router.navigate(['/topic', this.topicId, 'quizzes'], {
         queryParams: {
           moduleId: this.moduleId,
           moduleName: this.moduleName

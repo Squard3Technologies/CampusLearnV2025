@@ -58,9 +58,7 @@
   .tabs {
     list-style: none;
     padding: 0;
-    margin: 0;
-
-    .tab {
+    margin: 0;    .tab {
       padding: 1rem;
       margin-bottom: 0.5rem;
       border-radius: 6px;
@@ -77,6 +75,31 @@
         background-color: #AD0151;
         color: white;
         border-color: #AD0151;
+      }
+
+      &.clickable {
+        cursor: pointer;
+        position: relative;
+
+        &:hover {
+          background-color: #AD0151;
+          color: white;
+          border-color: #AD0151;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(173, 1, 81, 0.3);
+        }
+
+        &::after {
+          content: '→';
+          position: absolute;
+          right: 1rem;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        &:hover::after {
+          opacity: 1;
+        }
       }
     }
   }
