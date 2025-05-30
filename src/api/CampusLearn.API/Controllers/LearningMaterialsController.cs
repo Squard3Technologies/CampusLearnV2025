@@ -1,10 +1,13 @@
-﻿using CampusLearn.DataModel.Models.LearningMaterial;
+﻿using CampusLearn.DataLayer.Constants;
+
+using CampusLearn.DataModel.Models.LearningMaterial;
 
 namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class LearningMaterialsController : ControllerBase
 {
     #region -- protected properties --
@@ -32,9 +35,7 @@ public class LearningMaterialsController : ControllerBase
         return Ok();
     }
 
-
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("topic/uploads")]
     public async Task<IActionResult> UploadLearningMaterial(AddLearningMaterialRequest request)
     {
@@ -65,9 +66,7 @@ public class LearningMaterialsController : ControllerBase
         return Ok(apiResponse);
     }
 
-
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpDelete("{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> RemoveLearningMaterial(Guid id)

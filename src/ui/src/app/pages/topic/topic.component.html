@@ -1,1 +1,35 @@
-<p>topic works!</p>
+<div class="topic-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules', moduleId]" class="breadcrumb-link">{{ moduleName || 'Module' }}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Topic</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">      <h3>Topic Sections</h3>
+      <ul class="tabs">
+        <li class="tab active">Overview</li>
+        <li class="tab">Materials</li>
+        <li class="tab">Assignments</li>
+        <li class="tab clickable" (click)="navigateToDiscussions()">Discussion</li>
+        <li class="tab">Progress</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <h2>Topic Description</h2>
+      <p>This is where the topic description content will be displayed. Add your topic details, learning objectives, and any relevant information here.</p>
+    </div>
+  </div>
+</div>

@@ -1,34 +1,36 @@
-<div class="container mt-4">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
-      <li class="breadcrumb-item"><a [routerLink]="['/modules']">Modules</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ moduleName || 'Module' }}</li>
-    </ol>
-  </nav>
-  <div class="row mb-4">
-    <div class="col">
+<div class="module-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ moduleName || 'Module' }}</li>
+      </ol>
+    </nav>
+  </div>
 
+  <!-- Main Content -->
+  <div class="main-content">
       <h2>Module Topics</h2>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Topic Name</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let topic of topics">
-            <td>{{ topic.title }}</td>
-            <td>
-              <button class="btn btn-sm btn-primary" [routerLink]="['/topic', topic.id]">View</button>
-            </td>
-          </tr>
-          <tr *ngIf="topics?.length === 0">
-            <td colspan="2" class="text-center">No topics available</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="topics-grid">
+        <div class="topic-card" *ngFor="let topic of topics">
+          <div class="topic-header">
+            <h4>{{ topic.title }}</h4>
+          </div>
+          <div class="topic-actions">
+            <button class="btn btn-primary" [routerLink]="['/topic', topic.id]" [queryParams]="{ moduleId: moduleId, moduleName: moduleName }">
+              View Topic
+            </button>
+          </div>
+        </div>
+        <div class="no-topics" *ngIf="topics?.length === 0">
+          <p>No topics available for this module</p>
+        </div>      
     </div>
   </div>
 </div>

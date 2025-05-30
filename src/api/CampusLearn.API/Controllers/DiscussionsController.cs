@@ -3,6 +3,7 @@
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class DiscussionsController : ControllerBase
 {
     #region -- protected properties --

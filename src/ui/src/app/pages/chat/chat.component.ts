@@ -1,30 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-// Simple message structure
-interface ChatMessage {
-  content: string;
-  timestamp: Date;
-  sender: 'user' | 'system';
-}
-
-// Chat conversation structure
-interface Chat {
-  id: string;
-  title: string;
-  timestamp: Date;
-  lastMessage: string;
-  messages: ChatMessage[];
-}
-
-// Simple user structure for search
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import { Chat, ChatMessage, User, mockChats, mockUsers } from '../../mock-data';
 
 @Component({
   selector: 'app-chat',
@@ -53,73 +30,15 @@ export class ChatComponent implements OnInit {
     this.loadChats();
     this.loadUsers();
   }
-
   // Load example chat data
   loadChats(): void {
-    // Sample data - in a real app, this would come from a database
-    this.chats = [
-      {
-        id: '1',
-        title: 'Course Questions',
-        timestamp: new Date(),
-        lastMessage: 'Can you explain the last lecture?',
-        messages: [
-          {
-            content: 'Hello, can you help me with the course material?',
-            timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-            sender: 'user'
-          },
-          {
-            content: 'Of course! What do you need help with?',
-            timestamp: new Date(Date.now() - 3500000),
-            sender: 'system'
-          },
-          {
-            content: 'Can you explain the last lecture?',
-            timestamp: new Date(),
-            sender: 'user'
-          }
-        ]
-      },
-      {
-        id: '2',
-        title: 'Assignment Help',
-        timestamp: new Date(Date.now() - 86400000), // 1 day ago
-        lastMessage: 'Thanks for the explanation!',
-        messages: [
-          {
-            content: 'I need help with assignment 3',
-            timestamp: new Date(Date.now() - 90000000),
-            sender: 'user'
-          },
-          {
-            content: 'What specific part are you stuck on?',
-            timestamp: new Date(Date.now() - 89000000),
-            sender: 'system'
-          },
-          {
-            content: 'Thanks for the explanation!',
-            timestamp: new Date(Date.now() - 86400000),
-            sender: 'user'
-          }
-        ]
-      }
-    ];
+    // Use centralized mock data
+    this.chats = [...mockChats];
   }
-
   // Load example user data for search
   loadUsers(): void {
-    // Sample users - in a real app, this would come from a database
-    this.allUsers = [
-      { id: '1', name: 'John Smith', email: 'john.smith@university.edu', role: 'student' },
-      { id: '2', name: 'Mary Johnson', email: 'mary.johnson@university.edu', role: 'tutor' },
-      { id: '3', name: 'David Brown', email: 'david.brown@university.edu', role: 'student' },
-      { id: '4', name: 'Sarah Wilson', email: 'sarah.wilson@university.edu', role: 'admin' },
-      { id: '5', name: 'Mike Davis', email: 'mike.davis@university.edu', role: 'student' },
-      { id: '6', name: 'Lisa Garcia', email: 'lisa.garcia@university.edu', role: 'tutor' },
-      { id: '7', name: 'Tom Miller', email: 'tom.miller@university.edu', role: 'student' },
-      { id: '8', name: 'Anna Taylor', email: 'anna.taylor@university.edu', role: 'tutor' }
-    ];
+    // Use centralized mock data
+    this.allUsers = [...mockUsers];
     this.filteredUsers = this.allUsers; // Start with all users visible
   }
 

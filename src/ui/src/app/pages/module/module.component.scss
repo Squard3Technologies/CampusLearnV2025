@@ -1,0 +1,118 @@
+// Module component styling based on topic page styling
+
+.module-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.breadcrumb-container {
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  margin: 1rem 1rem 0 1rem;
+
+  .breadcrumb {
+    margin: 0;
+    background: none;
+    padding: 0;
+
+    .breadcrumb-item {
+      font-size: 0.9rem;
+
+      .breadcrumb-link {
+        color: #AD0151;
+        text-decoration: none;
+
+        &:hover {
+          color: #8b0142;
+          text-decoration: underline;
+        }
+      }
+
+      &.active {
+        color: #6c757d;
+      }
+    }
+  }
+}
+
+.main-content {
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 1rem;
+
+  h2 {
+    color: #AD0151;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+
+    .topic-card {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        border-color: #AD0151;
+        transform: translateY(-2px);
+      }
+
+      .topic-header {
+        margin-bottom: 1rem;
+
+        h4 {
+          color: #AD0151;
+          margin: 0;
+          font-weight: 600;
+        }
+      }
+
+      .topic-actions {
+        text-align: center;
+
+        .btn {
+          background-color: #AD0151;
+          border-color: #AD0151;
+          padding: 0.5rem 1.5rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #8b0142;
+            border-color: #8b0142;
+            transform: translateY(-1px);
+          }
+        }
+      }
+    }
+
+    .no-topics {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      color: #6c757d;
+      font-style: italic;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .topics-grid {
+    grid-template-columns: 1fr;
+  }
+}
