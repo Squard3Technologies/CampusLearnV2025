@@ -17,12 +17,11 @@
   <div class="main-container">
     <!-- Sidebar -->
     <div class="sidebar">      
-        <h3>Topic Sections</h3>
-      <ul class="tabs">
+        <h3>Topic Sections</h3>      <ul class="tabs">
         <li class="tab active">Overview</li>
-        <li class="tab">Materials</li>
+        <li class="tab clickable" (click)="navigateToMaterials()">Materials</li>
         <li class="tab clickable" (click)="navigateToDiscussions()">Discussion</li>
-        <li class="tab">Quizzes</li>
+        <li class="tab clickable" (click)="navigateToQuizzes()">Quizzes</li>
       </ul>
     </div>
 
