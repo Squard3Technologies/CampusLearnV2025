@@ -105,6 +105,7 @@ public class UserController : ControllerBase
         return Ok(apiResponse);
     }
 
+
     #region -- MODULES API --
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
