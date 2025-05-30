@@ -1,97 +1,71 @@
-<p>profile-detail works!</p>
+<div class="profile-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+      </ol>
+    </nav>
+  </div>
 
-<!-- <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exported Figma Design</title>
-  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>My Details</h3>      <ul class="tabs">
+        <li class="tab active">My Profile</li>
+        <li class="tab clickable" (click)="navigateToTopicSections()">Topic Sections</li>
+        <li class="tab clickable" (click)="navigateToTutorSubscription()">Tutor Subscription</li>
+        <li class="tab clickable" (click)="navigateToTopicSubscription()">Topic Subscription</li>
+        <li class="tab clickable" (click)="navigateToChangePassword()">Change Password</li>
+        <li class="tab clickable logout" (click)="logout()">Logout</li>
+      </ul>
+    </div>
 
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="node-1">
-<div class="node-2">
-<div class="group-3">
-<img src="images/vector-4.svg" class="vector-4" alt="vector" />
-<img src="images/vector-5.svg" class="vector-5" alt="vector" />
-</div>
-</div>
-<div class="footers-6">
-<p class="text-7"><span class="text-rgb-255-252-252">Terms and conditions of use.    Privacy statements.           2025 Campus Learn. All rights reserved.
-</span></p>
-<div class="mail-8">
-<img src="images/icon-9.svg" class="icon-9" alt="icon" />
-</div>
-<img src="images/image-5-10.png" class="image-5-10" alt="image-5" />
-<div class="location_on-11">
-<img src="images/icon-12.svg" class="icon-12" alt="icon" />
-</div>
-<p class="text-13"><span class="text-white">Contact us:</span></p>
-<p class="text-14"><span class="text-white"> Enquiry&#64;BelgiumCampus.co.za.   </span></p>
-<p class="text-15"><span class="text-white">+27 012 345 6789.</span></p>
-<p class="text-16"><span class="text-white">123 That Road, Pretoria north, Gauteng.</span></p>
-<div class="node-17">
-<div class="group-18">
-<img src="images/vector-19.svg" class="vector-19" alt="vector" />
-<img src="images/vector-20.svg" class="vector-20" alt="vector" />
-</div>
-</div>
-</div>
-<div class="node-21">
-<div class="group-22">
-<img src="images/vector-23.svg" class="vector-23" alt="vector" />
-<img src="images/vector-24.svg" class="vector-24" alt="vector" />
-</div>
-</div>
-<div class="header-variant7-25">
-<div class="rectangle-71-26"></div>
-<p class="text-27"><span class="text-rgb-255-248-248">Campus Learn</span></p>
-<p class="text-28"><span class="text-rgb-152-147-147">Home  </span><span class="text-rgb-255-248-248">Modules  </span><span class="text-rgb-152-147-147">Chat                                 Quizzes  Admin  </span></p>
-<img src="images/graduation-1-29.png" class="graduation-1-29" alt="graduation-1" />
-<div class="arrow_drop_down-30">
-</div>
-</div>
-<p class="text-32"><span class="text-black">My Details</span></p>
-<div class="buttons-variant14-33">
-<div class="rectangle-76-34">
-<div class="rectangle-5-35"></div>
-</div>
-<p class="header-1"><span class="text-white">My Profile</span></p>
-</div>
-<div class="buttons-variant14-37">
-<div class="rectangle-76-38">
-<div class="rectangle-5-39"></div>
-</div>
-<p class="header-1"><span class="text-white">Logout</span></p>
-</div>
-<div class="rectangle-123-41"></div>
-<p class="text-42"><span class="text-black">Topic Sections</span></p>
-<p class="text-43"><span class="text-black">My Details</span></p>
-<p class="text-44"><span class="text-black">Tutor Subscription</span></p>
-<p class="text-45"><span class="text-black">Topic Subscription</span></p>
-<p class="text-46"><span class="text-black">Change Password</span></p>
-<div class="buttons-variant13-47">
-<div class="rectangle-76-48">
-<div class="rectangle-5-49"></div>
-</div>
-<p class="text-50"><span class="text-white">Update</span></p>
-</div>
-<div class="rectangle-79-51"></div>
-<p class="text-52"><span class="text-black">Name:</span></p>
-<p class="text-53"><span class="text-black">Surname:</span></p>
-<div class="rectangle-124-54"></div>
-<p class="text-55"><span class="text-black">Contact Number:</span></p>
-<p class="text-56"><span class="text-black">Email:</span></p>
-<p class="text-57"><span class="text-black">Linked Modules:</span></p>
-<div class="rectangle-80-58"></div>
-<p class="text-59"><span class="text-black">Test@test.com</span></p>
-<p class="text-60"><span class="text-black">Module 1
-Module 2
-Module 5
-Module 7</span></p>
-</div>
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header-section">
+        <h2>My Profile</h2>        <div class="action-buttons">
+          <button class="update-btn" (click)="updateProfile()">Update</button>
+        </div>
+      </div>
 
-</body>
-</html> -->
+      <div class="profile-form">
+        <div class="form-section">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" class="form-control" placeholder="Enter your name">
+          </div>
+
+          <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" class="form-control" placeholder="Enter your surname">
+          </div>
+
+          <div class="form-group">
+            <label for="contact">Contact Number:</label>
+            <input type="text" id="contact" class="form-control" placeholder="Enter your contact number">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" class="form-control" value="Test@test.com" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="modules">Linked Modules:</label>
+            <div class="modules-display">
+              <div class="module-tag">Module 1</div>
+              <div class="module-tag">Module 2</div>
+              <div class="module-tag">Module 5</div>
+              <div class="module-tag">Module 7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
