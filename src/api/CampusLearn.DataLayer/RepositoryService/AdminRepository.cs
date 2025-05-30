@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace CampusLearn.DataLayer.RepositoryService;
 
@@ -74,7 +68,6 @@ public class AdminRepository : IAdminRepository
         }
         return response;
     }
-
 
 
     public async Task<GenericDbResponseViewModel> ChangeUserAccountStatusAsync(Guid userId, Guid accountStatusId)
@@ -170,4 +163,52 @@ public class AdminRepository : IAdminRepository
         }
         return response;
     }
+
+
+    public async Task<GenericDbResponseViewModel> UpdateUserAsync(UserViewModel model)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_UpdateUserDetails";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("id", model.Id, DbType.Guid);
+                        parameters.Add("name", model.FirstName, DbType.String);
+                        parameters.Add("surname", model.Surname, DbType.String);
+                        parameters.Add("contact", model.ContactNumber, DbType.String);
+                        parameters.Add("email", model.EmailAddress, DbType.String);
+                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
 }

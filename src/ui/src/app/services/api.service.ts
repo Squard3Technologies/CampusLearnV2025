@@ -19,15 +19,11 @@ export class ApiService {
       password: credentials.password
     };
     const url = `${this.apiUrl}/user/login`;
-    console.log('Making login request to:', url);
-    console.log('Request body:', loginBody);
     return this.httpClient.post(url, loginBody);
   }
 
   register(userData: any) {
-    const url = `${this.apiUrl}/user/createaccount`;
-    console.log('Making registration request to:', url);
-    console.log('Request body:', userData);
+    const url = `${this.apiUrl}/user/register`;
     return this.httpClient.post(url, userData);
   }
 

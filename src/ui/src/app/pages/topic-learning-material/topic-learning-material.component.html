@@ -1,1 +1,183 @@
-<p>topic-learning-material works!</p>
+<div class="topic-materials-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules', moduleId]" class="breadcrumb-link">{{ moduleName || 'Module' }}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/topic', topicId]" [queryParams]="{ moduleId: moduleId, moduleName: moduleName }" class="breadcrumb-link">Topic</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Learning Materials</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Topic Sections</h3>      <ul class="tabs">
+        <li class="tab clickable" (click)="navigateToTopicOverview()">Overview</li>
+        <li class="tab active">Materials</li>
+        <li class="tab clickable" (click)="navigateToDiscussions()">Discussion</li>
+        <li class="tab clickable" (click)="navigateToQuizzes()">Quizzes</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="materials-header">
+        <h2>Learning Materials</h2>
+        <div class="header-actions">
+          <button class="btn btn-primary">
+            <i class="fas fa-upload"></i> Upload Material
+          </button>
+        </div>
+      </div>
+
+      <!-- Materials Table -->
+      <div class="materials-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-header">
+              <tr>
+                <th scope="col">
+                  <i class="fas fa-file-alt"></i> Name
+                </th>
+                <th scope="col">
+                  <i class="fas fa-info-circle"></i> Description
+                </th>
+                <th scope="col">
+                  <i class="fas fa-tag"></i> File Type
+                </th>
+                <th scope="col">
+                  <i class="fas fa-hdd"></i> Size
+                </th>
+                <th scope="col">
+                  <i class="fas fa-calendar"></i> Upload Date
+                </th>
+                <th scope="col" class="text-center">
+                  <i class="fas fa-cog"></i> Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let material of learningMaterials" class="material-row">
+                <td class="material-name">
+                  <div class="d-flex align-items-center">
+                    <i [class]="getFileTypeIcon(material.fileType)" [ngClass]="getFileTypeClass(material.fileType)"></i>
+                    <div class="ms-2">
+                      <strong>{{ material.name }}</strong>
+                      <div class="file-name" *ngIf="material.fileName">{{ material.fileName }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="material-description">
+                  <span class="description-text">{{ material.description }}</span>
+                </td>
+                <td class="material-type">
+                  <span class="badge" [ngClass]="'badge-' + material.fileType.toLowerCase()">
+                    {{ material.fileType }}
+                  </span>
+                </td>
+                <td class="material-size">
+                  <span class="size-text">{{ material.fileSize || 'N/A' }}</span>
+                </td>
+                <td class="material-date">
+                  <span class="date-text">{{ material.uploadDate | date:'MMM d, y' }}</span>
+                </td>
+                <td class="material-actions text-center">
+                  <div class="btn-group" role="group">
+                    <button 
+                      class="btn btn-sm btn-outline-primary"
+                      *ngIf="material.viewUrl"
+                      (click)="viewMaterial(material)"
+                      title="View Material">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-success"
+                      *ngIf="material.downloadUrl"
+                      (click)="downloadMaterial(material)"
+                      title="Download Material">
+                      <i class="fas fa-download"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary"
+                      title="More Options">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- No Materials Message -->
+        <div class="no-materials" *ngIf="learningMaterials.length === 0">
+          <div class="text-center py-5">
+            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No Learning Materials</h4>
+            <p class="text-muted">No materials have been uploaded for this topic yet.</p>
+            <button class="btn btn-primary">
+              <i class="fas fa-upload"></i> Upload First Material
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials Summary -->
+      <div class="materials-summary" *ngIf="learningMaterials.length > 0">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="summary-card">
+              <div class="summary-icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div class="summary-content">
+                <h6>Total Materials</h6>
+                <span class="summary-number">{{ learningMaterials.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="summary-card">
+              <div class="summary-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>              <div class="summary-content">
+                <h6>Videos</h6>
+                <span class="summary-number">{{ getVideoCount() }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="summary-card">
+              <div class="summary-icon">
+                <i class="fas fa-file-pdf"></i>
+              </div>              <div class="summary-content">
+                <h6>Documents</h6>
+                <span class="summary-number">{{ getPdfCount() }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="summary-card">
+              <div class="summary-icon">
+                <i class="fas fa-question-circle"></i>
+              </div>              <div class="summary-content">
+                <h6>Quizzes</h6>
+                <span class="summary-number">{{ getQuizCount() }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

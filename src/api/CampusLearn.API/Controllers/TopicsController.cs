@@ -1,44 +1,43 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using CampusLearn.DataLayer.Constants;
+using CampusLearn.DataModel.Models.Topic;
 
 namespace CampusLearn.API.Controllers;
-
-
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class TopicsController : ControllerBase
 {
     #region -- protected properties --
+
     protected readonly ILogger<TopicsController> logger;
-    //protected readonly IMessagingServices messagingServices;
+    protected readonly IModuleService moduleService;
 
-    #endregion
+    #endregion -- protected properties --
 
-    public TopicsController(ILogger<TopicsController> logger)
+    public TopicsController(ILogger<TopicsController> logger, IModuleService moduleService)
     {
         this.logger = logger;
+        this.moduleService = moduleService;
     }
 
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Tutor")]
-    [HttpPost("CreateTopic")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> CreateTopicAsync()
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
+    [HttpPost]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CreateTopicAsync([FromBody] CreateTopicRequest request, CancellationToken token)
     {
-        return Ok();
+        var userId = User.GetUserIdentifier();
+        var response = await moduleService.AddTopicAsync(userId.Value, request, token);
+        return response?.Body != null ? Ok(response) : NoContent();
     }
 
-
-    [HttpGet("GetAllTopics")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> GetAllTopicsAsync()
+    [HttpGet("modules/{moduleId}")]
+    [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<TopicViewModel>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllTopicsAsync(Guid moduleId)
     {
-        return Ok();
+        var responses = await moduleService.GetModuleTopicAsync(moduleId);
+        return Ok(responses);
     }
-
-
-
 }

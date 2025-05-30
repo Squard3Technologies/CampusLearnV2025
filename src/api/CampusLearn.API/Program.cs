@@ -1,16 +1,9 @@
-using CampusLearn.Bootstrap;
-using CampusLearn.Services.Domain.Admin;
-using CampusLearn.Services.Domain.Modules;
-using CampusLearn.Services.Domain.Quizzes;
+using CampusLearn.DataLayer.Constants;
+using CampusLearn.Services.Domain.Authorization;
+
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
-
-#region -- custom configurations --
-
-builder.Services.Configure<ScheduleSetting>(builder.Configuration.GetSection("defaultSchedule"));
-builder.Services.Configure<SMTPSettings>(builder.Configuration.GetSection("smtp"));
-
-#endregion -- custom configurations --
 
 #region -- cors configuration --
 
@@ -28,6 +21,13 @@ builder.Services.AddCors(options =>
 
 #endregion -- cors configuration --
 
+#region -- custom configurations --
+
+builder.Services.Configure<ScheduleSetting>(builder.Configuration.GetSection("defaultSchedule"));
+builder.Services.Configure<SMTPSettings>(builder.Configuration.GetSection("smtp"));
+
+#endregion -- custom configurations --
+
 #region -- db context --
 
 builder.Services.AddSingleton<CampusLearnDbContext>();
@@ -44,6 +44,7 @@ builder.Services.AddSingleton<IQuizRepository, QuizRepository>();
 builder.Services.AddSingleton<IChatRepository, ChatRepository>();
 builder.Services.AddSingleton<IAdminRepository, AdminRepository>();
 builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
+builder.Services.AddSingleton<ISubscriptionRepository, SubscriptionRepository>();
 
 #endregion -- repositories --
 
@@ -59,9 +60,11 @@ builder.Services.AddSingleton<IQuizService, QuizService>();
 builder.Services.AddSingleton<IChatService, ChatService>();
 builder.Services.AddSingleton<IAdminService, AdminService>();
 builder.Services.AddSingleton<IModuleService, ModuleService>();
+builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
 
 #endregion -- services --
 
+builder.Services.AddSingleton<IAuthorizationHandler, HierarchicalRoleHandler>();
 builder.Services.AddHostedService<PersonalHostedService>();
 builder.Services.AddControllers();
 
@@ -87,7 +90,21 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthorizationRoles.Learner, policy =>
+        policy.Requirements.Add(new HierarchicalRoleRequirement(UserRoles.Learner)));
+
+    options.AddPolicy(AuthorizationRoles.Tutor.ToString(), policy =>
+        policy.Requirements.Add(new HierarchicalRoleRequirement(UserRoles.Tutor)));
+
+    options.AddPolicy(AuthorizationRoles.Lecturer.ToString(), policy =>
+        policy.Requirements.Add(new HierarchicalRoleRequirement(UserRoles.Lecturer)));
+
+    options.AddPolicy(AuthorizationRoles.Administrator.ToString(), policy =>
+        policy.Requirements.Add(new HierarchicalRoleRequirement(UserRoles.Administrator)));
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
@@ -161,6 +178,15 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 var app = builder.Build();
+
+// Serve files from "Uploads" directory
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(app.Configuration["FileUploadPath"].ToString())),
+        //Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/files"
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

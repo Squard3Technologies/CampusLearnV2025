@@ -7,4 +7,6 @@ public interface INotificationRepository
     Task<GenericDbResponseViewModel> GetAllPendingNotificationAsync(NotificationTypes notificationType, int batchSize = 100);
 
     Task UpdateNotificationStatusAsync(NotificationViewModel model, int statusCode, string statusMessage);
+
+    Task<string> GetEmailTemplate(NotificationContentTypes notificationContentType);
 }

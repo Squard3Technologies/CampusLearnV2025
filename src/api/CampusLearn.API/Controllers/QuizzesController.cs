@@ -1,5 +1,5 @@
-﻿using CampusLearn.DataModel.Models.Quizzes;
-using CampusLearn.Services.Domain.Quizzes;
+﻿using CampusLearn.DataLayer.Constants;
+using CampusLearn.DataModel.Models.Quizzes;
 
 namespace CampusLearn.API.Controllers;
 
@@ -24,7 +24,8 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet("topic/{topicId}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetQuizzesByTopic([FromQuery] Guid topicId, CancellationToken token)
     {
         if (topicId == Guid.Empty)
@@ -35,7 +36,8 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet("{id}/details")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(QuizDetailViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetQuizDetails(Guid id, CancellationToken token)
     {
         if (id == Guid.Empty)
@@ -45,8 +47,10 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateQuiz([FromBody] CreateQuizRequestModel model, CancellationToken token)
     {
         var userIdentifier = User.GetUserIdentifier();
@@ -57,8 +61,9 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateQuiz(Guid id, [FromBody] CreateQuizRequestModel model, CancellationToken token)
     {
         if (id == Guid.Empty)
@@ -72,8 +77,10 @@ public class QuizzesController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("{id}/questions")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateQuizQuestion(Guid id, [FromBody] CreateQuizQuestionRequestModel model, CancellationToken token)
     {
         if (id == Guid.Empty)
@@ -87,8 +94,9 @@ public class QuizzesController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}/questions/{questionId}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateQuizQuestion(Guid id, Guid questionId, [FromBody] CreateQuizQuestionRequestModel model, CancellationToken token)
     {
         if (id == Guid.Empty)
@@ -106,7 +114,8 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet("active")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetActiveQuizzes(CancellationToken token)
     {
         var userIdentifier = User.GetUserIdentifier();
@@ -118,7 +127,8 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpPost("{id}/attempt")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateQuizAttempt(Guid id, [FromBody] CreateQuizAttemptRequestModel model, CancellationToken token)
     {
         if (id == Guid.Empty)
@@ -133,7 +143,8 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet("attempt-history")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(List<QuizHistoryViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetQuizzesAttemptHistory(CancellationToken token)
     {
         var userIdentifier = User.GetUserIdentifier();
@@ -145,7 +156,8 @@ public class QuizzesController : ControllerBase
     }
 
     [HttpGet("attempt-history/{id}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(List<QuizAttemptViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetQuizAttemptHistory(Guid id, CancellationToken token)
     {
         if (id == Guid.Empty)

@@ -1,9 +1,9 @@
 ﻿namespace CampusLearn.API.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
+[Authorize]
 public class NotificationsController : ControllerBase
 {
     private readonly ILogger<NotificationsController> _logger;
@@ -16,18 +16,18 @@ public class NotificationsController : ControllerBase
     }
 
     [HttpPost("sms")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> SendSMSMessageAsync(SendMessageRequest messageRequest)
+    [ProducesResponseType(typeof(GenericDbResponseViewModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> SendSMSMessageAsync(SendMessageRequest messageRequest, CancellationToken token)
     {
-        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS, NotificationContentTypes.None);
+        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.SMS, NotificationContentTypes.None, token);
         return Ok(response);
     }
 
     [HttpPost("email")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> SendEmailMessageAsync(SendMessageRequest messageRequest)
+    [ProducesResponseType(typeof(GenericDbResponseViewModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> SendEmailMessageAsync(SendMessageRequest messageRequest, CancellationToken token)
     {
-        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email, NotificationContentTypes.None);
+        var response = await _notificationService.SendMessageAsync(model: messageRequest, NotificationTypes.Email, NotificationContentTypes.None, token);
         return Ok(response);
     }
 }

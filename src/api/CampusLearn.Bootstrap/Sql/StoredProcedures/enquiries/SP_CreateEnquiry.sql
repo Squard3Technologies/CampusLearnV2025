@@ -56,4 +56,4 @@ BEGIN
     END CATCH
 
     SELECT @Status AS [Status], @StatusCode AS [StatusCode], @StatusMessage AS [StatusMessage]
-END;
+END

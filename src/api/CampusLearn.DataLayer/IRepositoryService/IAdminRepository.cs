@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CampusLearn.DataLayer.IRepositoryService;
+﻿namespace CampusLearn.DataLayer.IRepositoryService;
 
 public interface IAdminRepository
 {
@@ -13,4 +7,5 @@ public interface IAdminRepository
     Task<GenericDbResponseViewModel> ChangeUserAccountStatusAsync(Guid userId, Guid accountStatusId);
 
     Task<GenericDbResponseViewModel> GetUsersAsync();
+    Task<GenericDbResponseViewModel> UpdateUserAsync(UserViewModel model);
 }
