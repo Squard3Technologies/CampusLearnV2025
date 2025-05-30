@@ -1,13 +1,15 @@
 <div class="topic-container">
   <!-- Breadcrumb Navigation -->
-  <div class="breadcrumb-container">    <nav aria-label="breadcrumb">
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <a [routerLink]="['/modules', moduleId]" class="breadcrumb-link">{{ moduleName || 'Module' }}</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">Topic</li>
       </ol>
-    </nav>  </div>
+    </nav>
+  </div>
 
   <!-- Main Container for Sidebar and Content -->
   <div class="main-container">
@@ -19,6 +21,7 @@
         <li class="tab">Materials</li>
         <li class="tab">Assignments</li>
         <li class="tab">Discussion</li>
+        <li class="tab">Progress</li>
       </ul>
     </div>
 

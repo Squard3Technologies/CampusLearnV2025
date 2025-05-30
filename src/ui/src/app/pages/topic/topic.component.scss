@@ -106,3 +106,15 @@
     line-height: 1.6;
   }
 }
+
+// Responsive design
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: auto;
+    margin: 1rem;
+  }
+}
