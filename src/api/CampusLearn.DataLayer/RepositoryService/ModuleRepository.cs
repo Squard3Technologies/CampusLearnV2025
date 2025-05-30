@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Reflection;
 using CampusLearn.DataModel.Models.Topic;
 
 namespace CampusLearn.DataLayer.RepositoryService;
@@ -295,6 +296,7 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
+
     #region -- topic section --
 
     public async Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module)
@@ -398,4 +400,227 @@ public class ModuleRepository : IModuleRepository
     }
 
     #endregion -- topic section --
+
+
+
+    #region -- learing material section --
+
+    public async Task<GenericDbResponseViewModel> AddLearningMaterialAsync(LearningMaterialViewModel model)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_AddLearningMaterial";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("id", model.Id, DbType.Guid);
+                        parameters.Add("uploadedByUserId", model.UserId, DbType.Guid);
+                        parameters.Add("topicId", model.TopicId, DbType.Guid);
+                        parameters.Add("fileType", model.FileType, DbType.String);
+                        parameters.Add("filePath", model.FilePath, DbType.String);
+                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetUserLearningMaterialAsync(Guid userId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetModuleTopics";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("userId", userId, DbType.Guid);
+                        var materials = await db.QueryAsync<LearningMaterialViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+
+                        if (materials?.Any() == true)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = materials.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "There are no learning material for the user found on the system";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetUserTopicLearningMaterialAsync(Guid userId, Guid topicId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetModuleTopics";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("userId", userId, DbType.Guid);
+                        parameters.Add("topicId", topicId, DbType.Guid);
+                        var materials = await db.QueryAsync<LearningMaterialViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+
+                        if (materials?.Any() == true)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = materials.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "There are no topics for this module found on the system";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetTopicLearningMaterialAsync(Guid topicId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetModuleTopics";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("topicId", topicId, DbType.Guid);
+                        var materials = await db.QueryAsync<LearningMaterialViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+
+                        if (materials?.Any() == true)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = materials.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "There are no topics for this module found on the system";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+    #endregion
+
+
+
 }

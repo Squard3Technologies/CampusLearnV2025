@@ -1,5 +1,10 @@
 ﻿using CampusLearn.DataModel.Models.Modules;
 using CampusLearn.DataModel.Models.Topic;
+using CampusLearn.DataModel.ViewModels;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Net;
 
 namespace CampusLearn.Services.Domain.Modules;
 
@@ -130,4 +135,49 @@ public class ModuleService : IModuleService
         apiResponse.Body = (dbResponse.Body != null) ? (List<TopicViewModel>)dbResponse.Body : null;
         return apiResponse;
     }
+
+
+
+
+    #region -- learing material section --
+
+    public async Task<GenericAPIResponse<string>> AddLearningMaterialAsync(LearningMaterialViewModel model)
+    {
+        GenericAPIResponse<string> apiResponse = new GenericAPIResponse<string>();
+        var dbResponse = await moduleRepository.AddLearningMaterialAsync(model);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        apiResponse.Body = (dbResponse.Status) ? model.FilePath : "";
+        return apiResponse;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetUserLearningMaterialAsync(Guid userId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        
+        return response;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetUserTopicLearningMaterialAsync(Guid userId, Guid topicId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        
+        return response;
+    }
+
+
+    public async Task<GenericDbResponseViewModel> GetTopicLearningMaterialAsync(Guid topicId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        
+        return response;
+    }
+
+    #endregion -- topic section --
+
+
 }
