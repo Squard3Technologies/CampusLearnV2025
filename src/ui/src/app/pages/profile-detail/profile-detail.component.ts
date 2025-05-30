@@ -13,18 +13,14 @@ import { RouterModule } from '@angular/router';
 export class ProfileDetailComponent {
 
   constructor(private router: Router) {}
-
   // Navigation methods for sidebar tabs
-  navigateToTopicSections() {
-    this.router.navigate(['/topic-sections']);
-  }
 
   navigateToTutorSubscription() {
-    this.router.navigate(['/tutor-subscription']);
+    this.router.navigate(['/profile/tutors']);
   }
 
   navigateToTopicSubscription() {
-    this.router.navigate(['/topic-subscription']);
+    this.router.navigate(['/profile/topics']);
   }
 
   navigateToChangePassword() {

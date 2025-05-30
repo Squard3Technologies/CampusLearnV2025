@@ -1,88 +1,179 @@
-<p>profile-tutor-subscriptions works!</p>
+<div class="tutor-subscriptions-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/profile-detail']" class="breadcrumb-link">My Profile</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Tutor Subscription</li>
+      </ol>
+    </nav>
+  </div>
 
-<!-- <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exported Figma Design</title>
-  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>My Details</h3>
+      <ul class="tabs">
+        <li class="tab clickable" (click)="navigateToProfile()">My Profile</li>
+        <li class="tab active">Tutor Subscription</li>
+        <li class="tab clickable" (click)="navigateToTopicSubscription()">Topic Subscription</li>
+        <li class="tab clickable" (click)="navigateToChangePassword()">Change Password</li>
+        <li class="tab clickable logout" (click)="logout()">Logout</li>
+      </ul>
+    </div>
 
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="node-1">
-<div class="node-2">
-<div class="group-3">
-<img src="images/vector-4.svg" class="vector-4" alt="vector" />
-<img src="images/vector-5.svg" class="vector-5" alt="vector" />
-</div>
-</div>
-<div class="footers-6">
-<p class="text-7"><span class="text-rgb-255-252-252">Terms and conditions of use.    Privacy statements.           2025 Campus Learn. All rights reserved.
-</span></p>
-<div class="mail-8">
-<img src="images/icon-9.svg" class="icon-9" alt="icon" />
-</div>
-<img src="images/image-5-10.png" class="image-5-10" alt="image-5" />
-<div class="location_on-11">
-<img src="images/icon-12.svg" class="icon-12" alt="icon" />
-</div>
-<p class="text-13"><span class="text-white">Contact us:</span></p>
-<p class="text-14"><span class="text-white"> Enquiry&#64;BelgiumCampus.co.za.   </span></p>
-<p class="text-15"><span class="text-white">+27 012 345 6789.</span></p>
-<p class="text-16"><span class="text-white">123 That Road, Pretoria north, Gauteng.</span></p>
-<div class="node-17">
-<div class="group-18">
-<img src="images/vector-19.svg" class="vector-19" alt="vector" />
-<img src="images/vector-20.svg" class="vector-20" alt="vector" />
-</div>
-</div>
-</div>
-<div class="node-21">
-<div class="group-22">
-<img src="images/vector-23.svg" class="vector-23" alt="vector" />
-<img src="images/vector-24.svg" class="vector-24" alt="vector" />
-</div>
-</div>
-<div class="header-variant7-25">
-<div class="rectangle-71-26"></div>
-<p class="text-27"><span class="text-rgb-255-248-248">Campus Learn</span></p>
-<p class="text-28"><span class="text-rgb-152-147-147">Home  </span><span class="text-rgb-255-248-248">Modules  </span><span class="text-rgb-152-147-147">Chat                                 Quizzes  Admin  </span></p>
-<img src="images/graduation-1-29.png" class="graduation-1-29" alt="graduation-1" />
-<div class="arrow_drop_down-30">
-</div>
-</div>
-<p class="text-32"><span class="text-black">My Subscribed Topics</span></p>
-<div class="buttons-variant14-33">
-<div class="rectangle-76-34">
-<div class="rectangle-5-35"></div>
-</div>
-<p class="header-1"><span class="text-white">My Profile</span></p>
-</div>
-<div class="buttons-variant14-37">
-<div class="rectangle-76-38">
-<div class="rectangle-5-39"></div>
-</div>
-<p class="header-1"><span class="text-white">Logout</span></p>
-</div>
-<div class="rectangle-123-41"></div>
-<p class="text-42"><span class="text-black">Topic Sections</span></p>
-<p class="text-43"><span class="text-black">My Details</span></p>
-<p class="text-44"><span class="text-black">Tutor Subscription</span></p>
-<p class="text-45"><span class="text-black">Topic Subscription</span></p>
-<p class="text-46"><span class="text-black">Change Password</span></p>
-<div class="rounded-rectangle-47"></div>
-<img src="images/image-9-48.png" class="image-9-48" alt="image-9" />
-<p class="text-49"><span class="text-black">Search</span></p>
-<div class="rectangle-123-50"></div>
-<p class="text-51"><span class="text-black">Previous  </span></p>
-<p class="text-52"><span class="text-black">Next</span></p>
-<p class="text-53"><span class="text-rgb-4-4-4">1</span></p>
-<p class="text-54"><span class="text-black">2</span></p>
-<p class="text-55"><span class="text-black">3</span></p>
-<div class="frame-10-56"></div>
-</div>
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header-section">
+        <h2>My Tutor Subscriptions</h2>
+        <div class="action-buttons">
+          <button class="search-btn" (click)="toggleSearch()">
+            <i class="search-icon">🔍</i> Search
+          </button>
+          <button class="find-tutor-btn" (click)="findTutors()">
+            <i class="add-icon">+</i> Find Tutors
+          </button>
+        </div>
+      </div>
 
-</body>
-</html> -->
+      <!-- Search Section -->
+      <div class="search-section" [class.expanded]="showSearch">
+        <div class="search-input-container">
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search tutors or subjects..." 
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+          >
+        </div>
+      </div>
+
+      <!-- Subscriptions Content -->
+      <div class="subscriptions-content">
+        <div class="subscriptions-grid" *ngIf="filteredSubscriptions.length > 0; else noSubscriptions">
+          <div class="subscription-card" *ngFor="let subscription of paginatedSubscriptions">
+            <div class="card-header">
+              <div class="tutor-info">
+                <div class="tutor-avatar">
+                  <img [src]="subscription.tutorAvatar" [alt]="subscription.tutorName" class="avatar-img">
+                </div>
+                <div class="tutor-details">
+                  <h4>{{ subscription.tutorName }}</h4>
+                  <p class="subject">{{ subscription.subject }}</p>
+                </div>
+              </div>
+              <span class="status-badge" [class]="'status-' + subscription.status.toLowerCase()">
+                {{ subscription.status }}
+              </span>
+            </div>
+            <div class="card-body">
+              <div class="subscription-details">
+                <div class="detail-item">
+                  <strong>Qualification:</strong> {{ subscription.qualification }}
+                </div>
+                <div class="detail-item">
+                  <strong>Experience:</strong> {{ subscription.experience }}
+                </div>
+                <div class="detail-item">
+                  <strong>Rate:</strong> R{{ subscription.hourlyRate }}/hour
+                </div>
+                <div class="detail-item">
+                  <strong>Sessions:</strong> {{ subscription.totalSessions }} completed
+                </div>
+                <div class="detail-item">
+                  <strong>Next Session:</strong> {{ subscription.nextSession | date:'medium' }}
+                </div>
+                <div class="detail-item">
+                  <strong>Rating:</strong> 
+                  <div class="rating">
+                    <span class="stars">{{ getStars(subscription.rating) }}</span>
+                    <span class="rating-value">({{ subscription.rating }}/5)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button 
+                class="action-btn view-btn" 
+                (click)="viewTutorProfile(subscription.tutorId)"
+              >
+                View Profile
+              </button>
+              <button 
+                class="action-btn schedule-btn" 
+                (click)="scheduleSession(subscription.id)"
+                *ngIf="subscription.status === 'Active'"
+              >
+                Schedule Session
+              </button>
+              <button
+                class="action-btn unsubscribe-btn" 
+                (click)="unsubscribe(subscription.id)"
+                *ngIf="subscription.status === 'Active'"
+              >
+                Unsubscribe
+              </button>
+              <button
+                class="action-btn resubscribe-btn" 
+                (click)="resubscribe(subscription.id)"
+                *ngIf="subscription.status === 'Expired' || subscription.status === 'Cancelled'"
+              >
+                Resubscribe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noSubscriptions>
+          <div class="no-subscriptions">
+            <div class="empty-state">
+              <div class="empty-icon">👨‍🏫</div>
+              <h3>No Tutor Subscriptions</h3>
+              <p>You haven't subscribed to any tutors yet. Find qualified tutors to help with your studies!</p>
+              <button class="browse-btn" (click)="findTutors()">Find Tutors</button>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Pagination -->
+        <div class="pagination-container" *ngIf="filteredSubscriptions.length > itemsPerPage">
+          <div class="pagination">
+            <button 
+              class="page-btn prev-btn" 
+              (click)="previousPage()" 
+              [disabled]="currentPage === 1"
+            >
+              Previous
+            </button>
+            
+            <div class="page-numbers">
+              <button 
+                class="page-btn" 
+                *ngFor="let page of getPageNumbers()" 
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            </div>
+            
+            <button 
+              class="page-btn next-btn" 
+              (click)="nextPage()" 
+              [disabled]="currentPage === totalPages"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
