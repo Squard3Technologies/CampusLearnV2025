@@ -1,4 +1,6 @@
-﻿namespace CampusLearn.API.Controllers;
+﻿using CampusLearn.DataModel.Models.LearningMaterial;
+
+namespace CampusLearn.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -8,14 +10,21 @@ public class LearningMaterialsController : ControllerBase
     #region -- protected properties --
 
     protected readonly ILogger<UserController> logger;
+    protected readonly IModuleService moduleService;
+    protected readonly IConfiguration configuration;
+    protected readonly MaterialStorageManager storageManager = new MaterialStorageManager();
 
     #endregion -- protected properties --
 
-    public LearningMaterialsController(ILogger<UserController> logger)
+    public LearningMaterialsController(ILogger<UserController> logger, IModuleService moduleService, IConfiguration configuration)
     {
         this.logger = logger;
+        this.moduleService = moduleService;
+        this.configuration = configuration;
     }
 
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("topic/{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetLearningMaterialsByTopic(Guid id)
@@ -23,32 +32,42 @@ public class LearningMaterialsController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("topic/{id}")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateLearningMaterial(Guid id, IFormFile file)
+
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("topic/uploads")]
+    public async Task<IActionResult> UploadLearningMaterial(AddLearningMaterialRequest request)
     {
         var authUser = User.GetUserIdentifier();
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-        if (file == null || file.Length == 0)
+        if (request.FileData == null || request.FileData.Length == 0)
             return BadRequest("No file uploaded.");
 
-        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "API", "Uploads");
+        var filePath = await storageManager.UploadLearningMaterialAsync(configuration, baseUrl, request);
 
-        if (!Directory.Exists(uploadPath))
-            Directory.CreateDirectory(uploadPath);
-
-        var filePath = Path.Combine(uploadPath, file.FileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            await file.CopyToAsync(stream);
-        }
+        if(string.IsNullOrEmpty(filePath))
+            return BadRequest("Error saving file.");
 
         //save the details to the database.
+        var materialViewModel = new LearningMaterialViewModel()
+        {
+            Id = Guid.NewGuid(),
+            UserId = authUser.Value,
+            TopicId = request.TopicId,
+            FileType = request.FileType,
+            FilePath = filePath,
+            UploadedDate = DateTime.UtcNow
+        };
 
-        return Ok(new { filePath });
+        var apiResponse = await moduleService.AddLearningMaterialAsync(materialViewModel);
+
+        return Ok(apiResponse);
     }
 
+
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("{id}")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> RemoveLearningMaterial(Guid id)
@@ -56,6 +75,8 @@ public class LearningMaterialsController : ControllerBase
         return Ok();
     }
 
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{id}/download")]
     [MapToApiVersion(1)]
     public async Task<IActionResult> GetLearningMaterial(Guid id)

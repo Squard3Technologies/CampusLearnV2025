@@ -13,3 +13,7 @@ public class AddLearningMaterialRequest
     public string FileType { get; set; }
     public IFormFile FileData { get; set; }
 }
+
+
+
+

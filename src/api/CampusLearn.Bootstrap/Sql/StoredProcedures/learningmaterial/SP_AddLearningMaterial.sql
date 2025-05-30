@@ -2,7 +2,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_AddLearningMaterial
 (
     @id UNIQUEIDENTIFIER,
     @uploadedByUserId UNIQUEIDENTIFIER,
-    @TopicId UNIQUEIDENTIFIER,
+    @topicId UNIQUEIDENTIFIER,
     @fileType VARCHAR(50),
     @filePath VARCHAR(MAX)
 )
@@ -15,13 +15,13 @@ BEGIN
 			SET @id = NEWID()
 		END
 		
-		IF(EXISTS(SELECT * FROM dbo.[User] M WITH(NOLOCK) WHERE M.Id = @uploadedByUserId))
+		IF(NOT EXISTS(SELECT * FROM dbo.[User] M WITH(NOLOCK) WHERE M.Id = @uploadedByUserId))
 		BEGIN
 			SET @Status = 0
 			SET @StatusCode = 404
 			SET @StatusMessage = 'A user with specified Id does not exists in the system.'
 		END
-		ELSE IF(EXISTS(SELECT * FROM dbo.[Topic] M WITH(NOLOCK) WHERE M.Id = @TopicId))
+		ELSE IF(NOT EXISTS(SELECT * FROM dbo.[Topic] M WITH(NOLOCK) WHERE M.Id = @TopicId))
 		BEGIN
 			SET @Status = 0
 			SET @StatusCode = 404

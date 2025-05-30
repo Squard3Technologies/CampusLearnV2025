@@ -20,4 +20,10 @@ public interface IModuleService
     Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module, CancellationToken token);
 
     Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId);
+
+    #region -- learing material section --
+    Task<GenericAPIResponse<string>> AddLearningMaterialAsync(LearningMaterialViewModel model);
+
+    #endregion
+
 }

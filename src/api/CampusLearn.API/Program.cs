@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 var builder = WebApplication.CreateBuilder(args);
 
 #region -- cors configuration --
@@ -158,6 +160,15 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 var app = builder.Build();
+
+// Serve files from "Uploads" directory
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(app.Configuration["FileUploadPath"].ToString())),
+        //Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/files"
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

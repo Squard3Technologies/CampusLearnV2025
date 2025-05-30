@@ -9,46 +9,24 @@ namespace CampusLearn.Services.Domain.Utils;
 
 public class MaterialStorageManager
 {
-    protected string basePath { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "material");
-
-
-
-    
-    public async Task<string> UploadLearningMaterialAsync(AddLearningMaterialRequest request)
+    public async Task<string> UploadLearningMaterialAsync(IConfiguration configuration, string baseUrl, AddLearningMaterialRequest request)
     {
         string returnStr = string.Empty;
-        var topicDir = Path.Combine(basePath, request.TopicId.ToString());
-        if(!Directory.Exists(topicDir))
+        var uploadPath = Path.Combine(configuration["FileUploadPath"].ToString());
+        if (!Directory.Exists(uploadPath))
+            Directory.CreateDirectory(uploadPath);
+
+        var fileName = $"{Guid.NewGuid().ToString().Replace("-", "").ToUpper()}{Path.GetExtension(request.FileData.FileName)}";
+        var filePath = Path.Combine(uploadPath, fileName);
+        var dbFilePath = $"{baseUrl}/files/{fileName}";
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            Directory.CreateDirectory(topicDir);
+            await request.FileData.CopyToAsync(stream);
         }
 
-        var userDir = Path.Combine(topicDir, request.UploadedByUserId.ToString());
-        if (!Directory.Exists(userDir))
-        {
-            Directory.CreateDirectory(userDir);
-        }
-        var fileExtension = ".pdf";
-        if(request.FileType.Equals("pdf", comparisonType: StringComparison.OrdinalIgnoreCase))
-        {
-            fileExtension = ".pdf";
-        }
-        else if (request.FileType.Equals("docx", comparisonType: StringComparison.OrdinalIgnoreCase))
-        {
-            fileExtension = ".docx";
-        }
-        else if (request.FileType.Equals("mp4", comparisonType: StringComparison.OrdinalIgnoreCase))
-        {
-            fileExtension = ".mp4";
-        }
-        else
-        {
-            fileExtension = ".pdf";
-        }
-        var filePath = Path.Combine(userDir, $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}{fileExtension}");
-        var fileData = Convert.FromBase64String(request.FileData);
-        await File.WriteAllBytesAsync(filePath, fileData);
-        returnStr = filePath;
+        if(File.Exists(filePath))
+            returnStr = dbFilePath;
         return returnStr;
     }
 }
