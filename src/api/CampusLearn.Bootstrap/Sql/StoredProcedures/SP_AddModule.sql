@@ -40,5 +40,5 @@ BEGIN
 		SET @StatusCode = 500
 		SET @StatusMessage = ERROR_MESSAGE()
 	END CATCH
-	SELECT @Status AS [Status], @StatusCode AS [StatusCode], @StatusMessage AS [StatusMessage]
+	SELECT @Status AS [Status], @StatusCode AS [StatusCode], @StatusMessage AS [StatusMessage], @id AS [Body]
 END;

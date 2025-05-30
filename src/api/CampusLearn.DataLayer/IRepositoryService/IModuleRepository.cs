@@ -4,7 +4,7 @@ namespace CampusLearn.DataLayer.IRepositoryService;
 
 public interface IModuleRepository
 {
-    Task<GenericDbResponseViewModel> AddModuleAsync(ModuleViewModel module);
+    Task<GenericDbResponseViewModel<Guid?>> AddModuleAsync(ModuleViewModel module);
 
     Task<GenericDbResponseViewModel> UpdateModuleAsync(ModuleViewModel module);
 
@@ -21,9 +21,8 @@ public interface IModuleRepository
     Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId);
 
     #region -- learing material section --
+
     Task<GenericDbResponseViewModel> AddLearningMaterialAsync(LearningMaterialViewModel model);
 
-    #endregion
-
-
+    #endregion -- learing material section --
 }

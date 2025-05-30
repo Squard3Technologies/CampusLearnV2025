@@ -175,6 +175,18 @@
     <None Update="Sql\StoredProcedures\chats\SP_GetChatsByUser.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Sql\StoredProcedures\discussions\SP_CreateDiscussionComment.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\discussions\SP_CreateDiscussion.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\discussions\SP_GetDiscussionComments.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\StoredProcedures\discussions\SP_GetDiscussions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sql\StoredProcedures\enquiries\SP_CreateEnquiry.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
