@@ -1,1 +1,221 @@
-<p>quiz-attempt works!</p>
+<div class="quiz-attempt-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/quizzes']" class="breadcrumb-link">Quizzes</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ currentQuiz?.title || 'Quiz Attempt' }}</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar with Quiz Sections -->
+    <div class="sidebar">
+      <h3>Quiz Sections</h3>
+      <ul class="quiz-sections">
+        <li 
+          class="section" 
+          *ngFor="let section of quizSections; let i = index"
+          [class.active]="currentSectionIndex === i"
+          [class.completed]="section.isCompleted"
+          (click)="navigateToSection(i)"
+        >
+          <div class="section-info">
+            <span class="section-title">{{ section.title }}</span>
+            <span class="question-count">{{ section.questions.length }} questions</span>
+          </div>
+          <div class="section-status">
+            <span class="status-icon" *ngIf="section.isCompleted">✓</span>
+            <span class="status-icon current" *ngIf="currentSectionIndex === i && !section.isCompleted">▶</span>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Quiz Progress -->
+      <div class="quiz-progress">
+        <h4>Overall Progress</h4>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="overallProgress"></div>
+        </div>
+        <p class="progress-text">{{ answeredQuestions }}/{{ totalQuestions }} questions answered</p>
+        
+        <!-- Timer -->
+        <div class="timer" *ngIf="timeRemaining > 0">
+          <h4>Time Remaining</h4>
+          <div class="time-display" [class.warning]="timeRemaining < 300">
+            {{ formatTime(timeRemaining) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Actions -->
+      <div class="quiz-actions">
+        <button 
+          class="submit-btn" 
+          (click)="submitQuiz()" 
+          [disabled]="!canSubmitQuiz()"
+        >
+          Submit Quiz
+        </button>
+        <button class="save-draft-btn" (click)="saveDraft()">
+          Save as Draft
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content - Quiz Questions -->
+    <div class="main-content">
+      <div class="quiz-header">
+        <h2>{{ currentSection?.title }}</h2>        <div class="section-progress">
+          Section {{ currentSectionIndex + 1 }} of {{ quizSections.length }}
+          <span class="questions-progress">({{ currentQuestionIndex + 1 }}/{{ currentSection?.questions?.length || 0 }})</span>
+        </div>
+      </div>
+
+      <!-- Question Container -->
+      <div class="question-container" *ngIf="currentQuestion">
+        <div class="question-header">
+          <h3>Question {{ currentQuestionIndex + 1 }}</h3>
+          <div class="question-meta">
+            <span class="question-type">{{ getQuestionTypeLabel(currentQuestion.type) }}</span>
+            <span class="question-points">{{ currentQuestion.points }} points</span>
+          </div>
+        </div>
+
+        <div class="question-content">
+          <p class="question-text">{{ currentQuestion.question }}</p>
+          
+          <!-- True/False Question -->
+          <div class="answer-section" *ngIf="currentQuestion.type === 'trueFalse'">
+            <div class="true-false-options">
+              <label class="option-label">
+                <input 
+                  type="radio" 
+                  [name]="'question_' + currentQuestion.id" 
+                  value="true"
+                  [(ngModel)]="currentQuestion.userAnswer"
+                  (change)="updateAnswer(currentQuestion.id, 'true')"
+                >
+                <span class="option-text">True</span>
+              </label>
+              <label class="option-label">
+                <input 
+                  type="radio" 
+                  [name]="'question_' + currentQuestion.id" 
+                  value="false"
+                  [(ngModel)]="currentQuestion.userAnswer"
+                  (change)="updateAnswer(currentQuestion.id, 'false')"
+                >
+                <span class="option-text">False</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Short Text Question -->
+          <div class="answer-section" *ngIf="currentQuestion.type === 'shortText'">            <input 
+              type="text" 
+              class="short-text-input"
+              placeholder="Enter your answer..."
+              [(ngModel)]="currentQuestion.userAnswer"
+              (input)="updateAnswer(currentQuestion.id, currentQuestion.userAnswer || '')"
+              maxlength="200"
+            >
+            <div class="char-count">
+              {{ (currentQuestion.userAnswer || '').length }}/200 characters
+            </div>
+          </div>
+
+          <!-- Long Text Question -->
+          <div class="answer-section" *ngIf="currentQuestion.type === 'longText'">            <textarea 
+              class="long-text-input"
+              placeholder="Enter your detailed answer..."
+              [(ngModel)]="currentQuestion.userAnswer"
+              (input)="updateAnswer(currentQuestion.id, currentQuestion.userAnswer || '')"
+              rows="6"
+              maxlength="1000"
+            ></textarea>
+            <div class="char-count">
+              {{ (currentQuestion.userAnswer || '').length }}/1000 characters
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Navigation -->
+        <div class="question-navigation">
+          <button 
+            class="nav-btn prev-btn" 
+            (click)="previousQuestion()" 
+            [disabled]="currentQuestionIndex === 0"
+          >
+            <span class="nav-icon">←</span> Previous
+          </button>
+          
+          <div class="question-indicators">
+            <button 
+              class="question-indicator" 
+              *ngFor="let question of currentSection?.questions; let i = index"
+              [class.active]="i === currentQuestionIndex"
+              [class.answered]="question.userAnswer"
+              (click)="goToQuestion(i)"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+            <button 
+            class="nav-btn next-btn" 
+            (click)="nextQuestion()" 
+            [disabled]="currentQuestionIndex === (currentSection?.questions?.length || 0) - 1"
+          >
+            Next <span class="nav-icon">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Section Complete -->
+      <div class="section-complete" *ngIf="currentSection?.isCompleted">
+        <div class="complete-message">
+          <h3>Section Complete!</h3>
+          <p>You have answered all questions in this section.</p>
+          <div class="section-actions">
+            <button 
+              class="review-btn" 
+              (click)="reviewSection()"
+            >
+              Review Answers
+            </button>
+            <button 
+              class="next-section-btn" 
+              (click)="nextSection()"
+              *ngIf="currentSectionIndex < quizSections.length - 1"
+            >
+              Next Section
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Submission Modal -->
+  <div class="modal-overlay" *ngIf="showSubmissionModal" (click)="closeSubmissionModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Submit Quiz</h3>
+      <p>Are you sure you want to submit your quiz? You cannot make changes after submission.</p>
+      <div class="submission-summary">
+        <p><strong>Questions Answered:</strong> {{ answeredQuestions }}/{{ totalQuestions }}</p>
+        <p><strong>Time Remaining:</strong> {{ formatTime(timeRemaining) }}</p>
+      </div>
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="closeSubmissionModal()">Cancel</button>
+        <button class="confirm-submit-btn" (click)="confirmSubmission()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+</div>

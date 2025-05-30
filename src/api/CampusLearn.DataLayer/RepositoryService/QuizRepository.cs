@@ -28,6 +28,7 @@ public class QuizRepository : IQuizRepository
             parameters.Add("TopicId", model.TopicId, DbType.Guid);
             parameters.Add("Duration", model.Duration, DbType.Time);
             parameters.Add("CreatedByUserId", userId, DbType.Guid);
+            parameters.Add("QuizId", null, DbType.Guid);
 
             var result = await db.QueryFirstAsync<GenericDbResponseViewModel<Guid?>>(
                 "dbo.SP_UpsertQuiz",

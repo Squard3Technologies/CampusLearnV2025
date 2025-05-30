@@ -18,29 +18,31 @@ public class DiscussionsController : ControllerBase
     }
 
     [HttpGet("topic/{id}")]
-    [MapToApiVersion(1)]
+    [ProducesResponseType(typeof(List<DiscussionViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetDiscussionsByTopic(Guid id)
     {
         return Ok();
     }
 
-    [HttpGet("topic/{id}/comments")]
-    [MapToApiVersion(1)]
+    [HttpGet("{id}/comments")]
+    [ProducesResponseType(typeof(List<DiscussionCommentViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetDiscussionComments(Guid id)
     {
         return Ok();
     }
 
     [HttpPost("topic/{id}")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> CreateDiscussion(Guid id)
+    [ProducesResponseType(typeof(Guid?), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateDiscussion(Guid id, [FromBody] CreateDiscussionRequestModel model)
     {
         return Ok();
     }
 
-    [HttpPost("topic/{id}/comment")]
-    [MapToApiVersion(1)]
-    public async Task<IActionResult> CreateComment(Guid id)
+    [HttpPost("{id}/comment")]
+    [ProducesResponseType(typeof(Guid?), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateComment(Guid id, [FromBody] CreateDiscussionCommentRequestModel model)
     {
         return Ok();
     }

@@ -79,7 +79,7 @@ namespace CampusLearn.API.Controllers
 
         [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("modules")]
-        [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GenericAPIResponse<Guid?>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddModuleAsync([FromBody] CreateModuleRequest request)
         {
             var apiResponse = await moduleService.AddModuleAsync(request);

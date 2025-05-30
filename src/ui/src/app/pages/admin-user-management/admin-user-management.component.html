@@ -1,1 +1,136 @@
-<p>admin-user-management works!</p>
+<div class="admin-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/admin']" class="breadcrumb-link">Admin</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">User Management</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Admin Sections</h3>
+      <ul class="tabs">
+        <li class="tab active">User Management</li>
+        <li class="tab clickable" (click)="navigateToPendingRegistrations()">Pending Registrations</li>
+        <li class="tab clickable" (click)="navigateToModuleManagement()">Module Management</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="content-header">
+        <h2>User Management</h2>
+        <p>Manage user accounts, roles, and permissions.</p>
+      </div>
+
+
+      <!-- Search and Filter Controls -->
+      <div class="controls-section">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search users..." [(ngModel)]="searchTerm" (input)="filterUsers()">
+        </div>
+        <div class="filter-controls">
+          <select [(ngModel)]="roleFilter" (change)="filterUsers()" class="filter-select">
+            <option value="">All Roles</option>
+            <option value="Student">Students</option>
+            <option value="Tutor">Tutors</option>
+            <option value="Admin">Admins</option>
+          </select>
+          <select [(ngModel)]="statusFilter" (change)="filterUsers()" class="filter-select">
+            <option value="">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Last Login</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers">
+              <td>
+                <div class="user-info">
+                  <div class="avatar">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <span>{{ user.name }}</span>
+                </div>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="role-badge" [ngClass]="getRoleClass(user.role)">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(user.status)">
+                  {{ user.status }}
+                </span>
+              </td>
+              <td>{{ user.lastLogin | date:'short' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn btn-sm btn-primary" (click)="editUser(user)" title="Edit User">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm" 
+                          [ngClass]="user.status === 'Active' ? 'btn-warning' : 'btn-success'"
+                          (click)="toggleUserStatus(user)" 
+                          [title]="user.status === 'Active' ? 'Deactivate User' : 'Activate User'">
+                    <i class="fas" [ngClass]="user.status === 'Active' ? 'fa-user-slash' : 'fa-user-check'"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteUser(user)" title="Delete User">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container" *ngIf="filteredUsers.length > 0">
+        <div class="pagination-info">
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to 
+          {{ Math.min(currentPage * pageSize, filteredUsers.length) }} of 
+          {{ filteredUsers.length }} users
+        </div>
+        <div class="pagination-controls">
+          <button class="btn btn-outline-primary" 
+                  [disabled]="currentPage === 1" 
+                  (click)="previousPage()">
+            Previous
+          </button>
+          <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-outline-primary" 
+                  [disabled]="currentPage === totalPages" 
+                  (click)="nextPage()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

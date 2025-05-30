@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Reflection;
 using CampusLearn.DataModel.Models.Topic;
 
 namespace CampusLearn.DataLayer.RepositoryService;
@@ -19,9 +18,9 @@ public class ModuleRepository : IModuleRepository
         this.database = database;
     }
 
-    public async Task<GenericDbResponseViewModel> AddModuleAsync(ModuleViewModel module)
+    public async Task<GenericDbResponseViewModel<Guid?>> AddModuleAsync(ModuleViewModel module)
     {
-        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        GenericDbResponseViewModel<Guid?> response = new GenericDbResponseViewModel<Guid?>();
         try
         {
             using (var db = database.CreateSqlConnection())
@@ -36,7 +35,7 @@ public class ModuleRepository : IModuleRepository
                         parameters.Add("id", module.Id, DbType.Guid);
                         parameters.Add("code", module.Code, DbType.String);
                         parameters.Add("name", module.Name, DbType.String);
-                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel>(sql: query,
+                        response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel<Guid?>>(sql: query,
                             param: parameters,
                             commandType: CommandType.StoredProcedure,
                             commandTimeout: 360,
@@ -296,7 +295,6 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-
     #region -- topic section --
 
     public async Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module)
@@ -401,8 +399,6 @@ public class ModuleRepository : IModuleRepository
 
     #endregion -- topic section --
 
-
-
     #region -- learing material section --
 
     public async Task<GenericDbResponseViewModel> AddLearningMaterialAsync(LearningMaterialViewModel model)
@@ -449,7 +445,6 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
-
 
     public async Task<GenericDbResponseViewModel> GetUserLearningMaterialAsync(Guid userId)
     {
@@ -505,7 +500,6 @@ public class ModuleRepository : IModuleRepository
         }
         return response;
     }
-
 
     public async Task<GenericDbResponseViewModel> GetUserTopicLearningMaterialAsync(Guid userId, Guid topicId)
     {
@@ -563,7 +557,6 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-
     public async Task<GenericDbResponseViewModel> GetTopicLearningMaterialAsync(Guid topicId)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
@@ -619,8 +612,5 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-    #endregion
-
-
-
+    #endregion -- learing material section --
 }

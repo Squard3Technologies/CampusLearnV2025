@@ -33,13 +33,13 @@ export class EnquiriesComponent {
   }          
   
   isViewModalOpen: boolean = false;
-selectedInquiry: any = {};
+selectedEnquiry: any = {};
 
 //view modal
 
 
 
-inquiries = [
+Enquiries = [
   {
     id: 1,
     title: 'Need help with assignment 1',
@@ -71,11 +71,11 @@ inquiries = [
     dateCreated: '2025-05-18'
   }
 ];
- //selectedInquiry: any = {};
+ //selectedEnquiry: any = {};
 
 
 openViewModal(inquiry: any) {
-  this.selectedInquiry = { ...inquiry };
+  this.selectedEnquiry = { ...inquiry };
   this.isViewModalOpen = true;
 }
 

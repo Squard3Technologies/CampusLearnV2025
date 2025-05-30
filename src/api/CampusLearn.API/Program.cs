@@ -45,6 +45,7 @@ builder.Services.AddSingleton<IChatRepository, ChatRepository>();
 builder.Services.AddSingleton<IAdminRepository, AdminRepository>();
 builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
 builder.Services.AddSingleton<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddSingleton<IDiscussionRepository, DiscussionRepository>();
 
 #endregion -- repositories --
 
@@ -61,6 +62,7 @@ builder.Services.AddSingleton<IChatService, ChatService>();
 builder.Services.AddSingleton<IAdminService, AdminService>();
 builder.Services.AddSingleton<IModuleService, ModuleService>();
 builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
+builder.Services.AddSingleton<IDiscussionService, DiscussionService>();
 
 #endregion -- services --
 
@@ -184,7 +186,7 @@ app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(app.Configuration["FileUploadPath"].ToString())),
-        //Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    //Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
     RequestPath = "/files"
 });
 

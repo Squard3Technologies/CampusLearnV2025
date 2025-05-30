@@ -1,1 +1,145 @@
-<p>profile-topic-subscriptions works!</p>
+<div class="topic-subscriptions-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/profile-detail']" class="breadcrumb-link">My Profile</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Topic Subscription</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>My Details</h3>
+      <ul class="tabs">
+        <li class="tab clickable" (click)="navigateToProfile()">My Profile</li>
+        <li class="tab clickable" (click)="navigateToTutorSubscription()">Tutor Subscription</li>
+        <li class="tab active">Topic Subscription</li>
+        <li class="tab clickable" (click)="navigateToChangePassword()">Change Password</li>
+        <li class="tab clickable logout" (click)="logout()">Logout</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header-section">
+        <h2>My Subscribed Topics</h2>
+        <div class="action-buttons">
+          <button class="search-btn" (click)="toggleSearch()">
+            <i class="search-icon">🔍</i> Search
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Section -->
+      <div class="search-section" [class.expanded]="showSearch">
+        <div class="search-input-container">
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search topics..." 
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+          >
+        </div>
+      </div>
+
+      <!-- Subscriptions Content -->
+      <div class="subscriptions-content">
+        <div class="subscriptions-grid" *ngIf="filteredSubscriptions.length > 0; else noSubscriptions">
+          <div class="subscription-card" *ngFor="let subscription of paginatedSubscriptions">
+            <div class="card-header">
+              <h4>{{ subscription.topicName }}</h4>
+              <span class="status-badge" [class]="'status-' + subscription.status.toLowerCase()">
+                {{ subscription.status }}
+              </span>
+            </div>
+            <div class="card-body">
+              <p class="description">{{ subscription.description }}</p>
+              <div class="subscription-details">
+                <div class="detail-item">
+                  <strong>Tutor:</strong> {{ subscription.tutorName }}
+                </div>
+                <div class="detail-item">
+                  <strong>Start Date:</strong> {{ subscription.startDate | date:'shortDate' }}
+                </div>
+                <div class="detail-item">
+                  <strong>Duration:</strong> {{ subscription.duration }}
+                </div>
+                <div class="detail-item">
+                  <strong>Price:</strong> R{{ subscription.price }}
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button 
+                class="action-btn view-btn" 
+                (click)="viewTopicDetails(subscription.id)"
+              >
+                View Details
+              </button>
+              <button 
+                class="action-btn unsubscribe-btn" 
+                (click)="unsubscribe(subscription.id)"
+                *ngIf="subscription.status === 'Active'"
+              >
+                Unsubscribe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noSubscriptions>
+          <div class="no-subscriptions">
+            <div class="empty-state">
+              <div class="empty-icon">📚</div>
+              <h3>No Topic Subscriptions</h3>
+              <p>You haven't subscribed to any topics yet. Browse available topics to get started!</p>
+              <button class="browse-btn" (click)="browseTopic()">Browse Topics</button>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Pagination -->
+        <div class="pagination-container" *ngIf="filteredSubscriptions.length > itemsPerPage">
+          <div class="pagination">
+            <button 
+              class="page-btn prev-btn" 
+              (click)="previousPage()" 
+              [disabled]="currentPage === 1"
+            >
+              Previous
+            </button>
+            
+            <div class="page-numbers">
+              <button 
+                class="page-btn" 
+                *ngFor="let page of getPageNumbers()" 
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            </div>
+            
+            <button 
+              class="page-btn next-btn" 
+              (click)="nextPage()" 
+              [disabled]="currentPage === totalPages"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

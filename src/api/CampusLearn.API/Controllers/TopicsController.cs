@@ -24,7 +24,7 @@ public class TopicsController : ControllerBase
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateTopicAsync([FromBody] CreateTopicRequest request, CancellationToken token)
     {

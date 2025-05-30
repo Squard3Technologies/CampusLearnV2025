@@ -107,12 +107,47 @@ public class NotificationService : INotificationService
         }
     }
 
-    public Task SendTopicQuizCreateAsync(Guid createdByUserId, Guid topicId, Guid quizId, NotificationTypes notificationType, CancellationToken token)
+    public Task SendTopicQuizCreateAsync(Guid createdByUserId, Guid quizId, NotificationTypes notificationType, CancellationToken token)
     {
         throw new NotImplementedException();
     }
 
-    public Task SendTopicQuizUpdatedAsync(Guid updatedByUserId, Guid topicId, Guid quizId, NotificationTypes notificationType, CancellationToken token)
+    public Task SendTopicQuizUpdatedAsync(Guid updatedByUserId, Guid quizId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendTopicDiscussionCreatedAsync(Guid createdByUserId, Guid discussionId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendTopicCommentCreatedAsync(Guid createdByUserId, Guid commentId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendTopicLearningMaterialUploadedAsync(Guid createdByUserId, Guid learningMaterialId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendTopicQuizAssignedAsync(Guid createdByUserId, Guid quizAttemptId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendEnquiryCreatedAsync(Guid createdByUserId, Guid enquiryId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendEnquiryResolvedAsync(Guid createdByUserId, Guid enquiryId, NotificationTypes notificationType, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendChatMessageCreatedAsync(Guid createdByUserId, Guid messageId, NotificationTypes notificationType, CancellationToken token)
     {
         throw new NotImplementedException();
     }
