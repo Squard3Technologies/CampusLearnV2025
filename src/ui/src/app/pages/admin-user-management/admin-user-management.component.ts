@@ -2,16 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { ApiService } from '../../services/api.service';
+import { UserService } from '../../services/user.service';
+import Swal from 'sweetalert2';
+import { SystemUser } from '../../models/systemuser.models';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: 'Student' | 'Tutor' | 'Admin';
-  status: 'Active' | 'Inactive';
-  lastLogin: Date;
-  createdDate: Date;
-}
+// interface User {
+//   id: number;
+//   name: string;
+//   email: string;
+//   role: 'Student' | 'Tutor' | 'Admin';
+//   status: 'Active' | 'Inactive';
+//   lastLogin: Date;
+//   createdDate: Date;
+// }
 
 @Component({
   selector: 'app-admin-user-management',
@@ -21,120 +25,115 @@ interface User {
   styleUrl: './admin-user-management.component.scss'
 })
 export class AdminUserManagementComponent implements OnInit {
-  users: User[] = [];
-  filteredUsers: User[] = [];
+  users: SystemUser[] = [];
+  filteredUsers: SystemUser[] = [];
   searchTerm: string = '';
-  roleFilter: string = '';
+  roleFilter: number = 0;
   statusFilter: string = '';
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private userService: UserService
+  ) { }
 
   ngOnInit(): void {
-    this.loadUsers();
     this.filterUsers();
+    this.loadUsers();
   }
 
   loadUsers(): void {
     // Mock user data
-    this.users = [
-      {
-        id: 1,
-        name: 'John Smith',
-        email: 'john.smith@university.edu',
-        role: 'Student',
-        status: 'Active',
-        lastLogin: new Date('2024-02-15T10:30:00'),
-        createdDate: new Date('2024-01-10')
+    var token = this.userService.getAuthToken() as string;
+    this.apiService.getAdminUsers(token).subscribe({
+      next: (response) => {
+        if (!response.status) {
+          Swal.fire({
+            icon: 'error',
+            iconColor: '#AD0151',
+            title: 'REGISTRAION ERROR',
+            text: response?.statusMessage || 'Retrieving admin users failed. Please try again.',
+            background: "#dc3545",
+            color: "#fafafa",
+            confirmButtonColor: '#AD0151',
+            confirmButtonText: 'Dismiss',
+            allowOutsideClick: false
+          });
+          return;
+        }
+
+        if (response.body == null) {
+          Swal.fire({
+            icon: 'error',
+            iconColor: '#AD0151',
+            title: 'REGISTRAION ERROR',
+            text: response?.statusMessage || 'Retrieving admin users failed. Please try again.',
+            background: "#dc3545",
+            color: "#fafafa",
+            confirmButtonColor: '#AD0151',
+            confirmButtonText: 'Dismiss',
+            allowOutsideClick: false
+          });
+          return;
+        }
+
+        debugger;
+        response.body.forEach(f => {
+          f.roleDescription = this.toSentenceCase(this.getRoleClass(f.role));
+          f.accountStatusDescription = this.toSentenceCase(f.accountStatusDescription)
+        });
+        this.users = response.body;
+
+        this.filterUsers();
       },
-      {
-        id: 2,
-        name: 'Dr. Sarah Johnson',
-        email: 'sarah.johnson@university.edu',
-        role: 'Tutor',
-        status: 'Active',
-        lastLogin: new Date('2024-02-14T16:45:00'),
-        createdDate: new Date('2023-09-01')
-      },
-      {
-        id: 3,
-        name: 'Michael Brown',
-        email: 'michael.brown@university.edu',
-        role: 'Student',
-        status: 'Inactive',
-        lastLogin: new Date('2024-01-20T09:15:00'),
-        createdDate: new Date('2024-01-05')
-      },
-      {
-        id: 4,
-        name: 'Admin User',
-        email: 'admin@university.edu',
-        role: 'Admin',
-        status: 'Active',
-        lastLogin: new Date('2024-02-15T08:00:00'),
-        createdDate: new Date('2023-08-01')
-      },
-      {
-        id: 5,
-        name: 'Emily Davis',
-        email: 'emily.davis@university.edu',
-        role: 'Student',
-        status: 'Active',
-        lastLogin: new Date('2024-02-13T14:20:00'),
-        createdDate: new Date('2024-01-15')
-      },
-      {
-        id: 6,
-        name: 'Prof. Robert Wilson',
-        email: 'robert.wilson@university.edu',
-        role: 'Tutor',
-        status: 'Active',
-        lastLogin: new Date('2024-02-12T11:30:00'),
-        createdDate: new Date('2023-09-15')
-      },
-      {
-        id: 7,
-        name: 'Jessica Martinez',
-        email: 'jessica.martinez@university.edu',
-        role: 'Student',
-        status: 'Active',
-        lastLogin: new Date('2024-02-11T13:45:00'),
-        createdDate: new Date('2024-01-20')
-      },
-      {
-        id: 8,
-        name: 'David Anderson',
-        email: 'david.anderson@university.edu',
-        role: 'Student',
-        status: 'Inactive',
-        lastLogin: new Date('2024-01-25T16:00:00'),
-        createdDate: new Date('2024-01-08')
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          iconColor: '#AD0151',
+          title: 'REGISTRAION ERROR',
+          text: error.error?.message || 'Retrieving admin users failed. Please try again.',
+          background: "#dc3545",
+          color: "#fafafa",
+          confirmButtonColor: '#AD0151',
+          confirmButtonText: 'Dismiss',
+          allowOutsideClick: false
+        });
       }
-    ];
+    });
   }
+
+
 
   filterUsers(): void {
     let filtered = this.users;
 
+    console.log(`selected role: ${this.roleFilter}`);
+    console.log(`select status: ${this.statusFilter}`);
+
     // Apply search filter
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(user => 
-        user.name.toLowerCase().includes(term) || 
-        user.email.toLowerCase().includes(term)
+      filtered = filtered.filter(user =>
+        user.firstName.toLowerCase().includes(term) ||
+        user.emailAddress.toLowerCase().includes(term)
       );
     }
 
     // Apply role filter
+    debugger;
     if (this.roleFilter) {
-      filtered = filtered.filter(user => user.role === this.roleFilter);
+      if (this.roleFilter !== 0) {
+        filtered = filtered.filter(user => user.role === this.roleFilter);
+      }
     }
 
     // Apply status filter
+    debugger;
     if (this.statusFilter) {
-      filtered = filtered.filter(user => user.status === this.statusFilter);
+      filtered = filtered.filter(user => user.accountStatusId.toLowerCase() === this.statusFilter.toLowerCase());
     }
 
     this.filteredUsers = filtered;
@@ -167,19 +166,47 @@ export class AdminUserManagementComponent implements OnInit {
     this.router.navigate(['/admin/modules']);
   }
 
-  editUser(user: User): void {
+  editUser(user: SystemUser): void {
     console.log('Editing user:', user);
     // Implement edit user functionality
   }
 
-  toggleUserStatus(user: User): void {
-    user.status = user.status === 'Active' ? 'Inactive' : 'Active';
-    console.log('Toggled user status:', user);
+  toggleUserStatus(user: SystemUser): void {
+    
+    var tempusers = this.users.filter(f => f.id !== user.id); 
+    var currentStatus = user.accountStatusDescription;
+    user.accountStatusDescription = currentStatus === 'Active' ? 'Inactive' : 'Active';
+    user.accountStatusId = currentStatus === 'Active' ? '2C1904BB-07F2-4A0E-8CB4-ECB768239D19' : 'B492BB30-B073-4059-A58B-B3F6E5BE4C95';
+    tempusers.push(user);
+    this.users = tempusers;
+    console.log('Toggled user status:', JSON.stringify(user));
+    console.log('users:', JSON.stringify(this.users));
     // Implement API call to update user status
   }
 
-  deleteUser(user: User): void {
-    if (confirm(`Are you sure you want to delete user ${user.name}?`)) {
+  toggleUserStatusExt(user: SystemUser, status:string): void {
+    
+    var tempusers = this.users.filter(f => f.id !== user.id); 
+    var currentStatus = user.accountStatusDescription;
+    user.accountStatusDescription = this.getStatusClass(status);
+    user.accountStatusId = status;
+    tempusers.push(user);
+    this.users = tempusers;
+    console.log('Toggled user status:', JSON.stringify(user));
+    console.log('users:', JSON.stringify(this.users));
+    // Implement API call to update user status
+    var token = this.userService.getAuthToken() as string;
+    this.apiService.changeUserAccountStatus(user.id, status, token).subscribe({
+      next: (response) => {
+
+      }
+    });
+
+
+  }
+
+  deleteUser(user: SystemUser): void {
+    if (confirm(`Are you sure you want to delete user ${user.firstName}?`)) {
       this.users = this.users.filter(u => u.id !== user.id);
       this.filterUsers();
       console.log('Deleted user:', user);
@@ -187,19 +214,23 @@ export class AdminUserManagementComponent implements OnInit {
     }
   }
 
-  getRoleClass(role: string): string {
-    const classes: { [key: string]: string } = {
-      'Student': 'role-student',
-      'Tutor': 'role-tutor',
-      'Admin': 'role-admin'
+  getRoleClass(role: number): string {
+    const classes: { [key: number]: string } = {
+      1: 'Administrator',
+      2: 'Lecturer',
+      3: 'Tutor',
+      4: 'Student'
     };
     return classes[role] || '';
   }
 
   getStatusClass(status: string): string {
     const classes: { [key: string]: string } = {
-      'Active': 'status-active',
-      'Inactive': 'status-inactive'
+      'B492BB30-B073-4059-A58B-B3F6E5BE4C95': 'Active',
+      '2C1904BB-07F2-4A0E-8CB4-ECB768239D19': 'Inactive',
+      '114F6BEE-6EF5-47CA-B2B5-113106C1E5B2': this.toSentenceCase('DELETED'),
+      'DF799A11-8237-4EEE-AC51-94FCEB369978': this.toSentenceCase('LOCKED'),
+      '285DE8D3-0DA3-4D50-A32D-3502010062E7': this.toSentenceCase('REJECTED'),
     };
     return classes[status] || '';
   }
@@ -210,15 +241,21 @@ export class AdminUserManagementComponent implements OnInit {
   }
 
   getActiveUsersCount(): number {
-    return this.users.filter(user => user.status === 'Active').length;
+    return this.users.filter(user => user.accountStatusDescription === 'Active').length;
   }
 
   getInactiveUsersCount(): number {
-    return this.users.filter(user => user.status === 'Inactive').length;
+    return this.users.filter(user => user.accountStatusDescription === 'Inactive').length;
   }
 
   getAdminUsersCount(): number {
-    return this.users.filter(user => user.role === 'Admin').length;
+    return this.users.filter(user => user.role === 1).length;
+  }
+
+  private toSentenceCase(str: string): string {
+    if (!str) return '';
+    str = str.toLowerCase();
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   // Add Math to component for template access

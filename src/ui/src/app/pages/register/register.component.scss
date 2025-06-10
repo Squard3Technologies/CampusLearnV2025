@@ -1,5 +1,29 @@
 // Basic styling for forgot password page to match login page
 
+:host {
+  display: flexbox;
+  height: 100vh;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.register-container {
+  height: 100%;
+  width: 100%;
+  padding: 15px; /* Prevents edge touching */
+  //box-shadow: 0 4px 6px rgba(193, 0, 0, 0.9);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 1500px; /* Prevents card from getting too wide */
+  max-height: 90vh; /* Prevents card from exceeding viewport height */
+  overflow: auto; /* Allows scrolling INSIDE card if needed */
+}
+
+
+
 .container {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background: white;

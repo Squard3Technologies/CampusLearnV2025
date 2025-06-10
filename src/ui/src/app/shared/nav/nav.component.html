@@ -1,7 +1,8 @@
-<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" style="position: fixed;top: 0px;width: 100%;">
+<nav class="navbar navbar-expand-lg bg-primary fixed-top" data-bs-theme="dark">
   <div class="container">
-    <a class="navbar-brand" routerLink="/">
-      <strong>Campus Learn</strong>
+    <a class="navbar-brand p-0" routerLink="/">
+      <!-- <strong>Campus Learn</strong> -->
+      <img src="assets/logo.png" class="rounded-circle " height="60"/>
     </a>
     <button class="navbar-toggler" type="button" (click)="toggleNavbar()" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -35,8 +36,8 @@
             Welcome, {{currentUser.name}}
           </a>
           <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
-            <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
-            <li><a class="dropdown-item" routerLink="/settings">Settings</a></li>
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/settings">Settings</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" (click)="logout(); toggleDropdown($event)" style="cursor: pointer;">Logout</a></li>
           </ul>
