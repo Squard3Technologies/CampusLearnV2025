@@ -105,12 +105,21 @@ export class ApiService {
   }
 
   // Enquiries
-  getEnquiries(options?: any) {
-    return this.httpClient.get(`${this.apiUrl}/enquiries`, options);
+  getEnquiries(token: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: "Basic" + btoa(token)
+      })
+    };
+    return this.httpClient.get(`${this.apiUrl}/enquiries`, httpOptions);
   }
 
-  createEnquiry(enquiryData: any, options?: any) {
-    return this.httpClient.post(`${this.apiUrl}/enquiries`, enquiryData, options);
+  createEnquiry(enquiryData: any, token: string) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.httpClient.post(`${this.apiUrl}/enquiries`, enquiryData, {headers});
   }
 
   getEnquiry(id: string) {
