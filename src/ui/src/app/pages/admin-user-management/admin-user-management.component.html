@@ -2,7 +2,8 @@
   <!-- Breadcrumb Navigation -->
   <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">        <li class="breadcrumb-item">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
           <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
         </li>
         <li class="breadcrumb-item">
@@ -40,17 +41,24 @@
           <input type="text" placeholder="Search users..." [(ngModel)]="searchTerm" (input)="filterUsers()">
         </div>
         <div class="filter-controls">
+
+
           <select [(ngModel)]="roleFilter" (change)="filterUsers()" class="filter-select">
-            <option value="">All Roles</option>
-            <option value="Student">Students</option>
-            <option value="Tutor">Tutors</option>
-            <option value="Admin">Admins</option>
+            <option [ngValue]="0">All Roles</option>
+            <option [ngValue]="1">Administrator</option>
+            <option [ngValue]="2">Lecturer</option>
+            <option [ngValue]="4">Student</option>
+            <option [ngValue]="3">Tutor</option>
           </select>
           <select [(ngModel)]="statusFilter" (change)="filterUsers()" class="filter-select">
             <option value="">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="B492BB30-B073-4059-A58B-B3F6E5BE4C95">ACTIVE</option>
+            <option value="2C1904BB-07F2-4A0E-8CB4-ECB768239D19">INACTIVE</option>
+            <option value="7DCF4027-85AA-4C08-92FF-F3A669DFF157">PENDING</option>
+            <option value="DF799A11-8237-4EEE-AC51-94FCEB369978">LOCKED</option>
+            <option value="114F6BEE-6EF5-47CA-B2B5-113106C1E5B2">DELETED</option>
           </select>
+
         </div>
       </div>
 
@@ -63,7 +71,7 @@
               <th>Email</th>
               <th>Role</th>
               <th>Status</th>
-              <th>Last Login</th>
+              <!-- <th>Last Login</th> -->
               <th>Actions</th>
             </tr>
           </thead>
@@ -74,33 +82,64 @@
                   <div class="avatar">
                     <i class="fas fa-user"></i>
                   </div>
-                  <span>{{ user.name }}</span>
+                  <span>{{ user.firstName }} {{ user.surname }}</span>
                 </div>
               </td>
-              <td>{{ user.email }}</td>
+              <td>{{ user.emailAddress }}</td>
               <td>
                 <span class="role-badge" [ngClass]="getRoleClass(user.role)">
-                  {{ user.role }}
+                  {{ user.roleDescription }}
                 </span>
               </td>
               <td>
-                <span class="status-badge" [ngClass]="getStatusClass(user.status)">
-                  {{ user.status }}
+                <span class="status-badge" [ngClass]="getStatusClass(user.accountStatusId)">
+                  <!-- {{ user.accountStatusDescription }} -->
+                  <!-- <button class="btn btn-sm"
+                    [ngClass]="user.accountStatusDescription === 'Active' ? 'btn-success' : 'btn-danger'"
+                    (click)="toggleUserStatus(user)"
+                    [title]="user.accountStatusDescription === 'Active' ? 'Deactivate User' : 'Activate User'">
+                    <span>{{ user.accountStatusDescription }}</span>
+                  </button> -->
+
+                  <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <button type="button" class="btn btn-sm w-100" 
+                    [ngClass]="user.accountStatusDescription === 'Active' ? 'btn-success' : 'btn-danger'"                    
+                    [disabled]="user.accountStatusDescription === 'Active'" (click)="toggleUserStatusExt(user, 'B492BB30-B073-4059-A58B-B3F6E5BE4C95')">
+                      <span [title]="user.accountStatusDescription === 'Active' ? 'account is active' : 'click to activate account'">{{user.accountStatusDescription}}</span>
+                    </button>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        [ngClass]="user.accountStatusDescription === 'Active' ? 'btn-success' : 'btn-danger'">
+                        <span></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                            (click)="toggleUserStatusExt(user, '2C1904BB-07F2-4A0E-8CB4-ECB768239D19')">DEACTIVATE</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                            (click)="toggleUserStatusExt(user, 'DF799A11-8237-4EEE-AC51-94FCEB369978')">LOCKED</a></li>
+                      </ul>
+                    </div>
+                  </div>
                 </span>
               </td>
-              <td>{{ user.lastLogin | date:'short' }}</td>
+              <!-- <td>
+                {{ user.lastLogin | date:'short' }}
+              </td> -->
               <td>
                 <div class="action-buttons">
                   <button class="btn btn-sm btn-primary" (click)="editUser(user)" title="Edit User">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="btn btn-sm" 
-                          [ngClass]="user.status === 'Active' ? 'btn-warning' : 'btn-success'"
-                          (click)="toggleUserStatus(user)" 
-                          [title]="user.status === 'Active' ? 'Deactivate User' : 'Activate User'">
-                    <i class="fas" [ngClass]="user.status === 'Active' ? 'fa-user-slash' : 'fa-user-check'"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" (click)="deleteUser(user)" title="Delete User">
+                  <!-- <button class="btn btn-sm"
+                    [ngClass]="user.accountStatusDescription === 'Active' ? 'btn-warning' : 'btn-success'"
+                    (click)="toggleUserStatus(user)"
+                    [title]="user.accountStatusDescription === 'Active' ? 'Deactivate User' : 'Activate User'">
+                    <i class="fas"
+                      [ngClass]="user.accountStatusDescription === 'Active' ? 'fa-user-slash' : 'fa-user-check'"></i>
+                  </button> -->
+                  <button class="btn btn-sm btn-danger" (click)="toggleUserStatusExt(user, '114F6BEE-6EF5-47CA-B2B5-113106C1E5B2')" title="Delete User">
                     <i class="fas fa-trash"></i>
                   </button>
                 </div>
@@ -113,20 +152,16 @@
       <!-- Pagination -->
       <div class="pagination-container" *ngIf="filteredUsers.length > 0">
         <div class="pagination-info">
-          Showing {{ (currentPage - 1) * pageSize + 1 }} to 
-          {{ Math.min(currentPage * pageSize, filteredUsers.length) }} of 
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to
+          {{ Math.min(currentPage * pageSize, filteredUsers.length) }} of
           {{ filteredUsers.length }} users
         </div>
         <div class="pagination-controls">
-          <button class="btn btn-outline-primary" 
-                  [disabled]="currentPage === 1" 
-                  (click)="previousPage()">
+          <button class="btn btn-outline-primary" [disabled]="currentPage === 1" (click)="previousPage()">
             Previous
           </button>
           <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button class="btn btn-outline-primary" 
-                  [disabled]="currentPage === totalPages" 
-                  (click)="nextPage()">
+          <button class="btn btn-outline-primary" [disabled]="currentPage === totalPages" (click)="nextPage()">
             Next
           </button>
         </div>

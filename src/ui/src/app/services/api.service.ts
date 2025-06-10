@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { GenericAPIResponse } from '../models/api.models';
+import { Observable } from 'rxjs';
+import { SystemUser } from '../models/systemuser.models';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +25,9 @@ export class ApiService {
     return this.httpClient.post(url, loginBody);
   }
 
-  register(userData: any) {
+  register(userData: any): Observable<GenericAPIResponse<string>> {
     const url = `${this.apiUrl}/user/register`;
-    return this.httpClient.post(url, userData);
+    return this.httpClient.post<GenericAPIResponse<string>>(url, userData);
   }
 
   forgotPassword(email: { email: string }) {
@@ -191,9 +194,25 @@ export class ApiService {
   }
 
   // Admin Dashboard - User Management
-  getAdminUsers() {
-    return this.httpClient.get(`${this.apiUrl}/admin/users`);
+  getAdminUsers(token: string):Observable<GenericAPIResponse<SystemUser[]>> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/users`, { headers });
   }
+
+  //Activating, deactivate, blocking & deleting user account by changing the account status
+  changeUserAccountStatus(id:string, status:string, token:string){
+    const requestBody = {
+      userId: id,
+      accountStatusId: status
+    };
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.httpClient.post(`${this.apiUrl}/admin/users/status`, requestBody, {headers});
+  }
+  
 
   deactivateUser(id: string) {
     return this.httpClient.post(`${this.apiUrl}/admin/users/${id}/deactivate`, {});
