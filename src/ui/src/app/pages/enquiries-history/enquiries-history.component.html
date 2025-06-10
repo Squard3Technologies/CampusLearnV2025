@@ -2,8 +2,12 @@
 <aside class="sidebar">
   <h3>Enquiry Navigation</h3>
   <ul>
-     <li><a [routerLink]="['/enquiries-history']" > History</a></li>
-    <li><a [routerLink]="['/enquiries-management']" > Pending Enquiries</a></li>
+     <li class="tab clickable">
+           <a [routerLink]="['/admin/enquiries']" class="breadcrumb-link">Enquiries management</a>
+        </li>       
+        <li class="tab clickable">
+           <a [routerLink]="['/enquiries/history']" class="breadcrumb-link">History</a>
+        </li>
   </ul>	
 </aside>
 

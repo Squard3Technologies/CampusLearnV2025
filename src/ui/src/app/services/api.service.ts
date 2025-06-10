@@ -102,12 +102,12 @@ export class ApiService {
   }
 
   // Enquiries
-  getEnquiries() {
-    return this.httpClient.get(`${this.apiUrl}/enquiries`);
+  getEnquiries(options?: any) {
+    return this.httpClient.get(`${this.apiUrl}/enquiries`, options);
   }
 
-  createEnquiry(enquiryData: any) {
-    return this.httpClient.post(`${this.apiUrl}/enquiries`, enquiryData);
+  createEnquiry(enquiryData: any, options?: any) {
+    return this.httpClient.post(`${this.apiUrl}/enquiries`, enquiryData, options);
   }
 
   getEnquiry(id: string) {

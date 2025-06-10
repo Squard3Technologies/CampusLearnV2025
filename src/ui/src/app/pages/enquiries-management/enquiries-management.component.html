@@ -16,8 +16,12 @@
     <div class="sidebar">
       <h3>Enquiry Management</h3>
       <ul class="tabs">
-        <li class="tab active">Pending Enquiries</li>
-        <li class="tab clickable" (click)="navigateToHistory()">History</li>
+        <li class="tab clickable">
+           <a [routerLink]="['/admin/enquiries']" class="breadcrumb-link">Enquiries management</a>
+        </li>       
+        <li class="tab clickable">
+           <a [routerLink]="['/enquiries/history']" class="breadcrumb-link">History</a>
+        </li>
       </ul>
     </div>
 

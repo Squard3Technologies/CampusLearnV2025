@@ -1,90 +1,96 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpHeaders } from '@angular/common/http';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-enquiries',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './enquiries.component.html',
-  styleUrl: './enquiries.component.scss'
+  styleUrls: ['./enquiries.component.scss']
 })
-export class EnquiriesComponent {
+export class EnquiriesComponent implements OnInit {
   showModal = false;
   enquiryTitle = '';
   enquiryDescription = '';
 
+  isViewModalOpen = false;
+  selectedEnquiry: any = {};
+  Enquiries: any[] = [];
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit(): void {
+    this.loadEnquiries();
+  }
+
+  /** Builds Authorization headers using token from localStorage */
+  getAuthHeaders(): { headers: HttpHeaders } {
+    const token = localStorage.getItem('token');
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      })
+    };
+  }
+
+  /** Loads enquiries from the backend API */
+  loadEnquiries() {
+    this.api.getEnquiries(this.getAuthHeaders()).subscribe({
+      next: (data: any) => {
+        console.log('Enquiries from API:', data);
+        this.Enquiries = data;
+      },
+      error: (err) => {
+        console.error('Failed to load enquiries:', err);
+      }
+    });
+  }
+
+  /** Opens modal for new enquiry */
   openModal() {
     this.showModal = true;
   }
 
+  /** Closes modal */
   closeModal() {
     this.showModal = false;
   }
 
+  /** Submits a new enquiry to the API */
   submitEnquiry() {
-    console.log('Enquiry submitted:', this.enquiryTitle, this.enquiryDescription);
+    const enquiryData = {
+      title: this.enquiryTitle,
+      description: this.enquiryDescription
+    };
 
-    // Reset form and close modal
-    this.enquiryTitle = '';
-    this.enquiryDescription = '';
-    this.showModal = false;
-  }          
-  
-  isViewModalOpen: boolean = false;
-selectedEnquiry: any = {};
+    console.log('Submitting enquiry:', enquiryData);
 
-//view modal
-
-
-
-Enquiries = [
-  {
-    id: 1,
-    title: 'Need help with assignment 1',
-    description: 'Details about assignment 1',
-    resolutionAction: 'No Action Required',
-    linkedTopic: '',
-    resolutionResponse: '',
-    status: 'Open',
-    dateCreated: '2025-05-23'
-  },
-  {
-    id: 2,
-    title: 'Clarification on Quiz 2',
-    description: 'Some details about Quiz 2',
-    resolutionAction: 'Link To Existing Topic',
-    linkedTopic: 'Quiz Topics',
-    resolutionResponse: 'Response here',
-    status: 'Resolved',
-    dateCreated: '2025-05-20'
-  },
-  {
-    id: 3,
-    title: 'Lecture Slides Missing',
-    description: 'Lecture slides for week 3 not uploaded',
-    resolutionAction: 'New Topic',
-    linkedTopic: '',
-    resolutionResponse: '',
-    status: 'Pending',
-    dateCreated: '2025-05-18'
+    this.api.createEnquiry(enquiryData, this.getAuthHeaders()).subscribe({
+      next: () => {
+        console.log('Created successfully');
+        this.loadEnquiries(); // Refresh list
+        this.enquiryTitle = '';
+        this.enquiryDescription = '';
+        this.closeModal();
+      },
+      error: (err) => {
+        console.error('Failed to create enquiry:', err);
+      }
+    });
   }
-];
- //selectedEnquiry: any = {};
 
+  /** Opens modal to view a specific enquiry */
+  openViewModal(inquiry: any) {
+    this.selectedEnquiry = { ...inquiry };
+    this.isViewModalOpen = true;
+  }
 
-openViewModal(inquiry: any) {
-  this.selectedEnquiry = { ...inquiry };
-  this.isViewModalOpen = true;
+  /** Closes the view modal */
+  closeViewModal() {
+    this.isViewModalOpen = false;
+  }
 }
-
-closeViewModal() {
-  this.isViewModalOpen = false;
-}
-
-
-}
-
-
-
