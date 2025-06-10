@@ -144,6 +144,7 @@ export class ApiService {
 
   // User Profile
   getUserProfile() {
+    
     return this.httpClient.get(`${this.apiUrl}/user`);
   }
 
@@ -194,15 +195,16 @@ export class ApiService {
   }
 
   // Admin Dashboard - User Management
-  getAdminUsers(token: string):Observable<GenericAPIResponse<SystemUser[]>> {
+  getAdminUsers(token: string): Observable<GenericAPIResponse<SystemUser[]>> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/users`, { headers });
+    
+    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/users`, {headers} );
   }
 
   //Activating, deactivate, blocking & deleting user account by changing the account status
-  changeUserAccountStatus(id:string, status:string, token:string){
+  changeUserAccountStatus(id: string, status: string, token: string) {
     const requestBody = {
       userId: id,
       accountStatusId: status
@@ -210,9 +212,9 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.httpClient.post(`${this.apiUrl}/admin/users/status`, requestBody, {headers});
+    return this.httpClient.post(`${this.apiUrl}/admin/users/status`, requestBody, { headers });
   }
-  
+
 
   deactivateUser(id: string) {
     return this.httpClient.post(`${this.apiUrl}/admin/users/${id}/deactivate`, {});
