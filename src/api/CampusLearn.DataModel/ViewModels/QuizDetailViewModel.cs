@@ -8,5 +8,7 @@ public class QuizDetailViewModel
 
     public string Description { get; set; }
 
+    public TimeSpan Duration { get; set; }
+
     public List<QuizQuestionViewModel> Questions { get; set; }
 }
