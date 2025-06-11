@@ -124,7 +124,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<UsersModuleViewModel>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserModuleAsync(Guid id)
     {
-        var apiResponse = await moduleService.GetUserModulesAsync(userId: id);
+        var apiResponse = await moduleService.GetUserModuleLinksAsync(userId: id);
         return Ok(apiResponse);
     }
 

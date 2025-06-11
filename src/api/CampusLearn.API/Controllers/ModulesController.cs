@@ -7,29 +7,39 @@ namespace CampusLearn.API.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion(1)]
 [Authorize]
-public class TopicsController : ControllerBase
+public class ModulesController : ControllerBase
 {
     #region -- protected properties --
 
-    protected readonly ILogger<TopicsController> logger;
+    protected readonly ILogger<ModulesController> logger;
     protected readonly IModuleService moduleService;
 
     #endregion -- protected properties --
 
-    public TopicsController(ILogger<TopicsController> logger, IModuleService moduleService)
+    public ModulesController(ILogger<ModulesController> logger, IModuleService moduleService)
     {
         this.logger = logger;
         this.moduleService = moduleService;
     }
 
-    [Authorize(Policy = AuthorizationRoles.Tutor)]
-    [HttpPost]
-    //[ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [HttpGet]
+    [ProducesResponseType(typeof(List<ModuleViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> CreateTopicAsync([FromBody] CreateTopicRequest request, CancellationToken token)
+    public async Task<IActionResult> GetModules(CancellationToken token)
     {
         var userId = User.GetUserIdentifier();
-        var response = await moduleService.AddTopicAsync(userId.Value, request, token);
+        var response = await moduleService.GetUserModulesAsync(userId.Value);
+        return response?.Body != null ? Ok(response.Body) : NoContent();
+    }
+
+    [Authorize(Policy = AuthorizationRoles.Tutor)]
+    [HttpPost("{moduleId}/topic")]
+    //[ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CreateTopicAsync(Guid moduleId, [FromBody] CreateTopicRequest request, CancellationToken token)
+    {
+        var userId = User.GetUserIdentifier();
+        var response = await moduleService.AddTopicAsync(userId.Value, moduleId, request, token);
         return response?.Body != null ? Ok(response) : NoContent();
     }
 
