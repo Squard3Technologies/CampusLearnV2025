@@ -7,15 +7,6 @@ import { UserService } from '../../services/user.service';
 import Swal from 'sweetalert2';
 import { SystemUser } from '../../models/systemuser.models';
 
-// interface User {
-//   id: number;
-//   name: string;
-//   email: string;
-//   role: 'Student' | 'Tutor' | 'Admin';
-//   status: 'Active' | 'Inactive';
-//   lastLogin: Date;
-//   createdDate: Date;
-// }
 
 @Component({
   selector: 'app-admin-user-management',

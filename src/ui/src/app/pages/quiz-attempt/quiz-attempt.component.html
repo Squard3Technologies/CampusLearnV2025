@@ -18,25 +18,7 @@
   <div class="main-container">
     <!-- Sidebar with Quiz Sections -->
     <div class="sidebar">
-      <h3>Quiz Sections</h3>
-      <ul class="quiz-sections">
-        <li 
-          class="section" 
-          *ngFor="let section of quizSections; let i = index"
-          [class.active]="currentSectionIndex === i"
-          [class.completed]="section.isCompleted"
-          (click)="navigateToSection(i)"
-        >
-          <div class="section-info">
-            <span class="section-title">{{ section.title }}</span>
-            <span class="question-count">{{ section.questions.length }} questions</span>
-          </div>
-          <div class="section-status">
-            <span class="status-icon" *ngIf="section.isCompleted">✓</span>
-            <span class="status-icon current" *ngIf="currentSectionIndex === i && !section.isCompleted">▶</span>
-          </div>
-        </li>
-      </ul>
+      <h3>Quiz Attempt</h3>
 
       <!-- Quiz Progress -->
       <div class="quiz-progress">
@@ -73,9 +55,8 @@
     <!-- Main Content - Quiz Questions -->
     <div class="main-content">
       <div class="quiz-header">
-        <h2>{{ currentSection?.title }}</h2>        <div class="section-progress">
-          Section {{ currentSectionIndex + 1 }} of {{ quizSections.length }}
-          <span class="questions-progress">({{ currentQuestionIndex + 1 }}/{{ currentSection?.questions?.length || 0 }})</span>
+        <h2>{{ currentQuiz?.title }}</h2>        <div class="section-progress">
+          <span class="questions-progress">({{ currentQuestionIndex + 1 }}/{{ currentQuiz?.questions?.length || 0 }})</span>
         </div>
       </div>
 
@@ -133,7 +114,7 @@
           </div>
 
           <!-- Long Text Question -->
-          <div class="answer-section" *ngIf="currentQuestion.type === 'longText'">            <textarea 
+          <!--<div class="answer-section" *ngIf="currentQuestion.type === 'longText'">            <textarea 
               class="long-text-input"
               placeholder="Enter your detailed answer..."
               [(ngModel)]="currentQuestion.userAnswer"
@@ -144,11 +125,11 @@
             <div class="char-count">
               {{ (currentQuestion.userAnswer || '').length }}/1000 characters
             </div>
-          </div>
+          </div>-->
         </div>
 
         <!-- Question Navigation -->
-        <div class="question-navigation">
+        <!--<div class="question-navigation">
           <button 
             class="nav-btn prev-btn" 
             (click)="previousQuestion()" 
@@ -175,11 +156,11 @@
           >
             Next <span class="nav-icon">→</span>
           </button>
-        </div>
+        </div>-->
       </div>
 
       <!-- Section Complete -->
-      <div class="section-complete" *ngIf="currentSection?.isCompleted">
+      <!--<div class="section-complete" *ngIf="currentQuiz?.isCompleted">
         <div class="complete-message">
           <h3>Section Complete!</h3>
           <p>You have answered all questions in this section.</p>
@@ -190,16 +171,9 @@
             >
               Review Answers
             </button>
-            <button 
-              class="next-section-btn" 
-              (click)="nextSection()"
-              *ngIf="currentSectionIndex < quizSections.length - 1"
-            >
-              Next Section
-            </button>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 

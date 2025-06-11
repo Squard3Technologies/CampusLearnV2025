@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GenericAPIResponse } from '../models/api.models';
 import { Observable } from 'rxjs';
 import { SystemUser } from '../models/systemuser.models';
+import { Quiz } from '../../mock-data';
 
 @Injectable({
   providedIn: 'root'
@@ -76,8 +77,8 @@ export class ApiService {
     return this.httpClient.get(`${this.apiUrl}/quizzes`, { params: { topicId } });
   }
 
-  getQuizDetails(quizId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quiz-details`, { params: { quizId } });
+  getQuizDetails(quizId: string) : any {
+    return this.httpClient.get(`${this.apiUrl}/quizzes/${quizId}/details`);
   }
 
   createQuestion(questionData: any) {
@@ -88,20 +89,20 @@ export class ApiService {
     return this.httpClient.put(`${this.apiUrl}/questions/${id}`, questionData);
   }
 
-  getActiveQuizzes() {
-    return this.httpClient.get(`${this.apiUrl}/active-quizzes`);
+  getActiveQuizzes() : Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}/quizzes/active`);
   }
 
-  submitQuizAttempt(attemptData: any) {
-    return this.httpClient.post(`${this.apiUrl}/quiz-attempt`, attemptData);
+  submitQuizAttempt(quizId: any, attemptData: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt`, attemptData);
   }
 
   getQuizHistory() {
-    return this.httpClient.get(`${this.apiUrl}/quiz-history`);
+    return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history`);
   }
 
   getQuizAttemptHistory(quizId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quiz-attempt-history`, { params: { quizId } });
+    return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history/${quizId}`);
   }
 
   // Enquiries
@@ -153,6 +154,7 @@ export class ApiService {
 
   // User Profile
   getUserProfile() {
+    
     return this.httpClient.get(`${this.apiUrl}/user`);
   }
 
@@ -203,15 +205,16 @@ export class ApiService {
   }
 
   // Admin Dashboard - User Management
-  getAdminUsers(token: string):Observable<GenericAPIResponse<SystemUser[]>> {
+  getAdminUsers(token: string): Observable<GenericAPIResponse<SystemUser[]>> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/users`, { headers });
+    
+    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/users`, {headers} );
   }
 
   //Activating, deactivate, blocking & deleting user account by changing the account status
-  changeUserAccountStatus(id:string, status:string, token:string){
+  changeUserAccountStatus(id: string, status: string, token: string) {
     const requestBody = {
       userId: id,
       accountStatusId: status
@@ -219,9 +222,9 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.httpClient.post(`${this.apiUrl}/admin/users/status`, requestBody, {headers});
+    return this.httpClient.post(`${this.apiUrl}/admin/users/status`, requestBody, { headers });
   }
-  
+
 
   deactivateUser(id: string) {
     return this.httpClient.post(`${this.apiUrl}/admin/users/${id}/deactivate`, {});

@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
 
 interface QuizQuestion {
   id: number;
@@ -13,19 +14,13 @@ interface QuizQuestion {
   correctAnswer?: string;
 }
 
-interface QuizSection {
-  id: number;
-  title: string;
-  questions: QuizQuestion[];
-  isCompleted: boolean;
-}
-
 interface Quiz {
   id: number;
   title: string;
   description: string;
-  timeLimit: number; // in seconds
+  duration: string; // in seconds
   totalPoints: number;
+  questions: QuizQuestion[];
 }
 
 @Component({
@@ -37,15 +32,16 @@ interface Quiz {
 })
 export class QuizAttemptComponent implements OnInit, OnDestroy {
 
+  quizId: string | null = null;
   currentQuiz: Quiz | null = null;
-  quizSections: QuizSection[] = [];
+  questions: QuizQuestion[] = [];
   currentSectionIndex: number = 0;
   currentQuestionIndex: number = 0;
   timeRemaining: number = 0;
   private timerInterval: any;
   showSubmissionModal: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router, private apiService: ApiService) {}
 
   ngOnInit() {
     this.loadQuiz();
@@ -60,7 +56,20 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
 
   // Load quiz data - replace with actual service call
   loadQuiz() {
-    this.currentQuiz = {
+    this.route.paramMap.subscribe(params => {
+      this.quizId = params.get('id');
+    });
+
+    if (this.quizId != null) {
+      this.apiService.getQuizDetails(this.quizId).subscribe((x: Quiz | null) => {
+        this.currentQuiz = x;
+        if (this.currentQuiz?.duration != null) {
+          this.timeRemaining = this.parseTimeSpan(this.currentQuiz.duration);
+        }
+      });
+    }
+
+    /*this.currentQuiz = {
       id: 1,
       title: 'Computer Science Fundamentals Quiz',
       description: 'Test your knowledge of basic computer science concepts',
@@ -147,9 +156,15 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
           }
         ]
       }
-    ];
+    ];*/
+  }
 
-    this.timeRemaining = this.currentQuiz.timeLimit;
+  parseTimeSpan(timeSpan: string): number {
+    const parts = timeSpan.split(':').map(Number);
+    const hours = parts[0];
+    const minutes = parts[1];
+    const seconds = parts[2];
+    return ((hours * 60 + minutes) * 60 + seconds);
   }
 
   // Timer functionality
@@ -174,23 +189,17 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   }
 
-  // Getters for current items
-  get currentSection(): QuizSection | null {
-    return this.quizSections[this.currentSectionIndex] || null;
-  }
-
   get currentQuestion(): QuizQuestion | null {
-    return this.currentSection?.questions[this.currentQuestionIndex] || null;
+    return this.currentQuiz?.questions[this.currentQuestionIndex] || null;
   }
 
   // Progress calculations
   get totalQuestions(): number {
-    return this.quizSections.reduce((total, section) => total + section.questions.length, 0);
+    return this.currentQuiz?.questions.length ?? 0;
   }
 
   get answeredQuestions(): number {
-    return this.quizSections.reduce((total, section) => 
-      total + section.questions.filter(q => q.userAnswer && q.userAnswer.trim() !== '').length, 0);
+    return this.currentQuiz?.questions.filter(q => q.userAnswer && q.userAnswer.trim() !== '').length ?? 0;
   }
 
   get overallProgress(): number {
@@ -207,41 +216,23 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Navigation methods
-  navigateToSection(sectionIndex: number) {
-    if (sectionIndex >= 0 && sectionIndex < this.quizSections.length) {
-      this.currentSectionIndex = sectionIndex;
-      this.currentQuestionIndex = 0;
-    }
-  }
-
-  nextSection() {
-    if (this.currentSectionIndex < this.quizSections.length - 1) {
-      this.currentSectionIndex++;
-      this.currentQuestionIndex = 0;
-    }
-  }
-
   previousQuestion() {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
     } else if (this.currentSectionIndex > 0) {
       this.currentSectionIndex--;
-      this.currentQuestionIndex = (this.quizSections[this.currentSectionIndex]?.questions.length || 1) - 1;
+      this.currentQuestionIndex = (this.currentQuiz?.questions.length || 1) - 1;
     }
   }
 
   nextQuestion() {
-    if (this.currentSection && this.currentQuestionIndex < this.currentSection.questions.length - 1) {
+    if (this.currentQuiz && this.currentQuestionIndex < this.currentQuiz.questions.length - 1) {
       this.currentQuestionIndex++;
-    } else if (this.currentSectionIndex < this.quizSections.length - 1) {
-      this.currentSectionIndex++;
-      this.currentQuestionIndex = 0;
     }
   }
 
   goToQuestion(questionIndex: number) {
-    if (this.currentSection && questionIndex >= 0 && questionIndex < this.currentSection.questions.length) {
+    if (this.currentQuiz && questionIndex >= 0 && questionIndex < this.currentQuiz.questions.length) {
       this.currentQuestionIndex = questionIndex;
     }
   }
@@ -249,22 +240,12 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
   // Answer management
   updateAnswer(questionId: number, answer: string) {
     // Find and update the question
-    for (const section of this.quizSections) {
-      const question = section.questions.find(q => q.id === questionId);
-      if (question) {
-        question.userAnswer = answer;
-        this.checkSectionCompletion();
-        break;
-      }
+    const question = this.currentQuiz?.questions.find(q => q.id === questionId);
+    if (question) {
+      question.userAnswer = answer;
     }
   }
-
-  checkSectionCompletion() {
-    for (const section of this.quizSections) {
-      const allAnswered = section.questions.every(q => q.userAnswer && q.userAnswer.trim() !== '');
-      section.isCompleted = allAnswered;
-    }
-  }
+  
 
   // Section actions
   reviewSection() {
@@ -317,7 +298,7 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     // Save current progress to localStorage or service
     const quizData = {
       quizId: this.currentQuiz?.id,
-      sections: this.quizSections,
+      questions: this.currentQuiz?.questions,
       currentSectionIndex: this.currentSectionIndex,
       currentQuestionIndex: this.currentQuestionIndex,
       timeRemaining: this.timeRemaining,
@@ -332,22 +313,20 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     let totalScore = 0;
     let maxScore = 0;
 
-    for (const section of this.quizSections) {
-      for (const question of section.questions) {
-        maxScore += question.points;
-        
-        if (question.userAnswer && question.correctAnswer) {
-          // Simple scoring for true/false questions
-          if (question.type === 'trueFalse' && 
-              question.userAnswer.toLowerCase() === question.correctAnswer.toLowerCase()) {
-            totalScore += question.points;
-          }
-          // For text questions, you'd typically need manual grading or more sophisticated scoring
-          else if (question.type === 'shortText' || question.type === 'longText') {
-            // For demo purposes, give partial credit if answered
-            if (question.userAnswer.trim() !== '') {
-              totalScore += Math.floor(question.points * 0.7); // 70% for attempt
-            }
+    for (const question of this.currentQuiz?.questions ?? []) {
+      maxScore += question.points;
+      
+      if (question.userAnswer && question.correctAnswer) {
+        // Simple scoring for true/false questions
+        if (question.type === 'trueFalse' && 
+            question.userAnswer.toLowerCase() === question.correctAnswer.toLowerCase()) {
+          totalScore += question.points;
+        }
+        // For text questions, you'd typically need manual grading or more sophisticated scoring
+        else if (question.type === 'shortText' || question.type === 'longText') {
+          // For demo purposes, give partial credit if answered
+          if (question.userAnswer.trim() !== '') {
+            totalScore += Math.floor(question.points * 0.7); // 70% for attempt
           }
         }
       }

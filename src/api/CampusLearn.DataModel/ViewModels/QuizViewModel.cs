@@ -12,5 +12,5 @@ public class QuizViewModel
 
     public string TopicName { get; set; }
 
-    public string Duration { get; set; }
+    public TimeSpan Duration { get; set; }
 }

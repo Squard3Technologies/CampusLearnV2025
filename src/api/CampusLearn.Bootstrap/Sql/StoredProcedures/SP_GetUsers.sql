@@ -12,9 +12,9 @@ BEGIN
 			S.Description AS AccountStatusDescription
 	FROM dbo.[User] U WITH(NOLOCK)
 	INNER JOIN [dbo].[Statuses] S WITH(NOLOCK) ON S.Id = U.AccountStatus
-	WHERE 
-	(
-		U.AccountStatus = 'B492BB30-B073-4059-A58B-B3F6E5BE4C95'
-	)
+	--WHERE 
+	--(
+	--	U.AccountStatus = 'B492BB30-B073-4059-A58B-B3F6E5BE4C95'
+	--)
 	ORDER BY U.Name, U.Surname
 END
