@@ -98,6 +98,9 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\topics\SP_GetModuleTopic.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\topics\SP_GetModuleTopics.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

@@ -4,8 +4,8 @@ import { LearningMaterial } from './interfaces';
 
 export const mockLearningMaterials: LearningMaterial[] = [
   {
-    id: 1,
-    topicId: 1,
+    id: "1",
+    topicId: "1",
     name: 'Introduction to Angular Components',
     description: 'Comprehensive guide covering Angular component basics, lifecycle, and best practices',
     fileType: 'PDF',
@@ -16,8 +16,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/view/1'
   },
   {
-    id: 2,
-    topicId: 1,
+    id: "2",
+    topicId: "1",
     name: 'Angular Component Architecture',
     description: 'Video tutorial explaining component architecture and communication patterns',
     fileType: 'Video',
@@ -27,8 +27,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/view/2'
   },
   {
-    id: 3,
-    topicId: 1,
+    id: "3",
+    topicId: "1",
     name: 'Component Lifecycle Hooks',
     description: 'Interactive article with examples of Angular lifecycle hooks implementation',
     fileType: 'Article',
@@ -38,8 +38,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/view/3'
   },
   {
-    id: 4,
-    topicId: 1,
+    id: "4",
+    topicId: "1",
     name: 'Component Best Practices Slides',
     description: 'Presentation slides covering Angular component best practices and patterns',
     fileType: 'Slides',
@@ -50,8 +50,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/view/4'
   },
   {
-    id: 5,
-    topicId: 1,
+    id: "5",
+    topicId: "1",
     name: 'Angular CLI Overview',
     description: 'Audio guide walking through Angular CLI commands and project setup',
     fileType: 'Audio',
@@ -61,8 +61,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     downloadUrl: '/assets/materials/angular-cli-overview.mp3'
   },
   {
-    id: 6,
-    topicId: 1,
+    id: "6",
+    topicId: "1",
     name: 'Sample Component Code',
     description: 'Complete example component implementation with TypeScript and SCSS',
     fileType: 'Code',
@@ -72,8 +72,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     downloadUrl: '/assets/materials/sample-component.zip'
   },
   {
-    id: 7,
-    topicId: 1,
+    id: "7",
+    topicId: "1",
     name: 'Component Knowledge Check',
     description: 'Interactive quiz to test your understanding of Angular components',
     fileType: 'Quiz',
@@ -81,8 +81,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/quiz/7'
   },
   {
-    id: 8,
-    topicId: 2,
+    id: "8",
+    topicId: "2",
     name: 'Data Binding Fundamentals',
     description: 'Complete guide to Angular data binding types and implementation',
     fileType: 'PDF',
@@ -93,8 +93,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/view/8'
   },
   {
-    id: 9,
-    topicId: 2,
+    id: "9",
+    topicId: "2",
     name: 'Two-Way Binding Demo',
     description: 'Video demonstration of two-way data binding in Angular forms',
     fileType: 'Video',
@@ -104,8 +104,8 @@ export const mockLearningMaterials: LearningMaterial[] = [
     viewUrl: '/materials/view/9'
   },
   {
-    id: 10,
-    topicId: 3,
+    id: "10",
+    topicId: "3",
     name: 'Service Injection Patterns',
     description: 'Advanced patterns for dependency injection and service management',
     fileType: 'Article',
@@ -116,10 +116,10 @@ export const mockLearningMaterials: LearningMaterial[] = [
   }
 ];
 
-export function getMaterialsByTopicId(topicId: number): LearningMaterial[] {
+export function getMaterialsByTopicId(topicId: string): LearningMaterial[] {
   return mockLearningMaterials.filter(material => material.topicId === topicId);
 }
 
-export function getMaterialById(id: number): LearningMaterial | undefined {
+export function getMaterialById(id: string): LearningMaterial | undefined {
   return mockLearningMaterials.find(material => material.id === id);
 }

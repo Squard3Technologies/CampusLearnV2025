@@ -21,7 +21,9 @@ public interface IModuleService
 
     Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, Guid moduleId, CreateTopicRequest module, CancellationToken token);
 
-    Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId);
+    Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicsAsync(Guid moduleId);
+
+    Task<GenericAPIResponse<TopicViewModel>> GetModuleTopicAsync(Guid moduleId, Guid topicId);
 
     #region -- learing material section --
 

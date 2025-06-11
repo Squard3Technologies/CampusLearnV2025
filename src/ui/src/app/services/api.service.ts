@@ -41,7 +41,11 @@ export class ApiService {
   }
 
   getTopics(moduleId: string) {
-    return this.httpClient.get(`${this.apiUrl}/topics`, { params: { moduleId } });
+    return this.httpClient.get(`${this.apiUrl}/modules/${moduleId}/topics`);
+  }
+
+  getTopic(moduleId: string, topicId: string) {
+    return this.httpClient.get(`${this.apiUrl}/modules/${moduleId}/topics/${topicId}`);
   }
 
   createTopic(topicData: any) {

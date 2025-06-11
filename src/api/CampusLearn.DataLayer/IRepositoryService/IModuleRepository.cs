@@ -20,7 +20,9 @@ public interface IModuleRepository
 
     Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, Guid moduleId, CreateTopicRequest module);
 
-    Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId);
+    Task<GenericDbResponseViewModel> GetModuleTopicsAsync(Guid moduleId);
+
+    Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId, Guid topicId);
 
     #region -- learing material section --
 

@@ -11,8 +11,8 @@ import { LearningMaterial, getMaterialsByTopicId } from '../../../mock-data';
   styleUrl: './topic-learning-material.component.scss'
 })
 export class TopicLearningMaterialComponent implements OnInit {
-  topicId!: number;
-  moduleId!: number;
+  topicId!: string;
+  moduleId!: string;
   moduleName!: string;
   learningMaterials: LearningMaterial[] = [];
 
@@ -24,7 +24,7 @@ export class TopicLearningMaterialComponent implements OnInit {
   ngOnInit(): void {
     // Get route parameters
     this.route.params.subscribe(params => {
-      this.topicId = +params['id'];
+      this.topicId = params['id'];
     });
 
     // Get query parameters

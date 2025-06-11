@@ -11,8 +11,8 @@ import { Quiz, mockQuizzes } from '../../../mock-data';
   styleUrl: './topic-quizzes.component.scss'
 })
 export class TopicQuizzesComponent implements OnInit {
-  topicId!: number;
-  moduleId!: number;
+  topicId!: string;
+  moduleId!: string;
   moduleName!: string;
   quizzes: Quiz[] = [];
 
@@ -24,7 +24,7 @@ export class TopicQuizzesComponent implements OnInit {
   ngOnInit(): void {
     // Get route parameters
     this.route.params.subscribe(params => {
-      this.topicId = +params['id'];
+      this.topicId = params['id'];
     });
 
     // Get query parameters
@@ -37,7 +37,7 @@ export class TopicQuizzesComponent implements OnInit {
     this.loadQuizzes();
   }
   loadQuizzes(): void {
-    this.quizzes = this.getQuizzesByTopicId(this.topicId);
+    //this.quizzes = this.getQuizzesByTopicId(this.topicId);
   }
 
   // Helper function to get quizzes by topic ID
