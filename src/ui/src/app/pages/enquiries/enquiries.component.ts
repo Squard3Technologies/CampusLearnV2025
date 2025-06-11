@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
-import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -26,8 +24,7 @@ export class EnquiriesComponent implements OnInit {
    moduleId: string | null = null;
 
   constructor(
-    private api: ApiService, 
-    private userService: UserService, 
+    private api: ApiService,
     private route: ActivatedRoute // Add this
   ) {}
 
@@ -37,21 +34,10 @@ export class EnquiriesComponent implements OnInit {
     });
     this.loadEnquiries();
   }
-  /** Builds Authorization headers using token from localStorage */
-  getAuthHeaders(): { headers: HttpHeaders } {
-    const token = localStorage.getItem('token');
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      })
-    };
-  }
 
   /** Loads enquiries from the backend API */
   loadEnquiries() {
-    var token = this.userService.getAuthToken() as string;
-
-    this.api.getEnquiries(token).subscribe({
+    this.api.getEnquiries().subscribe({
       next: (data: any) => {
         console.log('Enquiries from API:', data);
         this.Enquiries = data;
@@ -100,9 +86,7 @@ export class EnquiriesComponent implements OnInit {
 
   console.log('Submitting enquiry:', enquiryData);
 
-  const token = this.userService.getAuthToken() as string;
-
-  this.api.createEnquiry(enquiryData, token).subscribe({
+  this.api.createEnquiry(enquiryData).subscribe({
     next: () => {
       console.log('Created successfully');
       this.loadEnquiries();
