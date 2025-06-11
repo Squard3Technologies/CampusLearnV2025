@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './topic.component.html',
   styleUrl: './topic.component.scss'
 })
-export class TopicsComponent {
+export class TopicComponent {
   showModal = false;
   topicTitle = '';
   topicDescription = '';
