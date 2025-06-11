@@ -7,8 +7,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule, FormsModule, CommonModule ],
   templateUrl: './enquiries-history.component.html',
-  styleUrl: './enquiries-history.component.scss'
+  styleUrl: './enquiries-history.component.scss',
 })
 export class EnquiriesHistoryComponent {
-
 }

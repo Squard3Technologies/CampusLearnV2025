@@ -25,7 +25,6 @@ export class EnquiriesComponent implements OnInit {
 
    moduleId: string | null = null;
 
-
   constructor(
     private api: ApiService, 
     private userService: UserService, 
@@ -75,29 +74,47 @@ export class EnquiriesComponent implements OnInit {
 
   /** Submits a new enquiry to the API */
   submitEnquiry() {
-    const enquiryData = {
-      title: this.enquiryTitle,
-      description: this.enquiryDescription,
-      moduleId: this.moduleId // Add moduleId to the payload
-    };
-
-    console.log('Submitting enquiry:', enquiryData);
-    
-    var token = this.userService.getAuthToken() as string;
-
-    this.api.createEnquiry(enquiryData, token).subscribe({
-      next: () => {
-        console.log('Created successfully');
-        this.loadEnquiries(); // Refresh list
-        this.enquiryTitle = '';
-        this.enquiryDescription = '';
-        this.closeModal();
-      },
-      error: (err) => {
-        console.error('Failed to create enquiry:', err);
-      }
-    });
+  if (!this.moduleId) {
+    console.error('Module ID is missing or invalid!');
+    return;
   }
+
+  // Validate GUID format (optional, but recommended)
+  const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  if (!guidRegex.test(this.moduleId)) {
+    console.error('Module ID is not a valid GUID:', this.moduleId);
+    return;
+  }
+
+  if (!this.enquiryTitle.trim() || !this.enquiryDescription.trim()) {
+    console.error('Title and Description are required!');
+    return;
+  }
+
+  // Use PascalCase property names
+  const enquiryData = {
+    ModuleId: this.moduleId,
+    Title: this.enquiryTitle,
+    Description: this.enquiryDescription,
+  };
+
+  console.log('Submitting enquiry:', enquiryData);
+
+  const token = this.userService.getAuthToken() as string;
+
+  this.api.createEnquiry(enquiryData, token).subscribe({
+    next: () => {
+      console.log('Created successfully');
+      this.loadEnquiries();
+      this.enquiryTitle = '';
+      this.enquiryDescription = '';
+      this.closeModal();
+    },
+    error: (err) => {
+      console.error('Failed to create enquiry:', err);
+    }
+  });
+}
 
   /** Opens modal to view a specific enquiry */
   openViewModal(inquiry: any) {
