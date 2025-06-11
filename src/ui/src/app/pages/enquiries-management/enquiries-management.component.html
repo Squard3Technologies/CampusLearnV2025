@@ -16,40 +16,27 @@
     <div class="sidebar">
       <h3>Enquiry Management</h3>
       <ul class="tabs">
-        <li class="tab clickable">
-           <a [routerLink]="['/admin/enquiries']" class="breadcrumb-link">Enquiries management</a>
+        <li class="tab active">
+           <a [routerLink]="['/admin/enquiries']" >Enquiries management</a>
         </li>       
         <li class="tab clickable">
-           <a [routerLink]="['/enquiries/history']" class="breadcrumb-link">History</a>
+           <a [routerLink]="['/enquiries/history']" >History</a>
         </li>
       </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-      <h2>Pending Enquiries</h2>
-      
-      <div class="pending-card">
-        <h3>Heading</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
+      <h2>All Enquiries</h2>
+
+      <div *ngIf="allEnquiries.length === 0">
+        <p>No enquiries found.</p>
       </div>
 
-      <div class="pending-card">
-        <h3>Heading</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
-      </div>
-
-      <div class="pending-card">
-        <h3>Heading</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
+      <div class="pending-card" *ngFor="let inquiry of allEnquiries">
+        <h3>{{ inquiry.title }}</h3>
+        <p>{{ inquiry.description }}</p>
+        <button class="resolve-btn" (click)="openViewModal(inquiry)">Resolve</button>
       </div>
     </div>
   </div>

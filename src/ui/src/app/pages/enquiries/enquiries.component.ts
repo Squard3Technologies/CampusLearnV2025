@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
+import { EnquiryStatus } from '../../enums/enums';
 
 @Component({
   selector: 'app-enquiries',
@@ -21,7 +22,7 @@ export class EnquiriesComponent implements OnInit {
   selectedEnquiry: any = {};
   Enquiries: any[] = [];
 
-   moduleId: string | null = null;
+  moduleId: string | null = null;
 
   constructor(
     private api: ApiService,
@@ -39,7 +40,6 @@ export class EnquiriesComponent implements OnInit {
   loadEnquiries() {
     this.api.getEnquiries().subscribe({
       next: (data: any) => {
-        console.log('Enquiries from API:', data);
         this.Enquiries = data;
       },
       error: (err) => {
@@ -109,5 +109,13 @@ export class EnquiriesComponent implements OnInit {
   /** Closes the view modal */
   closeViewModal() {
     this.isViewModalOpen = false;
+  }
+
+  getStatusClass(status: number): string {
+    return 'status-' + this.resolveStatus(status).toLowerCase();
+  }
+
+  resolveStatus(status: number): string {
+    return EnquiryStatus[status] ?? 'Unknown';
   }
 }
