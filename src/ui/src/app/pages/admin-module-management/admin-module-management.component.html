@@ -32,7 +32,7 @@
         <h2>Module Management</h2>
         <p>Create, edit, and manage course modules and their content.</p>
       </div>
-    <!-- Create Module Button -->
+      <!-- Create Module Button -->
       <div class="controls-section">
         <button class="btn btn-primary" (click)="createModule()">
           <i class="fas fa-plus"></i> Create Module
@@ -51,7 +51,8 @@
               <th>Enrollments</th>
               <th>Created Date</th>
               <th>Actions</th>
-            </tr>          </thead>
+            </tr>
+          </thead>
           <tbody>
             <tr *ngIf="filteredModules.length === 0">
               <td colspan="7" class="text-center">
@@ -74,7 +75,8 @@
                   </div>
                 </div>
               </td>
-              <td>{{ module.instructor }}</td>              <td>
+              <td>{{ module.instructor }}</td>
+              <td>
                 <span class="level-badge">
                   {{ module.level }}
                 </span>
@@ -103,7 +105,8 @@
                 </div>
               </td>
             </tr>
-          </tbody>        </table>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
