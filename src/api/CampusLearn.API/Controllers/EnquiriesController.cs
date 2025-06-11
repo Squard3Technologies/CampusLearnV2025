@@ -10,12 +10,12 @@ public class EnquiriesController : ControllerBase
 {
     #region -- protected properties --
 
-    protected readonly ILogger<TopicsController> _logger;
+    protected readonly ILogger<EnquiriesController> _logger;
     private readonly IEnquiryService _enquiryService;
 
     #endregion -- protected properties --
 
-    public EnquiriesController(ILogger<TopicsController> logger,
+    public EnquiriesController(ILogger<EnquiriesController> logger,
         IEnquiryService enquiryService)
     {
         _logger = logger;
