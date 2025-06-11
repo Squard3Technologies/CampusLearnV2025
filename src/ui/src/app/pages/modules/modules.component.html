@@ -23,9 +23,11 @@
           <button class="btn btn-primary" [routerLink]="['/modules', module.id]">
             View Module
           </button>
-          <button class="btn btn-secondary" [routerLink]="['/enquiries']">
-            My Enquiries
-          </button>
+     <button class="btn btn-secondary" 
+        [routerLink]="['/enquiries']" 
+        [queryParams]="{ moduleId: module.id }">
+  My Enquiries
+</button>
           <button class="btn btn-info" [routerLink]="['/admin/enquiries']">
             Pending Enquiries
           </button>
