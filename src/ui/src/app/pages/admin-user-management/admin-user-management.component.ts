@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { UserService } from '../../services/user.service';
 import Swal from 'sweetalert2';
-import { SystemUser } from '../../models/systemuser.models';
+import { SystemUser } from '../../models/api.models';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class AdminUserManagementComponent implements OnInit {
   roleFilter: number = 0;
   statusFilter: string = '';
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 2;
   totalPages: number = 1;
 
   constructor(

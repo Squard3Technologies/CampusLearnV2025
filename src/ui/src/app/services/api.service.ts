@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { GenericAPIResponse } from '../models/api.models';
+import { GenericAPIResponse, SystemUser, Module } from '../models/api.models';
 import { Observable } from 'rxjs';
-import { SystemUser } from '../models/systemuser.models';
 import { Quiz } from '../../mock-data';
 
 @Injectable({
@@ -234,16 +233,16 @@ export class ApiService {
   }
 
   // Admin Dashboard - Module Management
-  getAdminModules() {
-    return this.httpClient.get(`${this.apiUrl}/admin/modules`);
+  getAdminModules():Observable<GenericAPIResponse<Module[]>> {
+    return this.httpClient.get<GenericAPIResponse<Module[]>>(`${this.apiUrl}/admin/modules`);
   }
 
-  createModule(moduleData: any) {
-    return this.httpClient.post(`${this.apiUrl}/admin/modules`, moduleData);
+  createModule(moduleData: any): Observable<GenericAPIResponse<string>> {
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/admin/modules`, moduleData);
   }
 
-  updateModule(id: string, moduleData: any) {
-    return this.httpClient.put(`${this.apiUrl}/admin/modules/${id}`, moduleData);
+  updateModule(id: string, moduleData: any): Observable<GenericAPIResponse<string>> {
+    return this.httpClient.put<GenericAPIResponse<string>>(`${this.apiUrl}/admin/modules/`, moduleData);
   }
 
   deactivateModule(id: string) {

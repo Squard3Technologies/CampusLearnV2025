@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.44.44</AssemblyVersion>
-    <FileVersion>1.0.44.44</FileVersion>
+    <AssemblyVersion>1.0.49.49</AssemblyVersion>
+    <FileVersion>1.0.49.49</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -59,10 +59,10 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeModuleStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUserModules.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_GetUserModules.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateModule.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_UpdateModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateUserDetails.sql">
@@ -83,16 +83,16 @@
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetDiscussionComment.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_AddUserModule.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_AddUserModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUserModuleLinks.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_GetUserModuleLinks.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetModules.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_GetModules.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_AddModule.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_AddModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin.sql">
