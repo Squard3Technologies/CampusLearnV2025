@@ -434,17 +434,23 @@ $border-color: #edebe9;
   border-top: 1px solid $border-color;
   background-color: $secondary-color;
   display: flex;
-  flex-direction: column;
-  
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
+
   .message-input {
     border-radius: 5px;
+    flex: 1 1 auto;
+    min-width: 0;
   }
-  
+
   .send-btn {
-    margin-left: 10px;
     border-radius: 5px;
     min-height: 38px;
-    align-self: flex-start;
+    align-self: stretch;
+    margin-left: 0;
+    width: 80px;
+    flex-shrink: 0;
   }
 }
 
