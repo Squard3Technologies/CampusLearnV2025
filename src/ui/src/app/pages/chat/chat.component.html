@@ -1,4 +1,10 @@
 <div class="chat-container">
+  <!-- Error display at top of chat container -->
+  <div *ngIf="hasError" class="error-state">
+    <p>{{ errorMessage }}</p>
+    <button class="retry-btn" (click)="retryOperation()">Retry</button>
+  </div>
+  
   <!-- Side navigation bar -->
   <aside class="chat-sidebar">
     <div class="sidebar-header">
@@ -6,26 +12,30 @@
       <button class="new-chat-btn" title="Start a new chat" (click)="openNewChatModal()">
         <i class="fas fa-plus"></i> New Chat
       </button>
-    </div>
-
-    <!-- Chat list -->
+    </div>    <!-- Chat list -->
     <div class="chat-list">
-      <div *ngIf="chats && chats.length > 0; else noChats">
+      <div *ngIf="isLoadingChats" class="loading-state">
+        <p>Loading chats...</p>
+      </div>
+      
+      <div *ngIf="!isLoadingChats && chats && chats.length > 0; else noChats">
         <div
           *ngFor="let chat of chats"
           class="chat-item"
-          [class.active]="selectedChatId === chat.id"
-          (click)="selectChat(chat.id)">
+          [class.active]="selectedUserId === chat.userId"
+          (click)="selectChat(chat.userId)">
           <div class="chat-item-content">
-            <div class="chat-title">{{ chat.title || 'New Conversation' }}</div>
-            <div class="chat-preview">{{ chat.lastMessage }}</div>
-            <div class="chat-time">{{ chat.timestamp | date:'short' }}</div>
+            <div class="chat-title">{{ chat.userName }} {{ chat.userSurname }}</div>
+            <div class="chat-preview">{{ chat.lastMessage || 'No messages yet' }}</div>
+            <div class="chat-time" *ngIf="chat.lastMessageTime">
+              {{ chat.lastMessageTime | date:'short' }}
+            </div>
           </div>
         </div>
       </div>
 
       <ng-template #noChats>
-        <div class="empty-state">
+        <div class="empty-state" *ngIf="!isLoadingChats">
           <p>No conversations yet</p>
           <p>Start a new chat to begin</p>
         </div>
@@ -33,18 +43,27 @@
     </div>
   </aside>
 
-
   <main class="chat-main">
-    <div *ngIf="selectedChatId" class="chat-messages">
+    <div *ngIf="selectedUserId" class="chat-messages">
 
       <div class="chat-header">
-        <h3>{{ selectedChat?.title || 'New Conversation' }}</h3>
+        <h3>{{ selectedChat?.userName }} {{ selectedChat?.userSurname || 'Chat' }}</h3>
       </div>
 
       <div class="messages-container">
-        <div *ngFor="let message of selectedChat?.messages" class="message" [ngClass]="message.sender">
-          <div class="message-content">{{ message.content }}</div>
-          <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+        <div *ngIf="isLoadingMessages" class="loading-state">
+          <p>Loading messages...</p>
+        </div>
+        
+        <div *ngIf="!isLoadingMessages">
+          <div *ngFor="let message of messages" class="message" 
+               [ngClass]="message.userId === getCurrentUserId() ? 'user' : 'other'">
+            <div class="message-content">{{ message.content }}</div>
+            <div class="message-time">{{ message.dateCreated | date:'short' }}</div>
+            <div class="message-sender" *ngIf="message.userId !== getCurrentUserId()">
+              {{ message.userName }} {{ message.userSurname }}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -52,11 +71,26 @@
         <textarea
           class="message-input"
           placeholder="Type your message here..."
-          [(ngModel)]="newMessage">
+          [(ngModel)]="newMessage"
+          (input)="validateMessageInput()"
+          [ngClass]="{'invalid': messageValidationError}">
         </textarea>
-        <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
-          Send
+        <button class="send-btn" 
+                (click)="sendMessage()" 
+                [disabled]="!newMessage.trim() || isSendingMessage || messageValidationError">
+          <span *ngIf="!isSendingMessage">Send</span>
+          <span *ngIf="isSendingMessage">Sending...</span>
         </button>
+        
+        <!-- Message validation UI -->
+        <div class="message-validation-container">
+          <div *ngIf="messageValidationError" class="validation-error">
+            {{ messageValidationError }}
+          </div>
+          <div class="character-counter" [ngClass]="{'warning': isApproachingLimit(), 'exceeded': isLimitExceeded()}">
+            {{ newMessage.length }} / {{ MAX_MESSAGE_LENGTH }}
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -68,38 +102,38 @@
     <div class="modal-header">
       <h3>Start New Chat</h3>
       <button class="close-btn" (click)="closeNewChatModal()">×</button>
-    </div>
-
-    <div class="modal-body">
+    </div>    <div class="modal-body">
       <div class="search-container">
         <input
           type="text"
           class="search-input"
-          placeholder="Search for users by name, email, or role..."
+          placeholder="Search for users by name or email..."
           [(ngModel)]="searchText"
           (input)="searchUsers()">
       </div>
 
-      <div class="users-list">
-        <div *ngIf="filteredUsers.length > 0; else noResults">
+      <div class="search-results">
+        <div *ngIf="isSearchingUsers" class="loading-state">
+          <p>Searching users...</p>
+        </div>
+        
+        <div *ngIf="!isSearchingUsers && searchResults.length > 0">
           <div
-            *ngFor="let user of filteredUsers"
+            *ngFor="let user of searchResults"
             class="user-item"
             (click)="startChatWithUser(user)">
             <div class="user-info">
-              <div class="user-name">{{ user.name }}</div>
-              <div class="user-email">{{ user.email }}</div>
-              <div class="user-role">{{ user.role }}</div>
+              <div class="user-name">{{ user.firstName }} {{ user.surname }}</div>
+              <div class="user-email">{{ user.emailAddress }}</div>
+              <div class="user-role">{{ getRoleDescription(user.role) }}</div>
             </div>
           </div>
         </div>
 
-        <ng-template #noResults>
-          <div class="no-results">
-            <p>No users found</p>
-            <p>Try searching with different keywords</p>
-          </div>
-        </ng-template>
+        <div *ngIf="!isSearchingUsers && searchText && searchResults.length === 0" class="no-results">
+          <p>No users found</p>
+          <p>Try searching with different keywords</p>
+        </div>
       </div>
     </div>
   </div>
