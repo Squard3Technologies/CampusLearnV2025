@@ -26,11 +26,9 @@
           (click)="selectChat(chat.userId)">
           <div class="chat-item-content">
             <div class="chat-title">{{ chat.userName }} {{ chat.userSurname }}</div>
-            <div class="chat-preview">{{ chat.lastMessage || 'No messages yet' }}</div>
-            <div class="chat-time" *ngIf="chat.lastMessageTime">
-              {{ chat.lastMessageTime | date:'short' }}
-            </div>
+
           </div>
+          <hr>
         </div>
       </div>
 
