@@ -142,7 +142,7 @@
 - `POST /admin/modules/{id}/activate`
 
 
-# Docker Configuration
+# 🐳 Docker Configuration
 ## Creating internal network
     docker network create campuslearn-net
 
