@@ -99,8 +99,12 @@ export class ApiService {
     return this.httpClient.get<any[]>(`${this.apiUrl}/quizzes/active`);
   }
 
-  submitQuizAttempt(quizId: any, attemptData: any) {
-    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt`, attemptData);
+  createQuizAttempt(quizId: any, assignedToUserId: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt?assignedByUserId=${assignedToUserId}`, {});
+  }
+
+  submitQuizAttempt(quizAttemptId: any, attemptData: any) {
+    return this.httpClient.put(`${this.apiUrl}/quizzes/attempt/${quizAttemptId}`, attemptData);
   }
 
   getQuizHistory() {

@@ -207,6 +207,9 @@
     <None Update="Sql\StoredProcedures\enquiries\SP_ResolveEnquiry.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_CompleteQuizAttempt.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sql\StoredProcedures\quizzes\SP_CreateQuizAttempt.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

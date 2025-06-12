@@ -23,8 +23,6 @@ public class QuizzesController : ControllerBase
         _quizService = quizService;
     }
 
-
-
     [HttpGet("topic/{topicId}")]
     [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -37,8 +35,6 @@ public class QuizzesController : ControllerBase
         return results != null ? Ok(results) : NoContent();
     }
 
-
-
     [HttpGet("{id}/details")]
     [ProducesResponseType(typeof(QuizDetailViewModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -50,8 +46,6 @@ public class QuizzesController : ControllerBase
         var result = await _quizService.GetQuizDetails(id, token);
         return result != null ? Ok(result) : NoContent();
     }
-
-
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost]
@@ -66,8 +60,6 @@ public class QuizzesController : ControllerBase
         var result = await _quizService.CreateQuiz(userIdentifier.Value, model, token);
         return result != null ? Ok(result) : NoContent();
     }
-
-
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}")]
@@ -85,8 +77,6 @@ public class QuizzesController : ControllerBase
         return Ok();
     }
 
-
-
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPost("{id}/questions")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
@@ -103,8 +93,6 @@ public class QuizzesController : ControllerBase
         var result = await _quizService.CreateQuizQuestion(id, userIdentifier.Value, model, token);
         return result != null ? Ok(result) : NoContent();
     }
-
-
 
     [Authorize(Policy = AuthorizationRoles.Tutor)]
     [HttpPut("{id}/questions/{questionId}")]
@@ -125,8 +113,6 @@ public class QuizzesController : ControllerBase
         return Ok();
     }
 
-
-
     [HttpGet("active")]
     [ProducesResponseType(typeof(List<QuizViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -140,12 +126,10 @@ public class QuizzesController : ControllerBase
         return results != null ? Ok(results) : NoContent();
     }
 
-
-
     [HttpPost("{id}/attempt")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> CreateQuizAttempt(Guid id, [FromBody] CreateQuizAttemptRequestModel model, CancellationToken token)
+    public async Task<IActionResult> CreateQuizAttempt(Guid id, [FromQuery] Guid? assignedByUserId, CancellationToken token)
     {
         if (id == Guid.Empty)
             return BadRequest("Provide valud QuizId");
@@ -154,10 +138,21 @@ public class QuizzesController : ControllerBase
         if (userIdentifier == null)
             return BadRequest("Could not determine UserIdentifier");
 
-        var result = await _quizService.CreateQuizAttempt(id, userIdentifier.Value, model, token);
+        var result = await _quizService.CreateQuizAttempt(id, userIdentifier.Value, assignedByUserId ?? userIdentifier.Value, token);
         return result != null ? Ok(result) : NoContent();
     }
 
+    [HttpPut("attempt/{id}")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CompleteQuizAttempt(Guid id, [FromBody] CompleteQuizAttemptRequestModel model, CancellationToken token)
+    {
+        if (id == Guid.Empty)
+            return BadRequest("Provide valud QuizId");
+
+        await _quizService.CreateQuizAttempt(id, model, token);
+        return Ok();
+    }
 
     [HttpGet("attempt-history")]
     [ProducesResponseType(typeof(List<QuizHistoryViewModel>), StatusCodes.Status200OK)]
@@ -171,8 +166,6 @@ public class QuizzesController : ControllerBase
         var results = await _quizService.GetQuizzesAttemptHistory(userIdentifier.Value, token);
         return results != null ? Ok(results) : NoContent();
     }
-
-
 
     [HttpGet("attempt-history/{id}")]
     [ProducesResponseType(typeof(QuizAttemptHistoryViewModel), StatusCodes.Status200OK)]
