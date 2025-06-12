@@ -152,6 +152,6 @@
 
 ## Setting Web API
     docker pull campuslearn-api:1.3
-    docker run --name campuslearn-api -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Production -e ASPNETCORE_URLS=http://0.0.0.0:8080 --network campuslearn-net -d campuslearn-api:1.3
+    docker run --restart always --name campuslearn-api -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_URLS=http://0.0.0.0:8080 --network campuslearn-net -d campuslearn-api:1.3
     
 
