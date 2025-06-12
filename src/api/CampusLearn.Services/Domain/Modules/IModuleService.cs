@@ -15,11 +15,15 @@ public interface IModuleService
 
     Task<GenericAPIResponse<IEnumerable<ModuleViewModel>>> GetModulesAsync();
 
-    Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModulesAsync(Guid userId);
+    Task<GenericAPIResponse<IEnumerable<ModuleViewModel>>> GetUserModulesAsync(Guid userId);
 
-    Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module, CancellationToken token);
+    Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModuleLinksAsync(Guid userId);
 
-    Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId);
+    Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, Guid moduleId, CreateTopicRequest module, CancellationToken token);
+
+    Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicsAsync(Guid moduleId);
+
+    Task<GenericAPIResponse<TopicViewModel>> GetModuleTopicAsync(Guid moduleId, Guid topicId);
 
     #region -- learing material section --
 

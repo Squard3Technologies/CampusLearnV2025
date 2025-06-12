@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GenericAPIResponse } from '../models/api.models';
 import { Observable } from 'rxjs';
 import { SystemUser } from '../models/systemuser.models';
+import { Quiz } from '../../mock-data';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,11 @@ export class ApiService {
   }
 
   getTopics(moduleId: string) {
-    return this.httpClient.get(`${this.apiUrl}/topics`, { params: { moduleId } });
+    return this.httpClient.get(`${this.apiUrl}/modules/${moduleId}/topics`);
+  }
+
+  getTopic(moduleId: string, topicId: string) {
+    return this.httpClient.get(`${this.apiUrl}/modules/${moduleId}/topics/${topicId}`);
   }
 
   createTopic(topicData: any) {
@@ -76,8 +81,8 @@ export class ApiService {
     return this.httpClient.get(`${this.apiUrl}/quizzes`, { params: { topicId } });
   }
 
-  getQuizDetails(quizId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quiz-details`, { params: { quizId } });
+  getQuizDetails(quizId: string) : any {
+    return this.httpClient.get(`${this.apiUrl}/quizzes/${quizId}/details`);
   }
 
   createQuestion(questionData: any) {
@@ -88,20 +93,20 @@ export class ApiService {
     return this.httpClient.put(`${this.apiUrl}/questions/${id}`, questionData);
   }
 
-  getActiveQuizzes() {
-    return this.httpClient.get(`${this.apiUrl}/active-quizzes`);
+  getActiveQuizzes() : Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}/quizzes/active`);
   }
 
-  submitQuizAttempt(attemptData: any) {
-    return this.httpClient.post(`${this.apiUrl}/quiz-attempt`, attemptData);
+  submitQuizAttempt(quizId: any, attemptData: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt`, attemptData);
   }
 
   getQuizHistory() {
-    return this.httpClient.get(`${this.apiUrl}/quiz-history`);
+    return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history`);
   }
 
   getQuizAttemptHistory(quizId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quiz-attempt-history`, { params: { quizId } });
+    return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history/${quizId}`);
   }
 
   // Enquiries

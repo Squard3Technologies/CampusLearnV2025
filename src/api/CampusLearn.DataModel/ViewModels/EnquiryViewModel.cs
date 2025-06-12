@@ -25,4 +25,6 @@ public class EnquiryViewModel
     public Guid ModuleId { get; set; }
 
     public Guid? LinkedTopicId { get; set; }
+
+    public string? TopicTitle { get; set; }
 }

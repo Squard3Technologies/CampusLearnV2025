@@ -47,7 +47,7 @@ export class LoginComponent {
       next: (user) => {
         Swal.close();
         console.log('Login successful for user:', user);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/modules']);
       },
       error: (error) => {
         this.errorMessage = error.message || 'Invalid email or password. Please try again.';

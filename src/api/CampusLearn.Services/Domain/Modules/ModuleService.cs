@@ -95,10 +95,22 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-    public async Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModulesAsync(Guid userId)
+    public async Task<GenericAPIResponse<IEnumerable<ModuleViewModel>>> GetUserModulesAsync(Guid userId)
+    {
+        GenericAPIResponse<IEnumerable<ModuleViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<ModuleViewModel>>();
+        var dbResponse = await moduleRepository.GetUserModulesAsync(userId);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        apiResponse.Body = (dbResponse.Body != null) ? (List<ModuleViewModel>)dbResponse.Body : null;
+        return apiResponse;
+    }
+
+    public async Task<GenericAPIResponse<IEnumerable<UsersModuleViewModel>>> GetUserModuleLinksAsync(Guid userId)
     {
         GenericAPIResponse<IEnumerable<UsersModuleViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<UsersModuleViewModel>>();
-        var dbResponse = await moduleRepository.GetUserModulesAsync(userId);
+        var dbResponse = await moduleRepository.GetUserModuleLinksAsync(userId);
 
         apiResponse.Status = dbResponse.Status;
         apiResponse.StatusCode = dbResponse.StatusCode;
@@ -107,10 +119,10 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-    public async Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest model, CancellationToken token)
+    public async Task<GenericAPIResponse<Guid?>> AddTopicAsync(Guid userId, Guid moduleId, CreateTopicRequest model, CancellationToken token)
     {
         GenericAPIResponse<Guid?> apiResponse = new GenericAPIResponse<Guid?>();
-        var dbResponse = await moduleRepository.AddTopicAsync(userId, model);
+        var dbResponse = await moduleRepository.AddTopicAsync(userId, moduleId, model);
         if (dbResponse.Body != null)
             await _notificationService.SendTopicCreatedAsync(userId, dbResponse.Body.Value, NotificationTypes.Email, token);
         apiResponse.Status = dbResponse.Status;
@@ -120,15 +132,27 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-    public async Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId)
+    public async Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicsAsync(Guid moduleId)
     {
         GenericAPIResponse<IEnumerable<TopicViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<TopicViewModel>>();
-        var dbResponse = await moduleRepository.GetModuleTopicAsync(moduleId);
+        var dbResponse = await moduleRepository.GetModuleTopicsAsync(moduleId);
 
         apiResponse.Status = dbResponse.Status;
         apiResponse.StatusCode = dbResponse.StatusCode;
         apiResponse.StatusMessage = dbResponse.StatusMessage;
         apiResponse.Body = (dbResponse.Body != null) ? (List<TopicViewModel>)dbResponse.Body : null;
+        return apiResponse;
+    }
+
+    public async Task<GenericAPIResponse<TopicViewModel>> GetModuleTopicAsync(Guid moduleId, Guid topicId)
+    {
+        GenericAPIResponse<TopicViewModel> apiResponse = new GenericAPIResponse<TopicViewModel>();
+        var dbResponse = await moduleRepository.GetModuleTopicAsync(moduleId, topicId);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        apiResponse.Body = (dbResponse.Body != null) ? (TopicViewModel)dbResponse.Body : null;
         return apiResponse;
     }
 
