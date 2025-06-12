@@ -42,15 +42,13 @@ public class QuizRepository : IQuizRepository
         });
     }
 
-    public async Task<GenericDbResponseViewModel<Guid?>> CreateQuizAttemptAsync(Guid quizId, Guid userId, CreateQuizAttemptRequestModel model, CancellationToken token)
+    public async Task<GenericDbResponseViewModel<Guid?>> CreateQuizAttemptAsync(Guid quizId, Guid userId, Guid assignedByUserId, CancellationToken token)
     {
-        var answersJson = JsonConvert.SerializeObject(model.QuestionAnswers);
-
         return await _database.ExecuteTransactionAsync(async (db, transaction) =>
         {
             var parameters = new DynamicParameters();
-            parameters.Add("AnswersJson", answersJson, DbType.String);
             parameters.Add("UserId", userId, DbType.Guid);
+            parameters.Add("AssignedByUserId", assignedByUserId, DbType.Guid);
             parameters.Add("QuizId", quizId, DbType.Guid);
 
             var result = await db.QueryFirstAsync<GenericDbResponseViewModel<Guid?>>(
@@ -62,6 +60,27 @@ public class QuizRepository : IQuizRepository
             );
 
             return result;
+        });
+    }
+
+    public async Task CompleteQuizAttemptAsync(Guid quizAttemptId, CompleteQuizAttemptRequestModel model, CancellationToken token)
+    {
+        var answersJson = JsonConvert.SerializeObject(model.QuestionAnswers);
+
+        await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("AnswersJson", answersJson, DbType.String);
+            parameters.Add("AttemptDuration", model.Duration, DbType.Time);
+            parameters.Add("QuizAttemptId", quizAttemptId, DbType.Guid);
+
+            var result = await db.ExecuteAsync(
+                "dbo.SP_CompleteQuizAttempt",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
         });
     }
 

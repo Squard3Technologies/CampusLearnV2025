@@ -22,7 +22,8 @@ interface QuizQuestionOption {
 }
 
 interface Quiz {
-  id: number;
+  id: string;
+  quizAttemptId: string;
   title: string;
   description: string;
   duration: string; // in seconds
@@ -41,6 +42,7 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
 
   quizId: string | null = null;
   currentQuiz: Quiz | null = null;
+  quizAttemptId: string | null = null;
   questions: QuizQuestion[] = [];
   currentQuestionIndex: number = 0;
   timeRemaining: number = 0;
@@ -66,6 +68,10 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
       this.quizId = params.get('id');
     });
 
+    this.route.queryParamMap.subscribe(queryParams => {
+      this.quizAttemptId = queryParams.get('quizAttemptId');
+    });
+
     if (this.quizId != null) {
       this.apiService.getQuizDetails(this.quizId).subscribe((x: Quiz | null) => {
         this.currentQuiz = x;
@@ -82,6 +88,15 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     const minutes = parts[1];
     const seconds = parts[2];
     return ((hours * 60 + minutes) * 60 + seconds);
+  }
+
+  formatTimeSpan(totalSeconds: number): string {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
   }
 
   // Timer functionality
@@ -188,6 +203,7 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     console.log('Quiz submitted with score:', score);
     if (this.currentQuiz != null) {
       const payload = {
+        duration: this.formatTimeSpan(this.parseTimeSpan(this.currentQuiz.duration) - this.timeRemaining),
         questionAnswers: this.currentQuiz.questions
           .filter(q => q.userAnswer) // only include answered questions
           .map(q => ({
@@ -196,8 +212,8 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
           }))
       };
 
-      this.apiService.submitQuizAttempt(this.quizId, payload).subscribe(x => {
-        this.router.navigate([`/quiz/${x}/review`]);
+      this.apiService.submitQuizAttempt(this.quizAttemptId, payload).subscribe(x => {
+        this.router.navigate([`/quiz/${this.quizAttemptId}/review`]);
       });
     }
   }

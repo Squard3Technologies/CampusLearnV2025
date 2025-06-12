@@ -18,7 +18,9 @@ public interface IQuizRepository
 
     Task<List<QuizViewModel>> GetActiveQuizzesAsync(Guid userId, CancellationToken token);
 
-    Task<GenericDbResponseViewModel<Guid?>> CreateQuizAttemptAsync(Guid quizId, Guid userId, CreateQuizAttemptRequestModel model, CancellationToken token);
+    Task<GenericDbResponseViewModel<Guid?>> CreateQuizAttemptAsync(Guid quizId, Guid userId, Guid assignedByUserId, CancellationToken token);
+
+    Task CompleteQuizAttemptAsync(Guid quizAttemptId, CompleteQuizAttemptRequestModel model, CancellationToken token);
 
     Task<List<QuizHistoryViewModel>> GetQuizzesAttemptHistoryAsync(Guid userId, CancellationToken token);
 

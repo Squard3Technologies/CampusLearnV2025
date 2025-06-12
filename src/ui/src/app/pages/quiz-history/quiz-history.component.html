@@ -1,15 +1,12 @@
-<div class="quiz-history-container">
+<div class="quizzes-container">
   <!-- Breadcrumb Navigation -->
   <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a routerLink="/dashboard" class="breadcrumb-link">Dashboard</a>
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
         </li>
-        <li class="breadcrumb-item">
-          <a routerLink="/quizzes" class="breadcrumb-link">Quizzes</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Quiz History</li>
+        <li class="breadcrumb-item active" aria-current="page">My Quizzes</li>
       </ol>
     </nav>
   </div>
@@ -18,279 +15,40 @@
   <div class="main-container">
     <!-- Sidebar -->
     <div class="sidebar">
-      <h3><i class="fas fa-history"></i> Quiz Management</h3>
+      <h3>My Quizzes</h3>      
       <ul class="tabs">
-        <li class="tab active">History</li>
-        <li class="tab clickable" routerLink="/quiz-active">
-          <i class="fas fa-play-circle"></i>
-          Available Quizzes
-        </li>
-        <li class="tab clickable" routerLink="/quiz-results">
-          <i class="fas fa-chart-bar"></i>
-          Results & Analytics
-        </li>
-        <li class="tab clickable" routerLink="/quiz-drafts">
-          <i class="fas fa-save"></i>
-          Saved Drafts
-        </li>
+        <li class="tab clickable" (click)="navigateToAssignedQuizzes()">Assigned Quizzes</li>
+        <li class="tab active">Quiz History</li>
       </ul>
-
-      <!-- Filter Section -->
-      <div class="filter-section">
-        <h4><i class="fas fa-filter"></i> Filters</h4>
-        
-        <!-- Search -->
-        <div class="form-group">
-          <label for="search">Search Quizzes</label>
-          <div class="search-input-group">
-            <i class="fas fa-search"></i>
-            <input
-              id="search"
-              type="text"
-              class="form-control"
-              placeholder="Search by quiz or topic name..."
-              [(ngModel)]="searchTerm"
-              (input)="applyFilters()">
-          </div>
-        </div>
-
-        <!-- Module Filter -->
-        <div class="form-group">
-          <label for="module">Module</label>
-          <select
-            id="module"
-            class="form-control"
-            [(ngModel)]="selectedModule"
-            (change)="applyFilters()">
-            <option value="">All Modules</option>
-            <option *ngFor="let module of uniqueModules" [value]="module">
-              {{ module }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Date Range Filter -->
-        <div class="form-group">
-          <label for="dateRange">Date Range</label>
-          <select
-            id="dateRange"
-            class="form-control"
-            [(ngModel)]="selectedDateRange"
-            (change)="applyFilters()">
-            <option value="">All Time</option>
-            <option value="last7days">Last 7 Days</option>
-            <option value="last30days">Last 30 Days</option>
-            <option value="last90days">Last 90 Days</option>
-          </select>
-        </div>
-
-        <button class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">
-          <i class="fas fa-times"></i> Clear Filters
-        </button>
-      </div>
-
-      <!-- Statistics -->
-      <div class="stats-section">
-        <h4><i class="fas fa-chart-pie"></i> Statistics</h4>
-        <div class="stat-item">
-          <span class="stat-label">Total Quizzes:</span>
-          <span class="stat-value">{{ quizHistory.length }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">This Month:</span>
-          <span class="stat-value">{{ filteredQuizHistory.length }}</span>
-        </div>
-      </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="content-header">
-        <h2><i class="fas fa-history"></i> Quiz History</h2>
-        <p class="content-description">
-          View and manage your quiz attempt history. Track your progress, review past attempts, and retake quizzes as needed.
-        </p>
-      </div>
-
-      <!-- Loading State -->
-      <div *ngIf="isLoading" class="loading-container">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <p>Loading quiz history...</p>
-      </div>
-
-      <!-- Content Controls -->
-      <div *ngIf="!isLoading" class="content-controls">
-        <div class="results-info">
-          <span class="results-count">
-            Showing {{ paginatedQuizHistory.length }} of {{ filteredQuizHistory.length }} quiz attempts
-          </span>
-        </div>
-        <div class="sort-controls">
-          <label for="itemsPerPage">Show:</label>
-          <select
-            id="itemsPerPage"
-            class="form-control form-control-sm"
-            [(ngModel)]="itemsPerPage"
-            (change)="updatePagination()">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-          <span>per page</span>
-        </div>
-      </div>
-
-      <!-- Quiz History Table -->
-      <div *ngIf="!isLoading && filteredQuizHistory.length > 0" class="table-container">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col" class="sortable" (click)="setSortBy('quizName')">
-                <i class="fas fa-question-circle"></i> Quiz Name
-                <i class="fas fa-sort" *ngIf="sortBy !== 'quizName'"></i>
-                <i class="fas fa-sort-up" *ngIf="sortBy === 'quizName' && sortDirection === 'asc'"></i>
-                <i class="fas fa-sort-down" *ngIf="sortBy === 'quizName' && sortDirection === 'desc'"></i>
-              </th>
-              <th scope="col" class="sortable" (click)="setSortBy('moduleCode')">
-                <i class="fas fa-book"></i> Module
-                <i class="fas fa-sort" *ngIf="sortBy !== 'moduleCode'"></i>
-                <i class="fas fa-sort-up" *ngIf="sortBy === 'moduleCode' && sortDirection === 'asc'"></i>
-                <i class="fas fa-sort-down" *ngIf="sortBy === 'moduleCode' && sortDirection === 'desc'"></i>
-              </th>
-              <th scope="col">
-                <i class="fas fa-bookmark"></i> Topic
-              </th>
-              <th scope="col">
-                <i class="fas fa-clock"></i> Duration
-              </th>
-              <th scope="col" class="sortable" (click)="setSortBy('lastAttemptDateTime')">
-                <i class="fas fa-calendar"></i> Last Attempt
-                <i class="fas fa-sort" *ngIf="sortBy !== 'lastAttemptDateTime'"></i>
-                <i class="fas fa-sort-up" *ngIf="sortBy === 'lastAttemptDateTime' && sortDirection === 'asc'"></i>
-                <i class="fas fa-sort-down" *ngIf="sortBy === 'lastAttemptDateTime' && sortDirection === 'desc'"></i>
-              </th>
-              <th scope="col" class="sortable" (click)="setSortBy('score')">
-                <i class="fas fa-star"></i> Score
-                <i class="fas fa-sort" *ngIf="sortBy !== 'score'"></i>
-                <i class="fas fa-sort-up" *ngIf="sortBy === 'score' && sortDirection === 'asc'"></i>
-                <i class="fas fa-sort-down" *ngIf="sortBy === 'score' && sortDirection === 'desc'"></i>
-              </th>
-              <th scope="col" class="text-center">
-                <i class="fas fa-cog"></i> Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let quiz of paginatedQuizHistory" class="quiz-row">
-              <td class="quiz-name">
-                <div class="quiz-info">
-                  <strong>{{ quiz.quizName }}</strong>
-                  <div class="quiz-meta">
-                    <small class="text-muted">
-                      Duration: {{ quiz.duration }} minutes
-                    </small>
-                  </div>
+        <h2>Assigned Quizzes</h2>
+        <div class="quizzes-grid">
+            <div class="quiz-card" *ngFor="let completedQuiz of completedQuizzes">
+                <div class="quiz-header">
+                <h4>{{ completedQuiz.quizName }}</h4>
                 </div>
-              </td>
-              <td class="module-code">
-                <span class="badge badge-module">{{ quiz.moduleCode }}</span>
-              </td>
-              <td class="topic-name">
-                <span>{{ quiz.topicName }}</span>
-              </td>
-              <td class="duration">
-                <span class="duration-text">{{ quiz.duration }} min</span>
-              </td>
-              <td class="attempt-date">
-                <div class="date-info">
-                  <strong>{{ quiz.lastAttemptDateTime | date:'MMM d, y' }}</strong>
-                  <div class="time-info">
-                    <small class="text-muted">
-                      {{ quiz.lastAttemptDateTime | date:'h:mm a' }} • {{ getDaysAgo(quiz.lastAttemptDateTime) }}
-                    </small>
-                  </div>
+                <div>
+                    <p><b>Module:</b> {{completedQuiz.moduleCode}}</p>
+                    <p><b>Topic:</b> {{completedQuiz.topicName}}</p>
+                    <p><b>Duration:</b> {{completedQuiz.duration}}</p>
+                    <p><b>Last Attempt Date Time:</b> {{completedQuiz.lastAttemptDateTime}}</p>
+                    <p><b>Last Attempt Score:</b> {{completedQuiz.lastAttemptScore}}</p>
                 </div>
-              </td>
-              <td class="score">
-                <span class="score-badge" [ngClass]="getScoreClass(quiz.lastAttemptScore)">
-                  {{ quiz.lastAttemptScore }}
-                </span>
-                <div class="score-percentage">
-                  <small class="text-muted">
-                    {{ getScorePercentage(quiz.lastAttemptScore) | number:'1.0-1' }}%
-                  </small>
+                <div class="quiz-actions">
+                    <button class="btn btn-primary" [routerLink]="['/quiz', completedQuiz.id, 'review']">
+                        View Attempt
+                    </button>
+                    <button class="btn btn-primary" [routerLink]="['/quiz', completedQuiz.quizId, 'attempt']" [queryParams]="{ quizAttemptId: completedQuiz.id }">
+                        Reattempt
+                    </button>
                 </div>
-              </td>
-              <td class="quiz-actions text-center">
-                <div class="btn-group" role="group">
-                  <button 
-                    class="btn btn-sm btn-outline-primary"
-                    (click)="reviewQuizAttempt(quiz.id)"
-                    title="Review Attempt">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button 
-                    class="btn btn-sm btn-outline-success"
-                    (click)="retakeQuiz(quiz.id)"
-                    title="Retake Quiz">
-                    <i class="fas fa-redo"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div *ngIf="!isLoading && filteredQuizHistory.length > 0 && totalPages > 1" class="pagination-container">
-        <nav aria-label="Quiz history pagination">
-          <ul class="pagination pagination-sm justify-content-center">
-            <li class="page-item" [class.disabled]="currentPage === 1">
-              <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li *ngFor="let page of [].constructor(totalPages); let i = index" 
-                class="page-item" 
-                [class.active]="currentPage === i + 1">
-              <a class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <!-- No Results Message -->
-      <div *ngIf="!isLoading && filteredQuizHistory.length === 0 && quizHistory.length > 0" class="no-results">
-        <div class="text-center py-5">
-          <i class="fas fa-search fa-3x text-muted mb-3"></i>
-          <h4 class="text-muted">No Quiz History Found</h4>
-          <p class="text-muted">No quiz attempts match your current filter criteria.</p>
-          <button class="btn btn-outline-primary" (click)="clearFilters()">
-            <i class="fas fa-times"></i> Clear Filters
-          </button>
+            </div>
+            <div class="no-quizzes" *ngIf="completedQuizzes?.length === 0">
+                <p>No completed quizzes</p>
+            </div>
         </div>
-      </div>
-
-      <!-- Empty State -->
-      <div *ngIf="!isLoading && quizHistory.length === 0" class="empty-state">
-        <div class="text-center py-5">
-          <i class="fas fa-history fa-3x text-muted mb-3"></i>
-          <h4 class="text-muted">No Quiz History</h4>
-          <p class="text-muted">You haven't attempted any quizzes yet. Start taking quizzes to see your history here.</p>
-          <button class="btn btn-primary" routerLink="/quiz-active">
-            <i class="fas fa-play"></i> Browse Available Quizzes
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

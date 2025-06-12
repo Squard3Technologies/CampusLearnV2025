@@ -17,10 +17,15 @@ public class QuizService : IQuizService
         return result?.Body;
     }
 
-    public async Task<Guid?> CreateQuizAttempt(Guid quizId, Guid userId, CreateQuizAttemptRequestModel model, CancellationToken token)
+    public async Task<Guid?> CreateQuizAttempt(Guid quizId, Guid userId, Guid assignedByUserId, CancellationToken token)
     {
-        var result = await _quizRepository.CreateQuizAttemptAsync(quizId, userId, model, token);
+        var result = await _quizRepository.CreateQuizAttemptAsync(quizId, userId, assignedByUserId, token);
         return result?.Body;
+    }
+
+    public async Task CreateQuizAttempt(Guid quizAttemptId, CompleteQuizAttemptRequestModel model, CancellationToken token)
+    {
+        await _quizRepository.CompleteQuizAttemptAsync(quizAttemptId, model, token);
     }
 
     public async Task<Guid?> CreateQuizQuestion(Guid quizId, Guid userId, CreateQuizQuestionRequestModel model, CancellationToken token)

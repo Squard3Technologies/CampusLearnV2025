@@ -2,7 +2,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_CreateQuizAttempt
 (
     @QuizId UNIQUEIDENTIFIER,
     @UserId UNIQUEIDENTIFIER,
-    @AnswersJson NVARCHAR(MAX)
+    @AssignedByUserId UNIQUEIDENTIFIER
 )
 AS
 BEGIN
@@ -24,19 +24,8 @@ BEGIN
         SET @QuizAttemptId = NEWID();
 
         -- Create quiz attempt
-        INSERT INTO QuizAttempt (Id, QuizId, UserId, DateCreated)
-        VALUES (@QuizAttemptId, @QuizId, @UserId, GETDATE());
-
-        -- Parse JSON to table and insert answers
-        INSERT INTO QuizAttemptQuestionAnswer (Id, QuizAttemptId, QuestionId, QuestionOptionId, IsCorrect)
-        SELECT 
-            NEWID(),
-            @QuizAttemptId,
-            JSON_VALUE(js.value, '$.QuestionId'),
-            JSON_VALUE(js.value, '$.SelectedQuestionOptionId'),
-            qo.IsCorrect
-        FROM OPENJSON(@AnswersJson) AS js
-            JOIN QuestionOption qo ON qo.Id = JSON_VALUE(js.value, '$.SelectedQuestionOptionId');
+        INSERT INTO QuizAttempt (Id, QuizId, UserId, DateCreated, AssignedByUserId)
+        VALUES (@QuizAttemptId, @QuizId, @UserId, GETDATE(), @AssignedByUserId);
 
         SET @Status = 1;
         SET @StatusCode = 200;
