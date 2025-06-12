@@ -40,12 +40,12 @@
 
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search users..." [(ngModel)]="searchTerm" (input)="filterModules()">
+          <input type="text" placeholder="Search module..." [(ngModel)]="searchTerm" (input)="filterModules()">
         </div>
 
         <div class="filter-controls">         
           <select [(ngModel)]="statusFilter" (change)="filterModules()" class="filter-select">
-            <option value="">All Status</option>
+            <option value="">ALL STATUSES</option>
             <option value="true">ACTIVE</option>
             <option value="false">CANCELLED</option>
           </select>
@@ -117,7 +117,7 @@
         <div class="pagination-info">
           Showing {{ (currentPage - 1) * pageSize + 1 }} to
           {{ Math.min(currentPage * pageSize, filteredModules.length) }} of
-          {{ filteredModules.length }} users
+          {{ filteredModules.length }} modules
         </div>
         <div class="pagination-controls">
           <button class="btn btn-outline-primary" [disabled]="currentPage === 1" (click)="previousPage()">

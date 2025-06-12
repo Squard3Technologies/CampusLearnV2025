@@ -50,7 +50,7 @@ public class QuizRepository : IQuizRepository
         {
             var parameters = new DynamicParameters();
             parameters.Add("AnswersJson", answersJson, DbType.String);
-            parameters.Add("CreatedByUserId", userId, DbType.Guid);
+            parameters.Add("UserId", userId, DbType.Guid);
             parameters.Add("QuizId", quizId, DbType.Guid);
 
             var result = await db.QueryFirstAsync<GenericDbResponseViewModel<Guid?>>(
@@ -128,8 +128,10 @@ public class QuizRepository : IQuizRepository
             if (quizAttempt == null)
                 return null;
 
-            quizAttempt.Questions = (await multipleResults.ReadAsync<QuizAttemptHistoryQuestionViewModel>()).ToList();
+            var questions = (await multipleResults.ReadAsync<QuizAttemptHistoryQuestionViewModel>()).ToList();
             var attemptOptions = (await multipleResults.ReadAsync<QuizAttemptHistoryQuestionOptionViewModel>()).ToList();
+
+            quizAttempt.Questions = questions;
 
             foreach (var question in quizAttempt.Questions)
             {

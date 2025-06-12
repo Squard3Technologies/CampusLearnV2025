@@ -24,7 +24,9 @@ export class AdminModuleManagementComponent implements OnInit {
 
 
   roleFilter: number = 0;
-  statusFilter: boolean | null = null;
+  statusFilter: string | null = '';
+  // get statusFilter(): string {return this._statusFilter === null ? '' : this._statusFilter; };
+  // set statusFilter(val:string) {this._statusFilter = val === '' ? null : val; };
   searchTerm: string = '';
   currentPage: number = 1;
   pageSize: number = 5;
@@ -395,15 +397,31 @@ export class AdminModuleManagementComponent implements OnInit {
   toggleModuleStatus(module: Module, status: boolean) {
     debugger;
     if (status) {
+      Swal.fire({
+        title: `Updating module status.....`,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
       this.apiService.activateModule(module.id).subscribe({
         next: (response) => {
+          Swal.close();
           this.loadModules();
         }
       });
     }
     else {
+      Swal.fire({
+        title: `Updating module status.....`,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
       this.apiService.deactivateModule(module.id).subscribe({
         next: (response) => {
+          Swal.close();
           this.loadModules();
         }
       });
