@@ -141,3 +141,8 @@
 - `POST /admin/modules/{id}/deactivate`
 - `POST /admin/modules/{id}/activate`
 
+
+# Docker Configuration
+## Creating internal network
+  docker network create campuslearn-net
+ 
