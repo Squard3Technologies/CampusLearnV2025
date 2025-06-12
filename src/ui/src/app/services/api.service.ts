@@ -105,7 +105,7 @@ export class ApiService {
     return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history`);
   }
 
-  getQuizAttemptHistory(quizId: string) {
+  getQuizAttemptHistory(quizId: string): any {
     return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history/${quizId}`);
   }
 
