@@ -144,5 +144,17 @@
 
 # Docker Configuration
 ## Creating internal network
-  docker network create campuslearn-net
+    docker network create campuslearn-net
+
+## Setting up MSSQL Server
+    docker pull mcr.microsoft.com/mssql/server
+    docker run --restart always -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=9w#ZCunZM3" --name campuslearn-mssql -p 1404:1433 --network campuslearn-net -d mcr.microsoft.com/mssql/server
+
+## Setting Web API
+    docker pull campuslearn-api:v1.3
+    docker run --name campuslearn-api -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Production -e ASPNETCORE_URLS=http://0.0.0.0:8080 --network campuslearn-net -d campuslearn-api:v1.3
+    
+
+
+    
  
