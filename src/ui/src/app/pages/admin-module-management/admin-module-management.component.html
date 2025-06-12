@@ -59,9 +59,18 @@
         <table class="modules-table">
           <thead>
             <tr>
-              <th>Module Code</th>
-              <th>Module Name</th>
-              <th>Status</th>
+              <th (click)="sortData('code')">
+                Module Code &nbsp;
+                <span *ngIf="sortColumn === 'code'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="sortData('name')">
+                Module Name &nbsp;
+                <span *ngIf="sortColumn === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="sortData('status')">
+                Status &nbsp;
+                <span *ngIf="sortColumn === 'status'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>

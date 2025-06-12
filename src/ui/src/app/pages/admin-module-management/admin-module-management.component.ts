@@ -31,6 +31,8 @@ export class AdminModuleManagementComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 5;
   totalPages: number = 1;
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   modules: Module[] = [];
   filteredModules: Module[] = [];
@@ -491,5 +493,31 @@ export class AdminModuleManagementComponent implements OnInit {
   }
 
   Math = Math;
+
+  sortData(column: string) {
+    if (this.sortColumn === column) {
+      // Toggle direction
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+
+    this.filteredModules.sort((a, b) => {
+      let valA = a[column];
+      let valB = b[column];
+
+      // If sorting by boolean, convert to number for comparison
+      if (typeof valA === 'boolean') valA = valA ? 1 : 0;
+      if (typeof valB === 'boolean') valB = valB ? 1 : 0;
+
+      if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    // Update pagination or any displayed subset after sorting
+    this.updatePagination();
+  }
 
 }
