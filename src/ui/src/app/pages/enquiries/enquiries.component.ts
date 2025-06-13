@@ -84,11 +84,8 @@ export class EnquiriesComponent implements OnInit {
     Description: this.enquiryDescription,
   };
 
-  console.log('Submitting enquiry:', enquiryData);
-
   this.api.createEnquiry(enquiryData).subscribe({
     next: () => {
-      console.log('Created successfully');
       this.loadEnquiries();
       this.enquiryTitle = '';
       this.enquiryDescription = '';
@@ -101,8 +98,8 @@ export class EnquiriesComponent implements OnInit {
 }
 
   /** Opens modal to view a specific enquiry */
-  openViewModal(inquiry: any) {
-    this.selectedEnquiry = { ...inquiry };
+  openViewModal(enquiry: any) {
+    this.selectedEnquiry = { ...enquiry };
     this.isViewModalOpen = true;
   }
 

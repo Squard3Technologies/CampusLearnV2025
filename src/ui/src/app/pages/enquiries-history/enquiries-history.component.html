@@ -13,16 +13,12 @@
 <!-- Main Container for Sidebar and Content -->
   <div class="main-container">
     <!-- Sidebar -->
-    <div class="sidebar">
-      <h3>Enquiry Management</h3>
-      <ul class="tabs">
-        <li class="tab clickable">
-           <a [routerLink]="['/admin/enquiries']" class="breadcrumb-link">Enquiries management</a>
-        </li>       
-        <li class="tab clickable">
-           <a [routerLink]="['/enquiries/history']" class="breadcrumb-link">History</a>
-        </li>
-      </ul>
+    <div class="sidebar">      
+        <h3>Enquiry Management</h3>
+        <ul class="tabs">
+          <li class="tab clickable" (click)="navigateToEnquiryManagement()">Enquiries management</li>
+          <li class="tab active">History</li>
+        </ul>
     </div>
 
     <!-- Main Content -->
@@ -41,22 +37,27 @@
       <table class="enquiry-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Title</th>
+            <th>Created By</th>
             <th>Date Created</th>
             <th>Date Resolved</th>
             <th>Resolved By</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr let inquiry of Enquiries>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><span class="status-badge" ></span></td>
-            <td>
-            </td>
-          </tr>
+          <ng-container *ngFor="let enquiry of resolvedEnquiries">
+            <tr>
+              <td>{{enquiry.title}}</td>
+              <td>{{enquiry.createdByUserEmail}}</td>
+              <td>{{enquiry.dateCreated}}</td>
+              <td>{{enquiry.resolvedByUserEmail}}</td>
+              <td>{{enquiry.dateResolved}}</td>
+              <td>
+                <button class="view-btn" (click)="openViewModal(enquiry)">View</button>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>
@@ -76,5 +77,34 @@
     </div>
   </div>
 
+<!-- View Enquiry Modal -->
+<ng-container *ngIf="isViewModalOpen">
+  <div class="modal">
+    <div class="modal-content">
+      <h2 class="modal-title">View Enquiry</h2>
 
+      <label for="view-title">Title</label>
+      <input disabled id="view-title" type="text" [(ngModel)]="selectedEnquiry.title" >
+
+      <label for="view-description">Description</label>
+      <textarea disabled id="view-description" rows="3" [(ngModel)]="selectedEnquiry.description" ></textarea>
+
+      <label for="view-description">Resolution Action</label>
+      <select disabled id="resolution-action" [(ngModel)]="selectedEnquiry.resolutionAction">
+        <option value="null" disabled selected>Pending resolution</option>
+        <option value="1">No Action</option>
+        <option value="2">Linked To Topic</option>
+        <option value="3">Created New Topic</option>
+      </select>
+
+      <label for="linked-topic">Linked Topic</label>
+      <input disabled id="linked-topic" type="text" [(ngModel)]="selectedEnquiry.topicTitle" >
+
+      <label for="resolution-response">Resolution Response</label>
+      <textarea disabled id="resolution-response" rows="4" [(ngModel)]="selectedEnquiry.resolutionResponse" ></textarea>
+
+      <button (click)="closeViewModal()">Back</button>
+    </div>
+  </div>
+</ng-container>
   

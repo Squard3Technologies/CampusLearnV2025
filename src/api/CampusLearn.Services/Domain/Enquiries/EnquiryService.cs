@@ -5,10 +5,14 @@ namespace CampusLearn.Services.Domain.Enquiries;
 public class EnquiryService : IEnquiryService
 {
     private readonly IEnquiryRepository _enquiryRepository;
+    private readonly IModuleRepository _moduleRepository;
+    private readonly ITopicRepository _topicRepository;
 
-    public EnquiryService(IEnquiryRepository enquiryRepository)
+    public EnquiryService(IEnquiryRepository enquiryRepository,
+        IModuleRepository moduleRepository)
     {
         _enquiryRepository = enquiryRepository;
+        _moduleRepository = moduleRepository;
     }
 
     public async Task CreateEnquiry(Guid userId, CreateEnquiryRequestModel model, CancellationToken token)
@@ -33,6 +37,17 @@ public class EnquiryService : IEnquiryService
 
     public async Task ResolveEnquiry(Guid enquiryId, Guid tutorId, ResolveEnquiryRequestModel model, CancellationToken token)
     {
+        var enquiry = await GetEnquiry(tutorId, enquiryId, token);
+
+        if (model.ResolutionAction == EnquiryResolutionTypes.CreateNewTopic)
+        {
+            model.LinkedTopicId = (await _moduleRepository.AddTopicAsync(tutorId, enquiry.ModuleId, new DataModel.Models.Topic.CreateTopicRequest()
+            {
+                Title = enquiry.Title,
+                Description = enquiry.Description
+            })).Body;
+        }
+
         await _enquiryRepository.ResolveEnquiryAsync(enquiryId, tutorId, model, token);
     }
 }

@@ -20,6 +20,10 @@ public class EnquiryViewModel
 
     public string? ResolutionResponse { get; set; }
 
+    public string CreatedByUserEmail { get; set; }
+
+    public string? ResolvedByUserEmail { get; set; }
+
     public EnquiryStatus Status { get; set; }
 
     public Guid ModuleId { get; set; }
