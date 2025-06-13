@@ -51,7 +51,12 @@ public class QuizService : IQuizService
 
     public async Task<List<QuizHistoryViewModel>> GetQuizzesAttemptHistory(Guid userId, CancellationToken token)
     {
-        return await _quizRepository.GetQuizzesAttemptHistoryAsync(userId, token);
+        var quizzes = await _quizRepository.GetQuizzesAttemptHistoryAsync(userId, token);
+
+        return quizzes
+            .GroupBy(x => x.QuizId)
+            .Select(g => g.OrderByDescending(x => x.LastAttemptDateTime).First())
+            .ToList();
     }
 
     public async Task<List<QuizViewModel>> GetQuizzesByTopic(Guid topicId, CancellationToken token)

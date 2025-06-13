@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GenericAPIResponse, SystemUser, Module } from '../models/api.models';
 import { map, Observable } from 'rxjs';
-import { Quiz } from '../../mock-data';
 import { ChatUser, ChatMessage, CreateMessageRequest, SearchUser } from '../models/chat.models';
 
 @Injectable({
@@ -78,7 +77,7 @@ export class ApiService {
 
   // Quizzes
   getQuizzes(topicId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quizzes`, { params: { topicId } });
+    return this.httpClient.get(`${this.apiUrl}/quizzes/topic/${topicId}`);
   }
 
   getQuizDetails(quizId: string) : any {
@@ -97,7 +96,11 @@ export class ApiService {
     return this.httpClient.get<any[]>(`${this.apiUrl}/quizzes/active`);
   }
 
-  createQuizAttempt(quizId: any, assignedToUserId: any) {
+  createQuizAttempt(quizId: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt`, {});
+  }
+
+  assignQuizAttempt(quizId: any, assignedToUserId: any) {
     return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt?assignedByUserId=${assignedToUserId}`, {});
   }
 
