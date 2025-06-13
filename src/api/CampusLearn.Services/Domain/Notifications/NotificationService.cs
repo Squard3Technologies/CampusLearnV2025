@@ -105,6 +105,7 @@ public class NotificationService : INotificationService
         {
             var result = await SendMessageAsync(new SendMessageRequest()
             {
+                SenderId = Constants.AdminUserIdentifier,
                 RecieverId = userIdentifier,
                 MessageContent = template
             }, notificationType, NotificationContentTypes.TopicCreated, token);
@@ -157,6 +158,7 @@ public class NotificationService : INotificationService
         {
             var result = await SendMessageAsync(new SendMessageRequest()
             {
+                SenderId = Constants.AdminUserIdentifier,
                 RecieverId = tutor.Id,
                 MessageContent = template
             }, notificationType, NotificationContentTypes.EnquiryCreated, token);
@@ -175,6 +177,7 @@ public class NotificationService : INotificationService
 
         var result = await SendMessageAsync(new SendMessageRequest()
         {
+            SenderId = Constants.AdminUserIdentifier,
             RecieverId = enquiry.CreatedByUserId,
             MessageContent = template
         }, notificationType, NotificationContentTypes.EnquiryResolved, token);
