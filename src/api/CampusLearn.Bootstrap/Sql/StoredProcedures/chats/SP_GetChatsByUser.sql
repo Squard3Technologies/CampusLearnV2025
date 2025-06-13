@@ -4,8 +4,29 @@ CREATE OR ALTER PROCEDURE dbo.SP_GetChatsByUser
 )
 AS
 BEGIN
-    SELECT m.ReceiverId 'UserId', u.Name 'UserName', u.Surname 'UserSurname', u.Email 'UserEmail' FROM [CampusLearnDB].[dbo].[Message] m
-        INNER JOIN [CampusLearnDB].[dbo].[User] u ON m.ReceiverId = u.Id
-    WHERE m.SenderId = @UserId
-    GROUP BY m.ReceiverId, u.Name, u.Surname, u.Email
+    -- Get users the current user has sent messages to
+    SELECT 
+        otherUser.Id 'UserId', 
+        otherUser.Name 'UserName', 
+        otherUser.Surname 'UserSurname', 
+        otherUser.Email 'UserEmail',
+        (SELECT TOP 1 Content FROM [CampusLearnDB].[dbo].[Message] 
+         WHERE (SenderId = @UserId AND ReceiverId = otherUser.Id) 
+            OR (SenderId = otherUser.Id AND ReceiverId = @UserId)
+         ORDER BY DateCreated DESC) as 'LastMessage',
+        (SELECT TOP 1 DateCreated FROM [CampusLearnDB].[dbo].[Message] 
+         WHERE (SenderId = @UserId AND ReceiverId = otherUser.Id) 
+            OR (SenderId = otherUser.Id AND ReceiverId = @UserId)
+         ORDER BY DateCreated DESC) as 'LastMessageTime'
+    FROM 
+        [CampusLearnDB].[dbo].[User] otherUser
+    WHERE 
+        EXISTS (
+            SELECT 1 FROM [CampusLearnDB].[dbo].[Message] m 
+            WHERE ((m.SenderId = @UserId AND m.ReceiverId = otherUser.Id) 
+               OR (m.SenderId = otherUser.Id AND m.ReceiverId = @UserId))
+               AND m.MessageType = 'Chat'
+        )
+        AND otherUser.Id <> @UserId
+    ORDER BY LastMessageTime DESC
 END;

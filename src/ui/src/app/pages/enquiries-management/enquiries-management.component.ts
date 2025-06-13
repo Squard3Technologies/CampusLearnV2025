@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-enquiries-management',
   standalone: true,
@@ -11,16 +12,20 @@ import { RouterModule } from '@angular/router';
 })
 export class EnquiriesManagementComponent {
   isViewModalOpen: boolean = false;
-selectedInquiry: any = {};
+  selectedEnquiry: any = {};
 
-openViewModal(inquiry: any) {
-  this.selectedInquiry = { ...inquiry };
-  this.isViewModalOpen = true;
-}
+  constructor(private router: Router) {}
 
-closeViewModal() {
-  this.isViewModalOpen = false;
-}
+  openViewModal(inquiry: any) {
+    this.selectedEnquiry = { ...inquiry };
+    this.isViewModalOpen = true;
+  }
 
+  closeViewModal() {
+    this.isViewModalOpen = false;
+  }
 
+  navigateToHistory() {
+    this.router.navigate(['/enquiries-history']);
+  }
 }

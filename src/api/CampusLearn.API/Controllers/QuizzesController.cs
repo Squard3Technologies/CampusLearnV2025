@@ -11,12 +11,12 @@ public class QuizzesController : ControllerBase
 {
     #region -- protected properties --
 
-    protected readonly ILogger<TopicsController> _logger;
+    protected readonly ILogger<QuizzesController> _logger;
     private readonly IQuizService _quizService;
 
     #endregion -- protected properties --
 
-    public QuizzesController(ILogger<TopicsController> logger,
+    public QuizzesController(ILogger<QuizzesController> logger,
         IQuizService quizService)
     {
         _logger = logger;
@@ -129,7 +129,7 @@ public class QuizzesController : ControllerBase
     [HttpPost("{id}/attempt")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> CreateQuizAttempt(Guid id, [FromBody] CreateQuizAttemptRequestModel model, CancellationToken token)
+    public async Task<IActionResult> CreateQuizAttempt(Guid id, [FromQuery] Guid? assignedByUserId, CancellationToken token)
     {
         if (id == Guid.Empty)
             return BadRequest("Provide valud QuizId");
@@ -138,8 +138,20 @@ public class QuizzesController : ControllerBase
         if (userIdentifier == null)
             return BadRequest("Could not determine UserIdentifier");
 
-        var result = await _quizService.CreateQuizAttempt(id, userIdentifier.Value, model, token);
+        var result = await _quizService.CreateQuizAttempt(id, userIdentifier.Value, assignedByUserId ?? userIdentifier.Value, token);
         return result != null ? Ok(result) : NoContent();
+    }
+
+    [HttpPut("attempt/{id}")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CompleteQuizAttempt(Guid id, [FromBody] CompleteQuizAttemptRequestModel model, CancellationToken token)
+    {
+        if (id == Guid.Empty)
+            return BadRequest("Provide valud QuizId");
+
+        await _quizService.CreateQuizAttempt(id, model, token);
+        return Ok();
     }
 
     [HttpGet("attempt-history")]

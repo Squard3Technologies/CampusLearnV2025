@@ -28,8 +28,8 @@ export interface Topic {
 }
 
 export interface LearningMaterial {
-  id: number;
-  topicId: number;
+  id: string;
+  topicId: string;
   name: string;
   description: string;
   fileType: 'PDF' | 'Video' | 'Article' | 'Slides' | 'Audio' | 'Code' | 'Quiz';

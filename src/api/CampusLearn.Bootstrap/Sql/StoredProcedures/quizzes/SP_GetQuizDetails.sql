@@ -2,7 +2,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_GetQuizDetail
     @QuizId UNIQUEIDENTIFIER
 AS
 BEGIN
-    SELECT q.Id, q.Title 'Name', q.Description
+    SELECT q.Id, q.Title 'Name', q.Description, q.Duration
     FROM Quiz q
     WHERE q.Id = @QuizId
 

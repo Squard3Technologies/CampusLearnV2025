@@ -3,5 +3,5 @@ AS
 BEGIN
 	SELECT * 
 	FROM dbo.Module M WITH(NOLOCK)
-	ORDER BY M.Name
+	ORDER BY M.code, M.Name
 END;

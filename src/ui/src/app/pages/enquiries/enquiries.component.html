@@ -1,51 +1,73 @@
-<div class="page-wrapper">
-
-  <!-- Header Title -->
-  <div class="page-header">
-    <h1>My Inquiries for Module Code</h1>
-    <button class="action-btn top-right" (click)="openModal()">+ Create Inquiry</button>
+<div class="enquiries-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Module 1 Enquiries</li>
+      </ol>
+    </nav>
   </div>
 
-  <!-- Breadcrumbs -->
-  <div class="breadcrumbs">
-    <span>Modules / Module 1</span>
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header-section">
+      <h2>My Enquiries for Module Code</h2>
+      <div class="action-buttons">
+        <button class="create-btn" (click)="openModal()">+ Create Enquiry</button>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-bar">
+        <input type="text" placeholder="Search enquiries..." />
+        <span class="search-icon">🔍</span>
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="table-container">
+      <table class="enquiry-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Date Created</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inquiry of Enquiries">
+            <td>{{inquiry.id}}</td>
+            <td>{{inquiry.title}}</td>
+            <td>{{inquiry.dateCreated}}</td>
+            <td><span class="status-badge" [class]="getStatusClass(inquiry.status)">{{resolveStatus(inquiry.status)}}</span></td>
+            <td>
+              <button class="view-btn" (click)="openViewModal(inquiry)">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="bubble">Previous</span>
+      <span class="bubble">1</span>
+      <span class="bubble">2</span>
+      <span class="bubble">3</span>
+      <span class="bubble">Next</span>
+    </div>
+
+    <!-- Back Button -->
+    <div class="bottom-actions">
+      <button class="back-btn" [routerLink]="['/modules']">Back to My Modules</button>
+    </div>
   </div>
-
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <input type="text" placeholder="Search" />
-    <span class="search-icon">🔍</span>
-  </div>
-
-  <!-- Table -->
-  <table class="enquiry-table">
-    <tbody>
-  <tr *ngFor="let inquiry of inquiries">
-    <td>{{inquiry.id}}</td>
-    <td>{{inquiry.title}}</td>
-    <td>{{inquiry.dateCreated}}</td>
-    <td>{{inquiry.status}}</td>
-    <td>
-      <button (click)="openViewModal(inquiry)">View</button>
-    </td>
-  </tr>
-</tbody>
-
-  </table>
-
-  <!-- Pagination -->
-  <div class="pagination">
-    <span class="bubble">Previous</span>
-    <span class="bubble">1</span>
-    <span class="bubble">2</span>
-    <span class="bubble">3</span>
-    <span class="bubble">Next</span>
-  </div>
-
-  <!-- Back Button -->
-  <div class="bottom-btn">
-    <button class="action-btn" [routerLink]="['/modules']">Back to My Modules</button>
-  </div>
+</div>
 
   <!-- Modal New enquiry-->
   <ng-container *ngIf="showModal">
@@ -67,35 +89,34 @@
     </div>
   </ng-container>
 
-  <!-- View Inquiry Modal -->
-   <ng-container>
-<div class="modal" *ngIf="isViewModalOpen">
-  <div class="modal-content">
-    <h2 class="modal-title">View Inquiry</h2>
+  <!-- View Enquiry Modal -->
+<ng-container>
+  <div class="modal" *ngIf="isViewModalOpen">
+    <div class="modal-content">
+      <h2 class="modal-title">View Enquiry</h2>
 
-    <label for="view-title">Title</label>
-    <input id="view-title" type="text" [(ngModel)]="selectedInquiry.title" >
+      <label for="view-title">Title</label>
+      <input disabled id="view-title" type="text" [(ngModel)]="selectedEnquiry.title" >
 
-    <label for="view-description">Description</label>
-    <textarea id="view-description" rows="3" [(ngModel)]="selectedInquiry.description" ></textarea>
+      <label for="view-description">Description</label>
+      <textarea disabled id="view-description" rows="3" [(ngModel)]="selectedEnquiry.description" ></textarea>
 
-    <label for="view-description">Resolution Action</label>
-    <select id="resolution-action" [(ngModel)]="selectedInquiry.resolutionAction">
-      <option value="New Topic">New Topic</option>
-      <option value="Link To Existing Topic">Link To Existing Topic</option>
-      <option value="No Action Required">No Action Required</option>
-    </select>
+      <label for="view-description">Resolution Action</label>
+      <select disabled id="resolution-action" [(ngModel)]="selectedEnquiry.resolutionAction">
+        <option value="null" disabled selected>Pending resolution</option>
+        <option value="1">No Action</option>
+        <option value="2">Linked To Topic</option>
+        <option value="3">Created New Topic</option>
+      </select>
 
+      <label for="linked-topic">Linked Topic</label>
+      <input disabled id="linked-topic" type="text" [(ngModel)]="selectedEnquiry.topicTitle" >
 
-    <label for="linked-topic">Linked Topic</label>
-    <input id="linked-topic" type="text" [(ngModel)]="selectedInquiry.linkedTopic" >
+      <label for="resolution-response">Resolution Response</label>
+      <textarea disabled id="resolution-response" rows="4" [(ngModel)]="selectedEnquiry.resolutionResponse" ></textarea>
 
-    <label for="resolution-response">Resolution Response</label>
-    <textarea id="resolution-response" rows="4" [(ngModel)]="selectedInquiry.resolutionResponse" ></textarea>
-
-    <button (click)="closeViewModal()">Back</button>
+      <button (click)="closeViewModal()">Back</button>
+    </div>
   </div>
-</div>
 </ng-container>
 
-</div>

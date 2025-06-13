@@ -1,1 +1,54 @@
-<p>quiz-history works!</p>
+<div class="quizzes-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">My Quizzes</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>My Quizzes</h3>      
+      <ul class="tabs">
+        <li class="tab clickable" (click)="navigateToAssignedQuizzes()">Assigned Quizzes</li>
+        <li class="tab active">Quiz History</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Assigned Quizzes</h2>
+        <div class="quizzes-grid">
+            <div class="quiz-card" *ngFor="let completedQuiz of completedQuizzes">
+                <div class="quiz-header">
+                <h4>{{ completedQuiz.quizName }}</h4>
+                </div>
+                <div>
+                    <p><b>Module:</b> {{completedQuiz.moduleCode}}</p>
+                    <p><b>Topic:</b> {{completedQuiz.topicName}}</p>
+                    <p><b>Duration:</b> {{completedQuiz.duration}}</p>
+                    <p><b>Last Attempt Date Time:</b> {{completedQuiz.lastAttemptDateTime}}</p>
+                    <p><b>Last Attempt Score:</b> {{completedQuiz.lastAttemptScore}}</p>
+                </div>
+                <div class="quiz-actions">
+                    <button class="btn btn-primary" [routerLink]="['/quiz', completedQuiz.id, 'review']">
+                        View Attempt
+                    </button>
+                    <button class="btn btn-primary" [routerLink]="['/quiz', completedQuiz.quizId, 'attempt']" [queryParams]="{ quizAttemptId: completedQuiz.id }">
+                        Reattempt
+                    </button>
+                </div>
+            </div>
+            <div class="no-quizzes" *ngIf="completedQuizzes?.length === 0">
+                <p>No completed quizzes</p>
+            </div>
+        </div>
+    </div>
+</div>

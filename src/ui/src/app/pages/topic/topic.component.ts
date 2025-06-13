@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-topic',
@@ -13,8 +14,9 @@ export class TopicComponent implements OnInit {
   moduleId: string | null = null;
   moduleName: string | null = null;
   topicId: string | null = null;
+  topic: any | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router, private apiService: ApiService) {}
 
   ngOnInit() {
     // Get the topic ID from route parameters
@@ -25,7 +27,14 @@ export class TopicComponent implements OnInit {
       this.moduleId = queryParams.get('moduleId');
       this.moduleName = queryParams.get('moduleName');
     });
+
+    if (this.topicId && this.moduleId) {
+      this.apiService.getTopic(this.moduleId, this.topicId).subscribe((x:any) => {
+        this.topic = x.body
+      })
+    }
   }
+
   navigateToDiscussions() {
     if (this.topicId) {
       // Navigate to discussions with module context as query parameters
