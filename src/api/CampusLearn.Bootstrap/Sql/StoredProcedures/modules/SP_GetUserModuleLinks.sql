@@ -1,4 +1,4 @@
-CREATE OR ALTER PROCEDURE dbo.SP_GetUserModules
+CREATE OR ALTER PROCEDURE dbo.SP_GetUserModuleLinks
 (
     @userId UNIQUEIDENTIFIER
 )

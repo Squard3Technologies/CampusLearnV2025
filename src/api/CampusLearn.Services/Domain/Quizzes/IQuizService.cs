@@ -18,7 +18,9 @@ public interface IQuizService
 
     Task<List<QuizViewModel>> GetActiveQuizzes(Guid userId, CancellationToken token);
 
-    Task<Guid?> CreateQuizAttempt(Guid quizId, Guid userId, CreateQuizAttemptRequestModel model, CancellationToken token);
+    Task<Guid?> CreateQuizAttempt(Guid quizId, Guid userId, Guid assignedByUserId, CancellationToken token);
+
+    Task CreateQuizAttempt(Guid quizAttemptId, CompleteQuizAttemptRequestModel model, CancellationToken token);
 
     Task<List<QuizHistoryViewModel>> GetQuizzesAttemptHistory(Guid userId, CancellationToken token);
 

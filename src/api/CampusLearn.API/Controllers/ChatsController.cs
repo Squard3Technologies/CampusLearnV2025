@@ -8,12 +8,12 @@ public class ChatsController : ControllerBase
 {
     #region -- protected properties --
 
-    protected readonly ILogger<TopicsController> _logger;
+    protected readonly ILogger<ChatsController> _logger;
     private readonly IChatService _chatService;
 
     #endregion -- protected properties --
 
-    public ChatsController(ILogger<TopicsController> logger,
+    public ChatsController(ILogger<ChatsController> logger,
         IChatService chatService)
     {
         _logger = logger;

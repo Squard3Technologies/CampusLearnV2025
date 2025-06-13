@@ -3,6 +3,15 @@
 /* Importing Bootstrap SCSS file */
 @import 'bootstrap/scss/bootstrap';
 
+// Calculate navbar height (adjust if your navbar height differs)
+$navbar-height: 70px; // Default Bootstrap navbar height
+
+.content-with-navbar {
+  padding-top: $navbar-height;
+  min-height: calc(100vh - $navbar-height); // Ensures footer stays at bottom
+}
+
+
 /* Custom Variables */
 :root {
   --primary-color: #AD0151;
@@ -16,6 +25,8 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   background-color: #f9f9f9;
+  height: 100%;
+  margin: 0;
 }
 
 /* Fix for dropdown in Angular */
@@ -28,9 +39,23 @@ body {
   cursor: pointer;
 }
 
+.swal2-loader {
+  //width: 3rem !important;   /* Increase size */
+  //height: 3rem !important;
+  //border-width: 4px !important; /* Thicker spinner */
+  border-color: #AD0151 transparent #AD0151 transparent !important;
+}
+
+
 /* Make dropdown items more clickable on mobile */
 @media (max-width: 992px) {
   .dropdown-item {
     padding: 12px 16px;
   }
+
+  .content-with-navbar {
+    padding-top: $navbar-height + 10px; // Extra space for mobile
+  }
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

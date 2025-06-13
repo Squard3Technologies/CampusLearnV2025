@@ -1,17 +1,18 @@
 // Basic styling for forgot password page to match login page
 
-.container {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: white;
-  border-radius: 8px;
-  padding: 2rem;
-}
 
-// Focus styling for input
-.form-control:focus {
-  border-color: #AD0151;
-  box-shadow: 0 0 0 0.2rem rgba(173, 1, 81, 0.25);
-}
+// .container {
+//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+//   background: white;
+//   border-radius: 8px;
+//   padding: 2rem;
+// }
+
+// // Focus styling for input
+// .form-control:focus {
+//   border-color: #AD0151;
+//   box-shadow: 0 0 0 0.2rem rgba(173, 1, 81, 0.25);
+// }
 
 // Primary button styling
 .btn-primary {
@@ -32,5 +33,66 @@
   &:hover {
     color: #8b0142;
     text-decoration: underline;
+  }
+}
+
+
+
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.login-container {
+  height: 100%;
+  width: 100%;
+  padding: 15px; /* Prevents edge touching */
+  box-shadow: 0 4px 6px rgba(193, 0, 0, 0.9);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 900px; /* Prevents card from getting too wide */
+  max-height: 90vh; /* Prevents card from exceeding viewport height */
+  overflow: hidden; /* Allows scrolling INSIDE card if needed */
+}
+
+/* Ensure image doesn't overflow */
+.logo-section img {
+  max-height: 80vh;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+
+/* Stack logo & form on small screens */
+@media (max-width: 992px) {
+  .login-card {
+    max-height: 95vh; /* Slightly more space on mobile */
+  }
+  
+  .col-lg-5, .col-lg-7 {
+    width: 100%;
+  }
+}
+
+
+/* Stack logo & form on small screens */
+@media (max-width: 768px) {
+  .login-card {
+    max-height: 95vh; /* Slightly more space on mobile */
+  }
+
+  img{
+    max-height: 400px;
+  }
+  
+  .col-lg-5, .col-lg-7 {
+    width: 100%;
   }
 }

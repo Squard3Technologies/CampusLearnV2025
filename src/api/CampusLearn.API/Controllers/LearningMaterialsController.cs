@@ -47,7 +47,7 @@ public class LearningMaterialsController : ControllerBase
 
         var filePath = await storageManager.UploadLearningMaterialAsync(configuration, baseUrl, request);
 
-        if(string.IsNullOrEmpty(filePath))
+        if (string.IsNullOrEmpty(filePath))
             return BadRequest("Error saving file.");
 
         //save the details to the database.

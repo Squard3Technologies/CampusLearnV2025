@@ -1,6 +1,6 @@
-CREATE OR ALTER PROCEDURE dbo.SP_GetAvailableTutors
+CREATE OR ALTER PROCEDURE dbo.SP_GetSubscribedUserIdentifiers
 (
-    @TutorId UNIQUEIDENTIFIER,
+    @UserId UNIQUEIDENTIFIER,
     @TopicId UNIQUEIDENTIFIER
 )
 AS
@@ -12,6 +12,6 @@ BEGIN
         WHERE ts.TopicId = @TopicId
         UNION
         SELECT ts.UserId FROM TutorSubscription ts
-        WHERE ts.TutorId = @TutorId
+        WHERE ts.TutorId = @UserId
     ) AS CombinedUserIds
 END;

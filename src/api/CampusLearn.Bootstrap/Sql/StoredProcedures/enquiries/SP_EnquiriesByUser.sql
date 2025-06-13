@@ -4,5 +4,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_EnquiriesByUser
 )
 AS
 BEGIN
-    SELECT * FROM Enquiry WHERE CreatedByUserId = @UserId;
+    SELECT e.*, t.Title 'TopicTitle' FROM Enquiry e
+	    LEFT JOIN Topic t ON e.LinkedTopicId = t.Id
+    WHERE e.CreatedByUserId = @UserId;
 END;

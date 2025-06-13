@@ -4,5 +4,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_EnquiriesByStatus
 )
 AS
 BEGIN
-    SELECT * FROM Enquiry WHERE Status = @Status;
+    SELECT e.*, t.Title 'TopicTitle' FROM Enquiry e
+	    LEFT JOIN Topic t ON e.LinkedTopicId = t.Id
+    WHERE e.Status = @Status;
 END;

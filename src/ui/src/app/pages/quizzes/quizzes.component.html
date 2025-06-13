@@ -1,1 +1,49 @@
-<p>quizzes works!</p>
+<div class="quizzes-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">My Quizzes</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>My Quizzes</h3>      
+      <ul class="tabs">
+        <li class="tab active">Assigned Quizzes</li>
+        <li class="tab clickable" (click)="navigateToQuizHistory()">Quiz History</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Assigned Quizzes</h2>
+        <div class="quizzes-grid">
+            <div class="quiz-card" *ngFor="let activeQuiz of activeQuizzes">
+                <div class="quiz-header">
+                <h4>{{ activeQuiz.name }}</h4>
+                </div>
+                <div>
+                    <p><b>Module:</b> {{activeQuiz.moduleCode}}</p>
+                    <p><b>Topic:</b> {{activeQuiz.topicName}}</p>
+                    <p><b>Duration:</b> {{activeQuiz.duration}}</p>
+                </div>
+                <div class="quiz-actions">
+                    <button class="btn btn-primary" [routerLink]="['/quiz', activeQuiz.id, 'attempt']" [queryParams]="{ quizAttemptId: activeQuiz.quizAttemptId }">
+                        Attempt Quiz
+                    </button>
+                </div>
+            </div>
+            <div class="no-quizzes" *ngIf="activeQuizzes?.length === 0">
+                <p>No assigned quizzes</p>
+            </div>
+        </div>
+    </div>
+</div>

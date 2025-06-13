@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { User, UserService } from '../../services/user.service';
 import { mockModules } from '../../mock-data';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-modules',
@@ -12,18 +12,13 @@ import { mockModules } from '../../mock-data';
   styleUrl: './modules.component.scss'
 })
 export class ModulesComponent {
-  currentUser: User | null = null;
   userModules: any[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.userService.currentUser$.subscribe((user: User | null) => {
-      this.currentUser = user;
-
-      if (user) {
-        this.userModules = mockModules;
-      }
+    this.apiService.getModules().subscribe((x: any | null) => {
+      this.userModules = x;
     });
   }
 }

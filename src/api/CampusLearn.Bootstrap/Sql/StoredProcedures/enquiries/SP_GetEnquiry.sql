@@ -4,5 +4,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_GetEnquiry
 )
 AS
 BEGIN
-    SELECT * FROM Enquiry WHERE Id = @Id;
+    SELECT e.*, t.Title 'TopicTitle' FROM Enquiry e
+		LEFT JOIN Topic t ON e.LinkedTopicId = t.Id
+	WHERE e.Id = @Id;
 END;

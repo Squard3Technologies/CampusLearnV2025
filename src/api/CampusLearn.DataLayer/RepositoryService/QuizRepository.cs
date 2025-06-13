@@ -42,15 +42,13 @@ public class QuizRepository : IQuizRepository
         });
     }
 
-    public async Task<GenericDbResponseViewModel<Guid?>> CreateQuizAttemptAsync(Guid quizId, Guid userId, CreateQuizAttemptRequestModel model, CancellationToken token)
+    public async Task<GenericDbResponseViewModel<Guid?>> CreateQuizAttemptAsync(Guid quizId, Guid userId, Guid assignedByUserId, CancellationToken token)
     {
-        var answersJson = JsonConvert.SerializeObject(model.QuestionAnswers);
-
         return await _database.ExecuteTransactionAsync(async (db, transaction) =>
         {
             var parameters = new DynamicParameters();
-            parameters.Add("AnswersJson", answersJson, DbType.String);
-            parameters.Add("CreatedByUserId", userId, DbType.Guid);
+            parameters.Add("UserId", userId, DbType.Guid);
+            parameters.Add("AssignedByUserId", assignedByUserId, DbType.Guid);
             parameters.Add("QuizId", quizId, DbType.Guid);
 
             var result = await db.QueryFirstAsync<GenericDbResponseViewModel<Guid?>>(
@@ -62,6 +60,27 @@ public class QuizRepository : IQuizRepository
             );
 
             return result;
+        });
+    }
+
+    public async Task CompleteQuizAttemptAsync(Guid quizAttemptId, CompleteQuizAttemptRequestModel model, CancellationToken token)
+    {
+        var answersJson = JsonConvert.SerializeObject(model.QuestionAnswers);
+
+        await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("AnswersJson", answersJson, DbType.String);
+            parameters.Add("AttemptDuration", model.Duration, DbType.Time);
+            parameters.Add("QuizAttemptId", quizAttemptId, DbType.Guid);
+
+            var result = await db.ExecuteAsync(
+                "dbo.SP_CompleteQuizAttempt",
+                parameters,
+                transaction,
+                commandTimeout: 360,
+                commandType: CommandType.StoredProcedure
+            );
         });
     }
 
@@ -128,8 +147,10 @@ public class QuizRepository : IQuizRepository
             if (quizAttempt == null)
                 return null;
 
-            quizAttempt.Questions = (await multipleResults.ReadAsync<QuizAttemptHistoryQuestionViewModel>()).ToList();
+            var questions = (await multipleResults.ReadAsync<QuizAttemptHistoryQuestionViewModel>()).ToList();
             var attemptOptions = (await multipleResults.ReadAsync<QuizAttemptHistoryQuestionOptionViewModel>()).ToList();
+
+            quizAttempt.Questions = questions;
 
             foreach (var question in quizAttempt.Questions)
             {
