@@ -40,7 +40,14 @@ interface Quiz {
 export class QuizManagementComponent {
   quizId: string | null = null;
   topicId: string | null = null;
-  quiz: Quiz | null = null;
+  quiz: Quiz = {
+    id: "",
+    name: "",
+    description: "",
+    duration: "",
+    durationMinites: 0,
+    questions: []
+  };
   moduleId: string | null = null;
   moduleName: string | null = null;
   durationMinutes: number = 0;

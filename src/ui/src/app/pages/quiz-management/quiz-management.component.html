@@ -84,77 +84,79 @@
         </div>
       </form>
 
-      <!-- Quizzes Table -->
-      <div class="quizzes-header">
-        <h4>Questions</h4>
-      </div>
-
-      <div class="quizzes-table-container">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead class="table-header">
-              <tr>
-                <th scope="col">
-                  <i class="fas fa-question-circle"></i> Name
-                </th>
-                <th scope="col">
-                  <i class="fas fa-info-circle"></i> Type
-                </th>
-                <th scope="col" class="text-center">
-                  <i class="fas fa-cog"></i> Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let question of quiz.questions" class="quiz-row">
-                <td class="quiz-name">
-                  <div class="d-flex align-items-center">
-                    <i class="fas fa-file-alt text-primary me-2"></i>
-                    <div>
-                        {{ question.name }}
-                    </div>
-                  </div>
-                </td>
-                <td class="quiz-name">
-                  <div class="d-flex align-items-center">
-                    <div>
-                      {{ getQuestionTypeLabel(question.questionType) }}
-                    </div>
-                  </div>
-                </td>
-                <td class="quiz-actions text-center">
-                  <div class="btn-group" role="group">
-                    <button
-                        class="btn btn-sm btn-outline-primary"
-                        (click)="editQuestion(question)"
-                        title="Edit Question">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button 
-                        class="btn btn-sm btn-outline-primary"
-                        (click)="deleteQuestion(question)"
-                        title="Delete Question">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Questions Table -->
+      <ng-container *ngIf="quizId != null">
+        <div class="quizzes-header">
+          <h4>Questions</h4>
         </div>
 
-        <!-- No Quizzes Message -->
-        <div class="no-quizzes" *ngIf="quiz.questions.length === 0">
-          <div class="text-center py-5">
-            <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
-            <h4 class="text-muted">No Questions Added</h4>
-            <p class="text-muted">No questions have been created for this Quiz.</p>
-            <button class="btn btn-primary">
-              <i class="fas fa-plus"></i> Create First Question
-            </button>
+        <div class="quizzes-table-container">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-header">
+                <tr>
+                  <th scope="col">
+                    <i class="fas fa-question-circle"></i> Name
+                  </th>
+                  <th scope="col">
+                    <i class="fas fa-info-circle"></i> Type
+                  </th>
+                  <th scope="col" class="text-center">
+                    <i class="fas fa-cog"></i> Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let question of quiz.questions" class="quiz-row">
+                  <td class="quiz-name">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-file-alt text-primary me-2"></i>
+                      <div>
+                          {{ question.name }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="quiz-name">
+                    <div class="d-flex align-items-center">
+                      <div>
+                        {{ getQuestionTypeLabel(question.questionType) }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="quiz-actions text-center">
+                    <div class="btn-group" role="group">
+                      <button
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="editQuestion(question)"
+                          title="Edit Question">
+                          <i class="fas fa-edit"></i>
+                      </button>
+                      <button 
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="deleteQuestion(question)"
+                          title="Delete Question">
+                          <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- No Quizzes Message -->
+          <div class="no-quizzes" *ngIf="quiz.questions.length === 0">
+            <div class="text-center py-5">
+              <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
+              <h4 class="text-muted">No Questions Added</h4>
+              <p class="text-muted">No questions have been created for this Quiz.</p>
+              <button class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create First Question
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 </div>
