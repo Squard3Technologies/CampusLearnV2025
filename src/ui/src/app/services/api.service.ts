@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GenericAPIResponse, SystemUser, Module } from '../models/api.models';
-import { map, Observable, catchError } from 'rxjs';
+import { map, Observable, catchError, of } from 'rxjs';
 import { ChatUser, ChatMessage, CreateMessageRequest, SearchUser } from '../models/chat.models';
 import { Discussion, DiscussionComment, CreateDiscussionRequest, CreateCommentRequest } from '../models/discussion.models';
 
@@ -58,26 +58,83 @@ export class ApiService {
   // Discussions & Learning Material
   getDiscussions(topicId: string) {
     return this.httpClient.get(`${this.apiUrl}/discussions`, { params: { topicId } });
-  }
-  // New Discussion API methods
+  }  // New Discussion API methods
   getDiscussionsByTopic(topicId: string): Observable<Discussion[]> {
-    return this.httpClient.get<Discussion[]>(`${this.apiUrl}/discussions/topic/${topicId}`);
+    return this.httpClient.get<any[]>(`${this.apiUrl}/discussions/topic/${topicId}`)
+      .pipe(
+        map(discussions => {
+          // Transform the backend model to match our frontend model
+          return discussions.map(d => ({
+            id: d.id || '',
+            title: d.title || '',
+            content: d.content || '',
+            createdOn: new Date(d.dateCreated || new Date()),
+            author: {
+              id: d.createdByUserId || '',
+              firstName: d.createdByUserName || '',
+              surname: d.createdByUserSurname || '',
+              emailAddress: d.createdByUserEmail || ''
+            },
+            comments: []
+          }));
+        })
+      );
   }
-
   getDiscussionComments(discussionId: string): Observable<DiscussionComment[]> {
-    return this.httpClient.get<DiscussionComment[]>(`${this.apiUrl}/discussions/${discussionId}/comments`);
-  }
-  createDiscussion(topicId: string, discussionData: CreateDiscussionRequest): Observable<string> {
-    return this.httpClient.post<string>(`${this.apiUrl}/discussions/topic/${topicId}`, discussionData);
-  }
-  addCommentToDiscussion(discussionId: string, commentData: CreateCommentRequest): Observable<string> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}/discussions/${discussionId}/comments`)
+      .pipe(
+        map(comments => {
+          // Handle case where API returns null/undefined
+          if (!comments || !Array.isArray(comments)) {
+            console.log('No comments returned for discussion:', discussionId);
+            return [];
+          }
+          
+          // Transform the backend model to match our frontend model
+          return comments.map(c => ({
+            id: c.id || c.commentId || '',
+            content: c.content || c.title || '', // Some APIs might use 'title' instead
+            createdOn: new Date(c.dateCreated || c.createdOn || new Date()),
+            author: {
+              id: c.createdByUserId || '',
+              firstName: c.createdByUserName || '',
+              surname: c.createdByUserSurname || '',
+              emailAddress: c.createdByUserEmail || ''
+            }
+          }));
+        }),
+        catchError(error => {
+          // If it's a 204 No Content, return empty array instead of error
+          if (error.status === 204) {
+            console.log('No comments found for discussion:', discussionId);
+            return of([]);
+          }
+          console.error('Error fetching comments for discussion:', discussionId, error);
+          throw error;
+        })
+      );
+  }createDiscussion(topicId: string, discussionData: CreateDiscussionRequest): Observable<string> {
+    // Format data to match backend expectations
+    const backendFormat = {
+      Title: discussionData.title,
+      Content: discussionData.content
+    };
+    
+    console.log('Creating discussion:', backendFormat);
+    return this.httpClient.post<string>(`${this.apiUrl}/discussions/topic/${topicId}`, backendFormat);
+  }  addCommentToDiscussion(discussionId: string, commentData: CreateCommentRequest): Observable<string> {
     // Enhanced debugging: Log the exact URL and payload
     const url = `${this.apiUrl}/discussions/${discussionId}/comment`;
     console.log('Adding comment to discussion:', discussionId);
     console.log('Comment URL:', url);
     console.log('Comment data:', JSON.stringify(commentData));
     
-    return this.httpClient.post<string>(url, commentData)
+    // Format data to match backend expectations
+    const backendFormat = {
+      Content: commentData.content
+    };
+    
+    return this.httpClient.post<string>(url, backendFormat)
       .pipe(
         map(response => {
           console.log('Comment added successfully, response:', response);

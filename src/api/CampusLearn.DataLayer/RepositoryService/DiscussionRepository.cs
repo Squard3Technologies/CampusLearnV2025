@@ -34,9 +34,7 @@ public class DiscussionRepository : IDiscussionRepository
 
             return result;
         });
-    }
-
-    public async Task<Guid?> CreateDiscussion(Guid topicId, Guid userId, CreateDiscussionRequestModel model, CancellationToken token)
+    }    public async Task<Guid?> CreateDiscussion(Guid topicId, Guid userId, CreateDiscussionRequestModel model, CancellationToken token)
     {
         return await _database.ExecuteTransactionAsync(async (db, transaction) =>
         {
@@ -44,6 +42,7 @@ public class DiscussionRepository : IDiscussionRepository
             parameters.Add("TopicId", topicId, DbType.Guid);
             parameters.Add("UserId", userId, DbType.Guid);
             parameters.Add("Title", model.Title, DbType.String);
+            parameters.Add("Content", model.Content, DbType.String);
 
             var result = await db.QueryFirstOrDefaultAsync<Guid?>(
                 "dbo.SP_CreateDiscussion",

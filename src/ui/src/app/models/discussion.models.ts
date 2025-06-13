@@ -22,7 +22,16 @@ export interface Discussion {
   createdOn: Date;
   comments?: DiscussionComment[];
 }
-
+export interface DiscussionApiModel {
+    title: string;
+    dateCreated: string;
+    createdByUserId: string;
+    createdByUserName: string;
+    createdByUserSurname: string;
+    createdByUserEmail: string;
+    lastComment: string;
+    lastCommentDateCreated: string;
+}
 export interface CreateDiscussionRequest {
   title: string;
   content: string;

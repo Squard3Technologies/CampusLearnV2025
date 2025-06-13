@@ -51,7 +51,6 @@ export class TopicDiscussionsComponent implements OnInit {
 
     this.loadDiscussions();
   }
-
   loadDiscussions() {
     if (!this.topicId) return;
     
@@ -63,6 +62,10 @@ export class TopicDiscussionsComponent implements OnInit {
       .subscribe({
         next: (discussions) => {
           this.discussions = discussions;
+          // Load comments for each discussion
+          discussions.forEach(discussion => {
+            this.loadDiscussionComments(discussion.id);
+          });
         },
         error: (error) => {
           console.error('Error loading discussions:', error);
@@ -96,53 +99,69 @@ export class TopicDiscussionsComponent implements OnInit {
           this.errorMessage = 'Failed to create discussion. Please try again later.';
         }
       });
-  }
-  addComment(discussionId: string) {
+  }  addComment(discussionId: string) {
     if (!this.newComment[discussionId]?.trim()) return;
     
     const commentData: CreateCommentRequest = {
-      content: this.newComment[discussionId]
+      content: this.newComment[discussionId].trim()
     };
     
     console.log('Adding comment to discussion:', discussionId);
     console.log('Comment data:', commentData);
     
     this.commentLoading[discussionId] = true;
+    this.errorMessage = null; // Clear any previous errors
+    
     this.apiService.addCommentToDiscussion(discussionId, commentData)
       .pipe(finalize(() => this.commentLoading[discussionId] = false))
       .subscribe({
         next: (result) => {
           console.log('Comment added successfully, result:', result);
-          // Clear the comment input
+          
+          // Clear the comment input immediately for better UX
           this.newComment[discussionId] = '';
           
-          // Get updated comments for this discussion
+          // Reload comments for this discussion to show the new comment
           this.loadDiscussionComments(discussionId);
         },
         error: (error) => {
           console.error('Error adding comment:', error);
-          this.errorMessage = 'Failed to add comment. Please try again later.';
+          this.errorMessage = `Failed to add comment: ${error?.error?.message || error?.message || 'Unknown error'}`;
+          
+          // Don't clear the comment input on error so user can retry
         }
       });
-  }
-  loadDiscussionComments(discussionId: string) {
+  }  loadDiscussionComments(discussionId: string) {
     console.log('Loading comments for discussion:', discussionId);
     
     this.apiService.getDiscussionComments(discussionId)
       .subscribe({
         next: (comments) => {
-          console.log('Comments loaded successfully:', comments);
+          console.log('Comments loaded successfully for discussion', discussionId, ':', comments);
+          
           // Find the discussion and update its comments
           const discussion = this.discussions.find(d => d.id === discussionId);
           if (discussion) {
-            discussion.comments = comments;
+            // Ensure comments is always an array and properly typed
+            discussion.comments = Array.isArray(comments) ? comments : [];
+            console.log('Updated discussion comments:', discussion.comments);
           } else {
             console.error('Discussion not found in local array:', discussionId);
           }
         },
         error: (error) => {
           console.error('Error loading comments for discussion', discussionId, ':', error);
-          this.errorMessage = 'Failed to load comments. Please try again later.';
+          
+          // Initialize empty comments array on error to prevent template issues
+          const discussion = this.discussions.find(d => d.id === discussionId);
+          if (discussion && !discussion.comments) {
+            discussion.comments = [];
+          }
+          
+          // Only show error if it's not a "no content" error
+          if (error.status !== 204) {
+            this.errorMessage = 'Failed to load some comments. Please refresh the page.';
+          }
         }
       });
   }
@@ -151,7 +170,11 @@ export class TopicDiscussionsComponent implements OnInit {
     if (!this.showNewPostForm) {
       // Reset form when hiding
       this.newPost = { title: '', content: '' };
-    }
+    }  }
+
+  // Track function for better performance in comment ngFor
+  trackComment(index: number, comment: DiscussionComment): string {
+    return comment.id;
   }
 
   // Navigation methods for sidebar
