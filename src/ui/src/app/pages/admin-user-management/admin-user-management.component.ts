@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { UserService } from '../../services/user.service';
 import Swal from 'sweetalert2';
 import { SystemUser } from '../../models/api.models';
 
@@ -27,10 +26,12 @@ export class AdminUserManagementComponent implements OnInit {
   pageSize: number = 5;
   totalPages: number = 1;
 
+  editUserModel: SystemUser
+  showEditUserModal: boolean = false;
+
   constructor(
     private router: Router,
-    private apiService: ApiService,
-    private userService: UserService
+    private apiService: ApiService
   ) { }
 
   ngOnInit(): void {
@@ -48,11 +49,13 @@ export class AdminUserManagementComponent implements OnInit {
             iconColor: '#AD0151',
             title: 'REGISTRAION ERROR',
             text: response?.statusMessage || 'Retrieving admin users failed. Please try again.',
-            background: "#dc3545",
-            color: "#fafafa",
-            confirmButtonColor: '#AD0151',
-            confirmButtonText: 'Dismiss',
-            allowOutsideClick: false
+            confirmButtonColor: '#dc3545',
+        confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+        allowOutsideClick: false,
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'btn btn-md btn-outline-danger me-2',
+        }
           });
           return;
         }
@@ -63,11 +66,13 @@ export class AdminUserManagementComponent implements OnInit {
             iconColor: '#AD0151',
             title: 'REGISTRAION ERROR',
             text: response?.statusMessage || 'Retrieving admin users failed. Please try again.',
-            background: "#dc3545",
-            color: "#fafafa",
-            confirmButtonColor: '#AD0151',
-            confirmButtonText: 'Dismiss',
-            allowOutsideClick: false
+            confirmButtonColor: '#dc3545',
+        confirmButtonText: '<i class="fa fa-thumbs-uo me-2"></i> Dismiss',
+        allowOutsideClick: false,
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'btn btn-md btn-outline-success me-2',
+        }
           });
           return;
         }
@@ -86,11 +91,13 @@ export class AdminUserManagementComponent implements OnInit {
           iconColor: '#AD0151',
           title: 'REGISTRAION ERROR',
           text: error.error?.message || 'Retrieving admin users failed. Please try again.',
-          background: "#dc3545",
-          color: "#fafafa",
-          confirmButtonColor: '#AD0151',
-          confirmButtonText: 'Dismiss',
-          allowOutsideClick: false
+          confirmButtonColor: '#dc3545',
+        confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+        allowOutsideClick: false,
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'btn btn-md btn-outline-danger me-2',
+        }
         });
       }
     });
@@ -170,10 +177,144 @@ export class AdminUserManagementComponent implements OnInit {
     this.router.navigate(['/admin/modules']);
   }
 
-  editUser(user: SystemUser): void {
-    console.log('Editing user:', user);
-    // Implement edit user functionality
+  openEditUserModal(user: SystemUser): void {
+    //console.log('Editing user:', user);
+    this.editUserModel = user;
+    this.showEditUserModal = true;
   }
+
+  closeEditUserModal(clearFiels: boolean) {
+    if (clearFiels) {
+      this.editUserModel = null;
+    }
+    this.showEditUserModal = false;
+  }
+
+
+  submitEditUserModal() {
+    if (!this.editUserModel.firstName || !this.editUserModel.surname || !this.editUserModel.emailAddress || !this.editUserModel.contactNumber 
+      || !this.editUserModel.role || !this.editUserModel.accountStatusId
+    ) {
+      //this.errorMessage = 'Please fill in all fields';
+      Swal.fire({
+        icon: 'error',
+        iconColor: '#AD0151',
+        title: 'Validation Error',
+        text: 'Please fill in all fields',
+        confirmButtonColor: '#dc3545',
+        confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+        allowOutsideClick: false,
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'btn btn-md btn-outline-danger me-2',
+        }
+      });
+      return;
+    }
+   
+
+    this.closeEditUserModal(false);
+    console.log('edit user data: ', JSON.stringify(this.editUserModel));
+    Swal.fire({
+      title: 'Saving user details changes...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    const model = {
+      id: this.editUserModel.id,
+      firstName: this.editUserModel.firstName,
+      middleName: this.editUserModel.middleName,
+      lastName: this.editUserModel.surname,
+      emailAddress: this.editUserModel.emailAddress,
+      contactNumber: this.editUserModel.contactNumber,
+      password: "",
+    }
+    console.log('edit user json: ', JSON.stringify(model));
+    // Call API registration service
+    this.apiService.updateUserByAdmin(model).subscribe({
+      next: (response) => {
+        console.log('module update successful:', response);
+        Swal.close();
+        if (response != null) {
+          if (!response.status) {
+            this.openEditUserModal(this.editUserModel);
+            Swal.fire({
+              icon: 'error',
+              iconColor: '#dc3545',
+              title: 'UPDATE USER ERROR',
+              text: response.statusMessage,
+              confirmButtonColor: '#dc3545',
+              confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+              allowOutsideClick: false,
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'btn btn-outline-danger me-2',
+              }
+            });
+            return;
+          }
+          Swal.fire({
+            icon: 'success',
+            iconColor: '#198754',
+            title: 'SUCCESS',
+            html: response.statusMessage,
+            confirmButtonColor: '#fafafa',
+            confirmButtonText: '<i class="fa fa-thumbs-up me-2"></i> Dismiss',
+            allowOutsideClick: false,
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-md btn-outline-success me-2',
+            }
+          }).then((result) => {
+            this.editUserModel = null
+            this.loadUsers();
+          });
+
+        }
+        else {
+          this.openEditUserModal(this.editUserModel);
+          Swal.fire({
+            icon: 'error',
+            iconColor: '#dc3545',
+            title: 'ERROR',
+            html: '<p class="font-13">Updating user failed. <br/>Internal system error encountered</p>',
+            confirmButtonColor: '#dc3545',
+            confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+            allowOutsideClick: false,
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-md btn-outline-danger me-2',
+            }
+          }).then((result) => {
+
+          });
+        }
+
+      },
+      error: (error) => {
+        this.openEditUserModal(this.editUserModel);
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          iconColor: '#dc3545',
+          title: 'UPDATE USER ERROR',
+          text: error.error?.message || 'user update failed. Please try again.',
+          confirmButtonColor: '#dc3545',
+          confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+          allowOutsideClick: false,
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-md btn-outline-danger me-2',
+          }
+        });
+      }
+
+    });
+  }
+
 
   toggleUserStatus(user: SystemUser): void {
 

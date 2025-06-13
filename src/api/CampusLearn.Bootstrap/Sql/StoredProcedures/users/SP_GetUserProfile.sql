@@ -4,7 +4,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_GetUserProfile
 )
 AS
 BEGIN
-    SELECT u.Id, u.Name, u.Surname, u.Email, u.ContactNumber
+    SELECT u.Id, u.Name, u.MiddleName, u.Surname, u.Email, u.ContactNumber
     FROM [CampusLearnDB].[dbo].[User] u
     WHERE u.Id = @UserId
 

@@ -234,17 +234,19 @@ export class ApiService {
   }
 
   // Admin Dashboard - Registrations
-  getPendingRegistrations() {
-    return this.httpClient.get(`${this.apiUrl}/admin/registrations/pending`);
+  getPendingRegistrations(): Observable<GenericAPIResponse<SystemUser[]>> {
+    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/registrations`);
   }
 
-  acceptRegistration(id: string) {
-    return this.httpClient.post(`${this.apiUrl}/admin/registrations/${id}/accept`, {});
+  processRegistration(id: string, status:string): Observable<GenericAPIResponse<string>> {
+    const requestBody = {
+      userId: id,
+      accountStatusId: status
+    };
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/admin/registrations/status`, requestBody);
   }
 
-  rejectRegistration(id: string, reason?: string) {
-    return this.httpClient.post(`${this.apiUrl}/admin/registrations/${id}/reject`, { reason });
-  }
+  
 
   // Admin Dashboard - User Management
   getAdminUsers(): Observable<GenericAPIResponse<SystemUser[]>> {    
@@ -271,6 +273,10 @@ export class ApiService {
 
   updateUser(id: string, userData: any) {
     return this.httpClient.put(`${this.apiUrl}/admin/users/${id}`, userData);
+  }
+
+   updateUserByAdmin(userData: any):Observable<GenericAPIResponse<string>> {
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/admin/users/update`, userData);
   }
 
   // Admin Dashboard - Module Management

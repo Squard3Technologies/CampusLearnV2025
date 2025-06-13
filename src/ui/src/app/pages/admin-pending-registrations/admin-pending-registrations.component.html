@@ -2,7 +2,8 @@
   <!-- Breadcrumb Navigation -->
   <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">        <li class="breadcrumb-item">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
           <a [routerLink]="['/home']" class="breadcrumb-link">Home</a>
         </li>
         <li class="breadcrumb-item">
@@ -37,74 +38,81 @@
       <div class="controls-section">
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search registrations..." [(ngModel)]="searchTerm" (input)="filterRegistrations()">
+          <input type="text" placeholder="Search user..." [(ngModel)]="searchTerm" (input)="filterRegistrations()">
         </div>
         <div class="filter-controls">
+
+
           <select [(ngModel)]="roleFilter" (change)="filterRegistrations()" class="filter-select">
-            <option value="">All Roles</option>
-            <option value="Student">Students</option>
-            <option value="Tutor">Tutors</option>
+            <option [ngValue]="0">All Roles</option>
+            <option [ngValue]="1">Administrator</option>
+            <option [ngValue]="2">Lecturer</option>
+            <option [ngValue]="4">Student</option>
+            <option [ngValue]="3">Tutor</option>
           </select>
-          <select [(ngModel)]="dateFilter" (change)="filterRegistrations()" class="filter-select">
-            <option value="">All Dates</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
+
+          <select [(ngModel)]="statusFilter" (change)="filterRegistrations()" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="7DCF4027-85AA-4C08-92FF-F3A669DFF157">Pending</option>
           </select>
+
         </div>
       </div>
 
-      <!-- Registrations Table -->
+      <!-- Users Table -->
       <div class="table-container">
-        <table class="registrations-table">
+        <table class="users-table">
           <thead>
             <tr>
               <th>Name</th>
               <th>Email</th>
-              <th>Requested Role</th>
-              <th>Registration Date</th>
-              <th>Documents</th>
+              <th>Role</th>
+              <th>Status</th>
+              <!-- <th>Last Login</th> -->
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let registration of filteredRegistrations">
+            <tr *ngFor="let user of pagedRegistrations">
               <td>
                 <div class="user-info">
                   <div class="avatar">
                     <i class="fas fa-user"></i>
                   </div>
-                  <span>{{ registration.fullName }}</span>
+                  <span>{{ user.firstName }} {{ user.surname }}</span>
                 </div>
               </td>
-              <td>{{ registration.email }}</td>
+              <td>{{ user.emailAddress }}</td>
               <td>
-                <span class="role-badge" [ngClass]="getRoleClass(registration.requestedRole)">
-                  {{ registration.requestedRole }}
+                <span class="role-badge" [ngClass]="getRoleClass(user.role)">
+                  {{ user.roleDescription }}
                 </span>
               </td>
-              <td>{{ registration.registrationDate | date:'short' }}</td>
               <td>
-                <div class="documents-info">
-                  <span class="document-count" *ngIf="registration.documents.length > 0">
-                    <i class="fas fa-file-alt"></i> {{ registration.documents.length }} files
-                  </span>
-                  <span class="no-documents" *ngIf="registration.documents.length === 0">
-                    <i class="fas fa-exclamation-triangle"></i> No documents
-                  </span>
-                </div>
+                <span class="status-badge" [ngClass]="getStatusClass(user.accountStatusId)">
+                  <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <span type="button" class="btn btn-sm w-100" [ngClass]="user.accountStatusDescription === 'Active' ? 'btn-success' : 'btn-danger'">
+                      <span
+                        [title]="user.accountStatusDescription === 'Active' ? 'account is active' : 'click to activate account'">{{user.accountStatusDescription}}</span>
+                    </span>                    
+                  </div>
+                </span>
               </td>
+
               <td>
                 <div class="action-buttons">
-                  <button class="btn btn-sm btn-info" (click)="viewDetails(registration)" title="View Details">
-                    <i class="fas fa-eye"></i>
+                  <button class="btn btn-sm btn-primary" (click)="openViewUserModal(user)" title="Review Data">
+                    <i class="fas fa-edit"></i>
                   </button>
-                  <button class="btn btn-sm btn-success" (click)="approveRegistration(registration)" title="Approve">
-                    <i class="fas fa-check"></i>
+                  
+                  <button class="btn btn-sm btn-danger" (click)="processApplication(user.id, '285DE8D3-0DA3-4D50-A32D-3502010062E7' )" title="Decline Application">
+                    <i class="fa-solid fa-user-xmark"></i>
                   </button>
-                  <button class="btn btn-sm btn-danger" (click)="rejectRegistration(registration)" title="Reject">
-                    <i class="fas fa-times"></i>
+                  
+                  <button class="btn btn-sm btn-success" (click)="processApplication(user.id, 'B492BB30-B073-4059-A58B-B3F6E5BE4C95' )" title="Accept Application">
+                    <i class="fa-solid fa-user-check"></i>
                   </button>
+
                 </div>
               </td>
             </tr>
@@ -112,32 +120,19 @@
         </table>
       </div>
 
-      <!-- Empty State -->
-      <div class="empty-state" *ngIf="filteredRegistrations.length === 0">
-        <div class="empty-icon">
-          <i class="fas fa-inbox"></i>
-        </div>
-        <h3>No Pending Registrations</h3>
-        <p>There are no registration requests matching your current filters.</p>
-      </div>
-
       <!-- Pagination -->
       <div class="pagination-container" *ngIf="filteredRegistrations.length > 0">
         <div class="pagination-info">
-          Showing {{ (currentPage - 1) * pageSize + 1 }} to 
-          {{ Math.min(currentPage * pageSize, filteredRegistrations.length) }} of 
-          {{ filteredRegistrations.length }} registrations
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to
+          {{ Math.min(currentPage * pageSize, filteredRegistrations.length) }} of
+          {{ filteredRegistrations.length }} users
         </div>
         <div class="pagination-controls">
-          <button class="btn btn-outline-primary" 
-                  [disabled]="currentPage === 1" 
-                  (click)="previousPage()">
+          <button class="btn btn-outline-primary" [disabled]="currentPage === 1" (click)="previousPage()">
             Previous
           </button>
           <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button class="btn btn-outline-primary" 
-                  [disabled]="currentPage === totalPages" 
-                  (click)="nextPage()">
+          <button class="btn btn-outline-primary" [disabled]="currentPage === totalPages" (click)="nextPage()">
             Next
           </button>
         </div>
@@ -145,3 +140,58 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+<!-- Modal New Module-->
+<ng-container *ngIf="showUserViewModal">
+  <div class="modal-backdrop">
+    <div class="modal-content">
+      <h2>Review User Details</h2>
+
+      <label for="firstName">First Name</label>
+      <input type="text" class="form-control" id="firstName" [(ngModel)]="selectedUserViewModel.firstName" placeholder="Enter first name" required disabled>
+
+      <label for="middleName">Middle Name</label>
+      <input type="text" class="form-control" id="middleName" [(ngModel)]="selectedUserViewModel.middleName" placeholder="Enter middle name" disabled>
+
+      <label for="surname">surname</label>
+      <input type="text" class="form-control" id="surname" [(ngModel)]="selectedUserViewModel.surname" placeholder="Enter surname" required disabled>
+
+      <label for="emailAddress">Email Address</label>
+      <input type="email" class="form-control" id="emailAddress" [(ngModel)]="selectedUserViewModel.emailAddress" placeholder="Enter email address"
+        required disabled>
+
+      <label for="contactNumber">Contact Number</label>
+      <input type="phone" class="form-control" id="contactNumber" [(ngModel)]="selectedUserViewModel.contactNumber" placeholder="Enter contact number"
+        required disabled>
+
+      <label for="role">User role</label>
+      <select [(ngModel)]="selectedUserViewModel.role" class="filter-select" required>
+        <option [ngValue]="">select</option>
+        <option [ngValue]="1">Administrator</option>
+        <option [ngValue]="2">Lecturer</option>
+        <option [ngValue]="4">Student</option>
+        <option [ngValue]="3">Tutor</option>
+      </select>
+
+      <!-- <label for="accountStatusId">Account status</label>
+      <select [(ngModel)]="selectedUserViewModel.accountStatusId" class="filter-select">
+        <option value="">Select Status</option>
+        <option value="b492bb30-b073-4059-a58b-b3f6e5be4c95">Active</option>
+        <option value="2c1904bb-07f2-4a0e-8cb4-ecb768239d19">Inactive</option>
+        <option value="df799a11-8237-4eee-ac51-94fceb369978">Locked</option>
+        <option value="114f6bee-6ef5-47ca-b2b5-113106c1e5b2">Delete</option>
+      </select> -->
+
+
+      <div class="modal-buttons">
+        <button class="btn-cancel mr-3" (click)="closeUserViewModal(true)">Cancel</button>
+        <button class="btn-decline" (click)="processApplication(selectedUserViewModel.id, '285DE8D3-0DA3-4D50-A32D-3502010062E7')">Decline</button>
+        <button class="btn-approve" (click)="processApplication(selectedUserViewModel.id, 'B492BB30-B073-4059-A58B-B3F6E5BE4C95')">Approve</button>
+      </div>
+    </div>
+  </div>
+</ng-container>
