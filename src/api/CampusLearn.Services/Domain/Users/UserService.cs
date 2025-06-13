@@ -54,7 +54,7 @@ public class UserService : IUserService
                 {
                     Status = true,
                     StatusCode = 404,
-                    StatusMessage = $"Login failed. Incorrect plainPassword provided",
+                    StatusMessage = $"Login failed. Incorrect password provided",
                     Body = "",
                     StatusDetailedMessage = ""
                 };
