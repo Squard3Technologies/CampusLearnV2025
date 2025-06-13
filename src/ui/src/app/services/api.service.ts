@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GenericAPIResponse, SystemUser, Module } from '../models/api.models';
-import { map, Observable } from 'rxjs';
+import { map, Observable, catchError } from 'rxjs';
 import { ChatUser, ChatMessage, CreateMessageRequest, SearchUser } from '../models/chat.models';
+import { Discussion, DiscussionComment, CreateDiscussionRequest, CreateCommentRequest } from '../models/discussion.models';
 
 @Injectable({
   providedIn: 'root'
@@ -54,10 +55,41 @@ export class ApiService {
   getTopicDescription(topicId: string) {
     return this.httpClient.get(`${this.apiUrl}/topic-description`, { params: { topicId } });
   }
-
   // Discussions & Learning Material
   getDiscussions(topicId: string) {
     return this.httpClient.get(`${this.apiUrl}/discussions`, { params: { topicId } });
+  }
+  // New Discussion API methods
+  getDiscussionsByTopic(topicId: string): Observable<Discussion[]> {
+    return this.httpClient.get<Discussion[]>(`${this.apiUrl}/discussions/topic/${topicId}`);
+  }
+
+  getDiscussionComments(discussionId: string): Observable<DiscussionComment[]> {
+    return this.httpClient.get<DiscussionComment[]>(`${this.apiUrl}/discussions/${discussionId}/comments`);
+  }
+  createDiscussion(topicId: string, discussionData: CreateDiscussionRequest): Observable<string> {
+    return this.httpClient.post<string>(`${this.apiUrl}/discussions/topic/${topicId}`, discussionData);
+  }
+  addCommentToDiscussion(discussionId: string, commentData: CreateCommentRequest): Observable<string> {
+    // Enhanced debugging: Log the exact URL and payload
+    const url = `${this.apiUrl}/discussions/${discussionId}/comment`;
+    console.log('Adding comment to discussion:', discussionId);
+    console.log('Comment URL:', url);
+    console.log('Comment data:', JSON.stringify(commentData));
+    
+    return this.httpClient.post<string>(url, commentData)
+      .pipe(
+        map(response => {
+          console.log('Comment added successfully, response:', response);
+          return response;
+        }),
+        catchError(error => {
+          console.error('Error adding comment:', error);
+          console.error('Status:', error.status);
+          console.error('Error details:', error.error);
+          throw error;
+        })
+      );
   }
 
   getLearningMaterial(topicId: string) {

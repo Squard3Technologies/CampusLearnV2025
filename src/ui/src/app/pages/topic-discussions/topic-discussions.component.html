@@ -1,12 +1,13 @@
 <div class="topic-discussions-container">
   <!-- Breadcrumb Navigation -->
   <div class="breadcrumb-container">
-    <nav aria-label="breadcrumb">      <ol class="breadcrumb">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
         </li>
-        <li class="breadcrumb-item">
-          <a [routerLink]="['/modules', moduleId]" class="breadcrumb-link">{{ moduleName || 'Module' }}</a>
+        <li class="breadcrumb-item" *ngIf="moduleId && moduleName">
+          <a [routerLink]="['/modules', moduleId]" class="breadcrumb-link">{{ moduleName }}</a>
         </li>
         <li class="breadcrumb-item">
           <a [routerLink]="['/topic', topicId]" [queryParams]="{ moduleId: moduleId, moduleName: moduleName }" class="breadcrumb-link">Topic</a>
@@ -16,11 +17,18 @@
     </nav>
   </div>
 
+  <!-- Error message display -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" aria-label="Close" (click)="errorMessage = null"></button>
+  </div>
+
   <!-- Main Container for Sidebar and Content -->
   <div class="main-container">
     <!-- Sidebar -->
     <div class="sidebar">
-      <h3>Topic Sections</h3>      <ul class="tabs">
+      <h3>Topic Sections</h3>      
+      <ul class="tabs">
         <li class="tab clickable" (click)="navigateToTopicOverview()">Overview</li>
         <li class="tab clickable" (click)="navigateToMaterials()">Materials</li>
         <li class="tab active">Discussion</li>
@@ -32,81 +40,98 @@
     <div class="main-content">
       <div class="discussions-header">
         <h2>Topic Discussions</h2>
-        <button class="btn btn-primary new-post-btn">New Post</button>
+        <div class="header-actions">
+          <button class="btn btn-primary" (click)="toggleNewPostForm()">
+            <i class="fas fa-plus"></i> {{ showNewPostForm ? 'Cancel' : 'New Post' }}
+          </button>
+        </div>
       </div>
 
-      <!-- Discussion Posts -->
-      <div class="posts-container">
-        <div class="post-card" *ngFor="let post of discussionPosts">
-          <div class="post-header">
-            <div class="post-author">
-              <div class="author-avatar">
-                <span>{{ post.author.name.charAt(0).toUpperCase() }}</span>
-              </div>
-              <div class="author-info">
-                <h4>{{ post.author.name }}</h4>
-                <span class="post-time">{{ post.timestamp | date:'medium' }}</span>
-              </div>
+      <!-- New post form -->
+      <div *ngIf="showNewPostForm" class="new-post-form">
+        <h5>Create New Discussion</h5>
+        <form (ngSubmit)="createNewDiscussion()">
+          <div class="mb-3">
+            <label for="postTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="postTitle" [(ngModel)]="newPost.title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="postContent" class="form-label">Content</label>
+            <textarea class="form-control" id="postContent" rows="5" [(ngModel)]="newPost.content" name="content" required></textarea>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success" [disabled]="postSubmitting || !newPost.title || !newPost.content">
+              <span *ngIf="postSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Post Discussion
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <!-- No discussions message -->
+      <div *ngIf="!loading && discussions.length === 0" class="no-discussions">
+        <i class="fas fa-comments fa-5x mb-3"></i>
+        <h4>No discussions found</h4>
+        <p>Be the first to start a discussion on this topic!</p>
+        <button class="btn btn-primary" (click)="toggleNewPostForm()">
+          <i class="fas fa-plus me-2"></i>Start a Discussion
+        </button>
+      </div>
+
+      <!-- Discussion posts list -->
+      <div *ngIf="!loading && discussions.length > 0" class="discussions-list">
+        <div class="discussion-card" *ngFor="let discussion of discussions">
+          <div class="discussion-header">
+            <h5 class="discussion-title">{{ discussion.title }}</h5>
+            <div class="discussion-meta">
+              <i class="fas fa-user me-2"></i>
+              {{ discussion.author.firstName }} {{ discussion.author.surname }}
+              <i class="fas fa-clock ms-3 me-2"></i>
+              {{ discussion.createdOn | date:'medium' }}
             </div>
-            <div class="post-actions">
-              <button class="btn btn-sm btn-outline-secondary">Reply</button>
-            </div>
+          </div>
+          <div class="discussion-content">
+            <p>{{ discussion.content }}</p>
           </div>
 
-          <div class="post-content">
-            <h5>{{ post.title }}</h5>
-            <p>{{ post.content }}</p>
-          </div>
-
-          <div class="post-stats">
-            <span class="stat-item">
-              <i class="fas fa-thumbs-up"></i> {{ post.likes || 0 }}
-            </span>
-            <span class="stat-item">
-              <i class="fas fa-comment"></i> {{ post.comments?.length || 0 }} Comments
-            </span>
-          </div>
-
-          <!-- Comments Section -->
-          <div class="comments-section" *ngIf="post.comments && post.comments.length > 0">
-            <h6>Comments</h6>
-            <div class="comment" *ngFor="let comment of post.comments">
-              <div class="comment-header">
-                <div class="comment-author">
-                  <div class="author-avatar small">
-                    <span>{{ comment.author.name.charAt(0).toUpperCase() }}</span>
-                  </div>
-                  <div class="author-info">
-                    <strong>{{ comment.author.name }}</strong>
-                    <span class="comment-time">{{ comment.timestamp | date:'short' }}</span>
-                  </div>
+          <!-- Comments section -->
+          <div class="discussion-comments">
+            <h6><i class="fas fa-comment me-2"></i>Comments ({{ discussion.comments?.length || 0 }})</h6>
+            
+            <div *ngIf="discussion.comments && discussion.comments.length > 0" class="comments-list">
+              <div class="comment" *ngFor="let comment of discussion.comments">
+                <div class="comment-content">{{ comment.content }}</div>
+                <div class="comment-meta">
+                  <i class="fas fa-user-circle me-1"></i>
+                  {{ comment.author.firstName }} {{ comment.author.surname }}
+                  <i class="fas fa-clock ms-2 me-1"></i>
+                  {{ comment.createdOn | date:'short' }}
                 </div>
               </div>
-              <div class="comment-content">
-                <p>{{ comment.content }}</p>
+            </div>
+
+            <!-- New comment form -->
+            <div class="new-comment-form">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Add a comment..." 
+                      [(ngModel)]="newComment[discussion.id]" 
+                      (keyup.enter)="addComment(discussion.id)">
+                <button class="btn btn-primary" 
+                        [disabled]="commentLoading[discussion.id] || !newComment[discussion.id]" 
+                        (click)="addComment(discussion.id)">
+                  <span *ngIf="commentLoading[discussion.id]" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span *ngIf="!commentLoading[discussion.id]">Post</span>
+                </button>
               </div>
             </div>
           </div>
-
-          <!-- Add Comment Form -->
-          <div class="add-comment">
-            <div class="comment-form">
-              <textarea 
-                class="form-control" 
-                placeholder="Add a comment..." 
-                rows="2"
-                [(ngModel)]="newComment[post.id]">
-              </textarea>
-              <button class="btn btn-sm btn-primary mt-2" (click)="addComment(post.id)">
-                Post Comment
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- No Posts Message -->
-        <div class="no-posts" *ngIf="discussionPosts.length === 0">
-          <p>No discussions yet. Be the first to start a conversation!</p>
         </div>
       </div>
     </div>
