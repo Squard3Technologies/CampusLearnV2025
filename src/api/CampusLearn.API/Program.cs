@@ -17,6 +17,12 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod()
                   .AllowCredentials();
         });
+
+    options.AddPolicy("AllowAngularApp",
+        policy => policy
+            .WithOrigins("http://localhost:8082") // or your domain
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 });
 
 #endregion -- cors configuration --
@@ -179,7 +185,15 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    serverOptions.ListenAnyIP(5008); // Listen on port 8080
+//    serverOptions.ListenAnyIP(7209, listenOptions => listenOptions.UseHttps());
+//});
+
 var app = builder.Build();
+
+app.UseCors("AllowAngularApp");
 
 // Serve files from "Uploads" directory
 app.UseStaticFiles(new StaticFileOptions

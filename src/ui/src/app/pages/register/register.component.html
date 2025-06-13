@@ -1,59 +1,59 @@
-<div class="d-flex justify-content-center align-items-center">
-  <form class="container mt-5" style="max-width: 450px;" (ngSubmit)="onSubmit()">
-    <h2 class="mb-4 text-center">Campus Learn Register</h2>
+<div class="register-container d-flex justify-content-center align-items-center">
+  <div class="card login-card">
+    <div class="card-body p-0">
+      <div class="row g-0">
+        <!-- Logo Section -->
+        <div class="col-md-7 d-flex align-items-center justify-content-center p-4 bg-light">
+          <img src="assets/personal-information.svg" alt="Campus Learn Logo" class="img-fluid" />
+        </div>
 
-    <div class="alert alert-danger" *ngIf="errorMessage">
-      {{ errorMessage }}
+        <!-- Form Section -->
+        <div class="col-md-5 p-4">
+          <h2 class="mb-4 text-center">Create <b>Campus Learn</b> Account</h2>
+          <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+            <div class="row">
+              <div class="col-lg-6 col-md-12 mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" [(ngModel)]="firstName" name="firstName" required class="form-control" />
+              </div>
+              <div class="col-lg-6 col-md-12 mb-3">
+                <label class="form-label">Surname</label>
+                <input type="text" [(ngModel)]="surname" name="surname" required class="form-control" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="contactNumber">Contact Number</label>
+              <input type="tel" id="contactNumber" placeholder="Enter contact number (10 digits)" [(ngModel)]="contactNumber" name="contactNumber" required class="form-control" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <input type="email" [(ngModel)]="emailAddress" name="emailAddress" required class="form-control" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" [(ngModel)]="password" name="password" required minlength="8" class="form-control" />
+              <div class="form-text">Must be at least 8 characters</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="8" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn w-100 text-white mb-3" [disabled]="!registerForm.valid" 
+                    [ngClass]="{'btn-primary': registerForm.valid, 'btn-secondary': !registerForm.valid}">
+              Create Account
+            </button>
+
+            <div class="text-center mt-3">
+              <small>Already have an account? <a routerLink="/authenticate">Sign In</a></small>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="mb-3">
-      <label for="firstName" class="form-label">First Name</label>
-      <input type="text" class="form-control" id="firstName"
-             placeholder="Enter first name" required
-             [(ngModel)]="firstName" name="firstName">
-    </div>
-
-    <div class="mb-3">
-      <label for="surname" class="form-label">Surname</label>
-      <input type="text" class="form-control" id="surname"
-             placeholder="Enter surname" required
-             [(ngModel)]="surname" name="surname">
-    </div>
-
-    <div class="mb-3">
-      <label for="emailAddress" class="form-label">Email Address</label>
-      <input type="email" class="form-control" id="emailAddress"
-             placeholder="Enter email address" required
-             [(ngModel)]="emailAddress" name="emailAddress">
-    </div>
-
-    <div class="mb-3">
-      <label for="contactNumber" class="form-label">Contact Number</label>
-      <input type="tel" class="form-control" id="contactNumber"
-             placeholder="Enter contact number (10 digits)" required
-             [(ngModel)]="contactNumber" name="contactNumber">
-    </div>
-
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password"
-             placeholder="Password" required
-             [(ngModel)]="password" name="password">
-    </div>
-
-    <div class="mb-3">
-      <label for="confirmPassword" class="form-label">Confirm Password</label>
-      <input type="password" class="form-control" id="confirmPassword"
-             placeholder="Confirm Password" required
-             [(ngModel)]="confirmPassword" name="confirmPassword">
-    </div>
-
-    <button type="submit" class="btn btn-primary w-100">Register</button>
-
-    <div class="mt-3 text-center">
-      <small class="text-muted">
-        Already have an account? <a routerLink="/login">Login</a>
-      </small>
-    </div>
-  </form>
+  </div>
 </div>

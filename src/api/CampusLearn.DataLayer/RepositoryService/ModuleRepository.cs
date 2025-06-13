@@ -255,6 +255,62 @@ public class ModuleRepository : IModuleRepository
                         string query = "dbo.SP_GetUserModules";
                         var parameters = new DynamicParameters();
                         parameters.Add("userId", userId, DbType.Guid);
+
+                        var modules = await db.QueryAsync<ModuleViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+
+                        if (modules != null && modules?.Any() != false)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = modules.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "No modules found on the system";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+    public async Task<GenericDbResponseViewModel> GetUserModuleLinksAsync(Guid userId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetUserModuleLinks";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("userId", userId, DbType.Guid);
                         var userModules = await db.QueryAsync<UsersModuleViewModel>(sql: query,
                             param: parameters,
                             commandType: CommandType.StoredProcedure,
@@ -297,7 +353,7 @@ public class ModuleRepository : IModuleRepository
 
     #region -- topic section --
 
-    public async Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, CreateTopicRequest module)
+    public async Task<GenericDbResponseViewModel<Guid?>> AddTopicAsync(Guid userId, Guid moduleId, CreateTopicRequest module)
     {
         GenericDbResponseViewModel<Guid?> response = new GenericDbResponseViewModel<Guid?>();
         try
@@ -313,7 +369,7 @@ public class ModuleRepository : IModuleRepository
                         var parameters = new DynamicParameters();
                         parameters.Add("authorId", userId, DbType.Guid);
                         parameters.Add("id", Guid.NewGuid(), DbType.Guid);
-                        parameters.Add("moduleId", module.ModuleId, DbType.Guid);
+                        parameters.Add("moduleId", moduleId, DbType.Guid);
                         parameters.Add("title", module.Title, DbType.String);
                         parameters.Add("description", module.Description, DbType.String);
                         response = await db.QueryFirstOrDefaultAsync<GenericDbResponseViewModel<Guid?>>(sql: query,
@@ -342,7 +398,7 @@ public class ModuleRepository : IModuleRepository
         return response;
     }
 
-    public async Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId)
+    public async Task<GenericDbResponseViewModel> GetModuleTopicsAsync(Guid moduleId)
     {
         GenericDbResponseViewModel response = new GenericDbResponseViewModel();
         try
@@ -370,6 +426,61 @@ public class ModuleRepository : IModuleRepository
                             response.StatusCode = 200;
                             response.StatusMessage = "Successful";
                             response.Body = topics.ToList();
+                        }
+                        else
+                        {
+                            response.Status = false;
+                            response.StatusCode = 404;
+                            response.StatusMessage = "There are no topics for this module found on the system";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await sqltrans.RollbackAsync();
+                        await db.CloseAsync();
+                        throw ex;
+                    }
+                }
+                await db.CloseAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Status = false;
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            response.StatusMessage = $"{ex.Message} <br/> {ex.StackTrace}";
+        }
+        return response;
+    }
+
+    public async Task<GenericDbResponseViewModel> GetModuleTopicAsync(Guid moduleId, Guid topicId)
+    {
+        GenericDbResponseViewModel response = new GenericDbResponseViewModel();
+        try
+        {
+            using (var db = database.CreateSqlConnection())
+            {
+                await db.OpenAsync();
+                using (SqlTransaction sqltrans = db.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    try
+                    {
+                        string query = "dbo.SP_GetModuleTopic";
+                        var parameters = new DynamicParameters();
+                        parameters.Add("topicId", topicId, DbType.Guid);
+                        var topic = await db.QueryFirstOrDefaultAsync<TopicViewModel>(sql: query,
+                            param: parameters,
+                            commandType: CommandType.StoredProcedure,
+                            commandTimeout: 360,
+                            transaction: sqltrans);
+                        await sqltrans.CommitAsync();
+
+                        if (topic != null)
+                        {
+                            response.Status = true;
+                            response.StatusCode = 200;
+                            response.StatusMessage = "Successful";
+                            response.Body = topic;
                         }
                         else
                         {

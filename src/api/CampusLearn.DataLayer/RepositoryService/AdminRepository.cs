@@ -181,6 +181,7 @@ public class AdminRepository : IAdminRepository
                         var parameters = new DynamicParameters();
                         parameters.Add("id", model.Id, DbType.Guid);
                         parameters.Add("name", model.FirstName, DbType.String);
+                        parameters.Add("middlename", model.MiddleName, DbType.String);
                         parameters.Add("surname", model.Surname, DbType.String);
                         parameters.Add("contact", model.ContactNumber, DbType.String);
                         parameters.Add("email", model.EmailAddress, DbType.String);

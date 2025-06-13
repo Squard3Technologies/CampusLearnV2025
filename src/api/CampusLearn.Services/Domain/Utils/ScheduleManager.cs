@@ -4,14 +4,14 @@ public class ScheduleManager
 {
     private readonly ScheduleSetting _scheduleSettings;
     private readonly ILogger<ScheduleManager> _logger;
-    private readonly INotificationService _notificationService;
+    private readonly IServiceProvider _serviceProvider;
     public static IDictionary<string, ScheduleSetting> customSchedules = new Dictionary<string, ScheduleSetting>();
 
-    public ScheduleManager(ILogger<ScheduleManager> logger, IOptions<ScheduleSetting> options, INotificationService notificationService)
+    public ScheduleManager(ILogger<ScheduleManager> logger, IOptions<ScheduleSetting> options, IServiceProvider serviceProvider)
     {
         _scheduleSettings = options.Value;
         _logger = logger;
-        _notificationService = notificationService;
+        _serviceProvider = serviceProvider;
     }
 
     #region -- public schedules functions --
@@ -42,9 +42,10 @@ public class ScheduleManager
                 {
                     action = async () =>
                     {
-                        if (!_notificationService.EMAILServiceBusy())
+                        var notificationService = _serviceProvider.GetRequiredService<INotificationService>();
+                        if (!notificationService.EMAILServiceBusy())
                         {
-                            await _notificationService.StartEmailingServiceAsync();
+                            await notificationService.StartEmailingServiceAsync();
                         }
                     };
                 }

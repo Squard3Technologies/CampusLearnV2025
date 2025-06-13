@@ -1,1 +1,162 @@
-<p>quiz-management works!</p>
+<div class="topic-quizzes-container">
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-container">
+        <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+            <a [routerLink]="['/modules']" class="breadcrumb-link">Modules</a>
+            </li>
+            <li class="breadcrumb-item">
+            <a [routerLink]="['/modules', moduleId]" class="breadcrumb-link">{{ moduleName || 'Module' }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/topic', topicId]" [queryParams]="{ moduleId: moduleId, moduleName: moduleName }" class="breadcrumb-link">Topic</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/topic', topicId, 'quizzes']" [queryParams]="{ moduleId: moduleId, moduleName: moduleName }" class="breadcrumb-link">Quizzes</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Quiz Management</li>
+        </ol>
+        </nav>
+    </div>
+
+  <!-- Main Container for Sidebar and Content -->
+  <div class="main-container">
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="quizzes-header">
+        <h2>Quiz Management</h2>
+      </div>
+
+      <div class="quizzes-header">
+        <h4>Quiz Details</h4>
+      </div>
+
+      <form style="width: 80%; justify-self: center;" (ngSubmit)="onSubmit()">
+        <div class="form-group mb-3">
+            <label class="form-label">Name</label>
+            <div class="input-group">
+                <input type="text" [(ngModel)]="quiz.name" name="name" required class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Description</label>
+            <div class="input-group">
+                <input type="text" [(ngModel)]="quiz.description" name="description" required class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Duration (minutes)</label>
+            <div class="input-group">
+                <input
+                type="number"
+                [(ngModel)]="quiz.durationMinites"
+                name="durationMinutes"
+                required
+                class="form-control"
+                min="1"
+                />
+            </div>
+        </div>
+
+        <!--<div class="form-group mb-3">
+            <label class="form-label">Question Type</label>
+            <div class="input-group">
+                <select disabled id="resolution-action" [(ngModel)]="quiz.resolutionAction">
+                    <option value="null" disabled selected>Pending resolution</option>
+                    <option value="1">No Action</option>
+                    <option value="2">Linked To Topic</option>
+                    <option value="3">Created New Topic</option>
+                </select>
+                <input type="text" [(ngModel)]="quiz.name" name="name" required class="form-control" />=
+            </div>
+        </div>-->
+
+        <div class="quiz-header-actions">
+            <button type="submit" class="btn btn-primary">
+                {{quizId != null ? "Update Quiz" : "Create Quiz"}}
+            </button>
+            <a [routerLink]="['/topic', topicId, 'quizzes']" class="btn btn-primary">
+                Back To Topic Quizzes
+            </a>
+        </div>
+      </form>
+
+      <!-- Questions Table -->
+      <ng-container *ngIf="quizId != null">
+        <div class="quizzes-header">
+          <h4>Questions</h4>
+        </div>
+
+        <div class="quizzes-table-container">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-header">
+                <tr>
+                  <th scope="col">
+                    <i class="fas fa-question-circle"></i> Name
+                  </th>
+                  <th scope="col">
+                    <i class="fas fa-info-circle"></i> Type
+                  </th>
+                  <th scope="col" class="text-center">
+                    <i class="fas fa-cog"></i> Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let question of quiz.questions" class="quiz-row">
+                  <td class="quiz-name">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-file-alt text-primary me-2"></i>
+                      <div>
+                          {{ question.name }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="quiz-name">
+                    <div class="d-flex align-items-center">
+                      <div>
+                        {{ getQuestionTypeLabel(question.questionType) }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="quiz-actions text-center">
+                    <div class="btn-group" role="group">
+                      <button
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="editQuestion(question)"
+                          title="Edit Question">
+                          <i class="fas fa-edit"></i>
+                      </button>
+                      <button 
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="deleteQuestion(question)"
+                          title="Delete Question">
+                          <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- No Quizzes Message -->
+          <div class="no-quizzes" *ngIf="quiz.questions.length === 0">
+            <div class="text-center py-5">
+              <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
+              <h4 class="text-muted">No Questions Added</h4>
+              <p class="text-muted">No questions have been created for this Quiz.</p>
+              <button class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create First Question
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

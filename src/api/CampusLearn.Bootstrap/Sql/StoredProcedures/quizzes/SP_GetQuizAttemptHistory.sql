@@ -7,11 +7,11 @@ BEGIN
         INNER JOIN Quiz q ON qa.QuizId = q.Id
     WHERE qa.Id = @QuizAttemptId
 
-    SELECT q.Id, q.Title 'Name' FROM QuizAttempt qa
+    SELECT q.Id, q.Title 'Name', q.QuestionType FROM QuizAttempt qa
         INNER JOIN QuizAttemptQuestionAnswer qaqa ON qaqa.QuizAttemptId = qa.Id
         INNER JOIN Question q ON q.Id = qaqa.QuestionId
     WHERE qa.Id = @QuizAttemptId
-    GROUP BY q.Id, q.Title
+    GROUP BY q.Id, q.Title, q.QuestionType
 
     SELECT qo.Id, qo.QuestionId, qo.Value 'Name', qo.IsCorrect,
         CASE 

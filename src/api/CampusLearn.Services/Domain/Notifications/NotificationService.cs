@@ -4,6 +4,8 @@ public class NotificationService : INotificationService
 {
     private readonly INotificationRepository _notificationRepository;
     private readonly ISubscriptionService _subscriptionService;
+    private readonly IAdminRepository _adminRepository;
+    private readonly IEnquiryRepository _enquiryService;
     private readonly SMTPManager _smtpManager;
     private bool _emailerBusy = false;
     private bool _smsBusy = false;
@@ -11,10 +13,14 @@ public class NotificationService : INotificationService
     public NotificationService(
         INotificationRepository notificationRepository,
         ISubscriptionService subscriptionService,
+        IAdminRepository adminRepository,
+        IEnquiryRepository enquiryService,
         SMTPManager smtpManager)
     {
         _notificationRepository = notificationRepository;
         _subscriptionService = subscriptionService;
+        _adminRepository = adminRepository;
+        _enquiryService = enquiryService;
         _smtpManager = smtpManager;
     }
 
@@ -99,6 +105,7 @@ public class NotificationService : INotificationService
         {
             var result = await SendMessageAsync(new SendMessageRequest()
             {
+                SenderId = Constants.AdminUserIdentifier,
                 RecieverId = userIdentifier,
                 MessageContent = template
             }, notificationType, NotificationContentTypes.TopicCreated, token);
@@ -137,14 +144,45 @@ public class NotificationService : INotificationService
         throw new NotImplementedException();
     }
 
-    public Task SendEnquiryCreatedAsync(Guid createdByUserId, Guid enquiryId, NotificationTypes notificationType, CancellationToken token)
+    public async Task SendEnquiryCreatedAsync(Guid createdByUserId, Guid enquiryId, NotificationTypes notificationType, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var template = await _notificationRepository.GetEmailTemplate(NotificationContentTypes.EnquiryCreated);
+        var usersBody = await _adminRepository.GetUsersAsync();
+        var users = (usersBody?.Body != null) ? (List<UserViewModel>)usersBody.Body : [];
+        var tutors = users.Where(x => x.Role == UserRoles.Tutor);
+
+        if (tutors == null)
+            return;
+
+        foreach (var tutor in tutors)
+        {
+            var result = await SendMessageAsync(new SendMessageRequest()
+            {
+                SenderId = Constants.AdminUserIdentifier,
+                RecieverId = tutor.Id,
+                MessageContent = template
+            }, notificationType, NotificationContentTypes.EnquiryCreated, token);
+            if (!result.Status)
+                Console.WriteLine(result.StatusMessage);
+        }
     }
 
-    public Task SendEnquiryResolvedAsync(Guid createdByUserId, Guid enquiryId, NotificationTypes notificationType, CancellationToken token)
+    public async Task SendEnquiryResolvedAsync(Guid createdByUserId, Guid enquiryId, NotificationTypes notificationType, CancellationToken token)
     {
-        throw new NotImplementedException();
+        var template = await _notificationRepository.GetEmailTemplate(NotificationContentTypes.EnquiryCreated);
+        var enquiry = await _enquiryService.GetEnquiryAsync(enquiryId, token);
+
+        if (enquiry == null)
+            return;
+
+        var result = await SendMessageAsync(new SendMessageRequest()
+        {
+            SenderId = Constants.AdminUserIdentifier,
+            RecieverId = enquiry.CreatedByUserId,
+            MessageContent = template
+        }, notificationType, NotificationContentTypes.EnquiryResolved, token);
+        if (!result.Status)
+            Console.WriteLine(result.StatusMessage);
     }
 
     public Task SendChatMessageCreatedAsync(Guid createdByUserId, Guid messageId, NotificationTypes notificationType, CancellationToken token)

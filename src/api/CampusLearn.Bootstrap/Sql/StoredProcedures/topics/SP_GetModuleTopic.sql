@@ -1,0 +1,9 @@
+CREATE OR ALTER PROCEDURE dbo.SP_GetModuleTopic
+(
+	@topicId UNIQUEIDENTIFIER
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * FROM dbo.[Topic] t WHERE t.Id = @topicId
+END

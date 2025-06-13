@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { GenericAPIResponse, SystemUser, Module } from '../models/api.models';
+import { map, Observable, catchError, of } from 'rxjs';
+import { ChatUser, ChatMessage, CreateMessageRequest, SearchUser } from '../models/chat.models';
+import { Discussion, DiscussionComment, CreateDiscussionRequest, CreateCommentRequest } from '../models/discussion.models';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +26,9 @@ export class ApiService {
     return this.httpClient.post(url, loginBody);
   }
 
-  register(userData: any) {
+  register(userData: any): Observable<GenericAPIResponse<string>> {
     const url = `${this.apiUrl}/user/register`;
-    return this.httpClient.post(url, userData);
+    return this.httpClient.post<GenericAPIResponse<string>>(url, userData);
   }
 
   forgotPassword(email: { email: string }) {
@@ -37,7 +41,11 @@ export class ApiService {
   }
 
   getTopics(moduleId: string) {
-    return this.httpClient.get(`${this.apiUrl}/topics`, { params: { moduleId } });
+    return this.httpClient.get(`${this.apiUrl}/modules/${moduleId}/topics`);
+  }
+
+  getTopic(moduleId: string, topicId: string) {
+    return this.httpClient.get(`${this.apiUrl}/modules/${moduleId}/topics/${topicId}`);
   }
 
   createTopic(topicData: any) {
@@ -47,10 +55,98 @@ export class ApiService {
   getTopicDescription(topicId: string) {
     return this.httpClient.get(`${this.apiUrl}/topic-description`, { params: { topicId } });
   }
-
   // Discussions & Learning Material
   getDiscussions(topicId: string) {
     return this.httpClient.get(`${this.apiUrl}/discussions`, { params: { topicId } });
+  }  // New Discussion API methods
+  getDiscussionsByTopic(topicId: string): Observable<Discussion[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}/discussions/topic/${topicId}`)
+      .pipe(
+        map(discussions => {
+          // Transform the backend model to match our frontend model
+          return discussions.map(d => ({
+            id: d.id || '',
+            title: d.title || '',
+            content: d.content || '',
+            createdOn: new Date(d.dateCreated || new Date()),
+            author: {
+              id: d.createdByUserId || '',
+              firstName: d.createdByUserName || '',
+              surname: d.createdByUserSurname || '',
+              emailAddress: d.createdByUserEmail || ''
+            },
+            comments: []
+          }));
+        })
+      );
+  }
+  getDiscussionComments(discussionId: string): Observable<DiscussionComment[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}/discussions/${discussionId}/comments`)
+      .pipe(
+        map(comments => {
+          // Handle case where API returns null/undefined
+          if (!comments || !Array.isArray(comments)) {
+            console.log('No comments returned for discussion:', discussionId);
+            return [];
+          }
+          
+          // Transform the backend model to match our frontend model
+          return comments.map(c => ({
+            id: c.id || c.commentId || '',
+            content: c.content || c.title || '', // Some APIs might use 'title' instead
+            createdOn: new Date(c.dateCreated || c.createdOn || new Date()),
+            author: {
+              id: c.createdByUserId || '',
+              firstName: c.createdByUserName || '',
+              surname: c.createdByUserSurname || '',
+              emailAddress: c.createdByUserEmail || ''
+            }
+          }));
+        }),
+        catchError(error => {
+          // If it's a 204 No Content, return empty array instead of error
+          if (error.status === 204) {
+            console.log('No comments found for discussion:', discussionId);
+            return of([]);
+          }
+          console.error('Error fetching comments for discussion:', discussionId, error);
+          throw error;
+        })
+      );
+  }createDiscussion(topicId: string, discussionData: CreateDiscussionRequest): Observable<string> {
+    // Format data to match backend expectations
+    const backendFormat = {
+      Title: discussionData.title,
+      Content: discussionData.content
+    };
+    
+    console.log('Creating discussion:', backendFormat);
+    return this.httpClient.post<string>(`${this.apiUrl}/discussions/topic/${topicId}`, backendFormat);
+  }  addCommentToDiscussion(discussionId: string, commentData: CreateCommentRequest): Observable<string> {
+    // Enhanced debugging: Log the exact URL and payload
+    const url = `${this.apiUrl}/discussions/${discussionId}/comment`;
+    console.log('Adding comment to discussion:', discussionId);
+    console.log('Comment URL:', url);
+    console.log('Comment data:', JSON.stringify(commentData));
+    
+    // Format data to match backend expectations
+    const backendFormat = {
+      Content: commentData.content
+    };
+    
+    return this.httpClient.post<string>(url, backendFormat)
+      .pipe(
+        map(response => {
+          console.log('Comment added successfully, response:', response);
+          return response;
+        }),
+        catchError(error => {
+          console.error('Error adding comment:', error);
+          console.error('Status:', error.status);
+          console.error('Error details:', error.error);
+          throw error;
+        })
+      );
   }
 
   getLearningMaterial(topicId: string) {
@@ -59,6 +155,10 @@ export class ApiService {
 
   createLearningMaterial(materialData: any) {
     return this.httpClient.post(`${this.apiUrl}/learning-material`, materialData);
+  }
+
+  uploadLearningMaterial(materialData: any): Observable<GenericAPIResponse<string>> {
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/learningmaterials/topic/uploads`, materialData);
   }
 
   downloadLearningMaterial(fileId: string) {
@@ -70,11 +170,11 @@ export class ApiService {
 
   // Quizzes
   getQuizzes(topicId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quizzes`, { params: { topicId } });
+    return this.httpClient.get(`${this.apiUrl}/quizzes/topic/${topicId}`);
   }
 
-  getQuizDetails(quizId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quiz-details`, { params: { quizId } });
+  getQuizDetails(quizId: string) : any {
+    return this.httpClient.get(`${this.apiUrl}/quizzes/${quizId}/details`);
   }
 
   createQuestion(questionData: any) {
@@ -85,20 +185,36 @@ export class ApiService {
     return this.httpClient.put(`${this.apiUrl}/questions/${id}`, questionData);
   }
 
-  getActiveQuizzes() {
-    return this.httpClient.get(`${this.apiUrl}/active-quizzes`);
+  getActiveQuizzes() : Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}/quizzes/active`);
   }
 
-  submitQuizAttempt(attemptData: any) {
-    return this.httpClient.post(`${this.apiUrl}/quiz-attempt`, attemptData);
+  createQuiz(data: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes`, data);
+  }
+
+  updateQuiz(quizId: any, data: any) {
+    return this.httpClient.put(`${this.apiUrl}/quizzes/${quizId}`, data);
+  }
+
+  createQuizAttempt(quizId: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt`, {});
+  }
+
+  assignQuizAttempt(quizId: any, assignedToUserId: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt?assignedByUserId=${assignedToUserId}`, {});
+  }
+
+  submitQuizAttempt(quizAttemptId: any, attemptData: any) {
+    return this.httpClient.put(`${this.apiUrl}/quizzes/attempt/${quizAttemptId}`, attemptData);
   }
 
   getQuizHistory() {
-    return this.httpClient.get(`${this.apiUrl}/quiz-history`);
+    return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history`);
   }
 
-  getQuizAttemptHistory(quizId: string) {
-    return this.httpClient.get(`${this.apiUrl}/quiz-attempt-history`, { params: { quizId } });
+  getQuizAttemptHistory(quizId: string): any {
+    return this.httpClient.get(`${this.apiUrl}/quizzes/attempt-history/${quizId}`);
   }
 
   // Enquiries
@@ -125,22 +241,55 @@ export class ApiService {
   getResolvedEnquiries() {
     return this.httpClient.get(`${this.apiUrl}/enquiries/resolved`);
   }
-
-  // Chat
-  getChats() {
-    return this.httpClient.get(`${this.apiUrl}/chats`);
+  // Chat API methods
+  getChats(): Observable<ChatUser[]> {
+    return this.httpClient.get<ChatUser[]>(`${this.apiUrl}/chats`);
   }
 
+  getChatMessages(userId: string): Observable<ChatMessage[]> {
+    return this.httpClient.get<ChatMessage[]>(`${this.apiUrl}/chats/user/${userId}`);
+  }
+
+  sendMessage(userId: string, messageRequest: CreateMessageRequest): Observable<string> {
+    return this.httpClient.post<string>(`${this.apiUrl}/chats/user/${userId}/message`, messageRequest);
+  }
+  // Enhanced user search for chat (update existing method)
+  searchUsers(query: string): Observable<SearchUser[]> {
+    // Get all users and filter on frontend since backend doesn't support search
+    return this.httpClient.get<any>(`${this.apiUrl}/user/get`).pipe(
+      map((response: any) => {
+        // Extract users from the API response body
+        const users = response?.body || [];
+        
+        // Filter users based on query
+        const filteredUsers = users.filter((user: any) => {
+          const searchLower = query.toLowerCase();
+          const nameMatch = (user.firstName?.toLowerCase() || '').includes(searchLower) ||
+                           (user.surname?.toLowerCase() || '').includes(searchLower);
+          const emailMatch = (user.emailAddress?.toLowerCase() || '').includes(searchLower);
+          return nameMatch || emailMatch;
+        });
+        
+        // Map to SearchUser interface
+        return filteredUsers.map((user: any) => ({
+          id: user.id,
+          firstName: user.firstName || '',
+          surname: user.surname || '',
+          emailAddress: user.emailAddress || '',
+          role: user.role || 4
+        }));
+      })
+    );
+  }
+
+  // Legacy method - keeping for backward compatibility
   getUserChat(userId: string) {
     return this.httpClient.get(`${this.apiUrl}/chats/${userId}`);
   }
 
-  searchUsers(query: string) {
-    return this.httpClient.get(`${this.apiUrl}/users`, { params: { search: query } });
-  }
-
   // User Profile
   getUserProfile() {
+    
     return this.httpClient.get(`${this.apiUrl}/user`);
   }
 
@@ -178,22 +327,34 @@ export class ApiService {
   }
 
   // Admin Dashboard - Registrations
-  getPendingRegistrations() {
-    return this.httpClient.get(`${this.apiUrl}/admin/registrations/pending`);
+  getPendingRegistrations(): Observable<GenericAPIResponse<SystemUser[]>> {
+    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/registrations`);
   }
 
-  acceptRegistration(id: string) {
-    return this.httpClient.post(`${this.apiUrl}/admin/registrations/${id}/accept`, {});
+  processRegistration(id: string, status:string): Observable<GenericAPIResponse<string>> {
+    const requestBody = {
+      userId: id,
+      accountStatusId: status
+    };
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/admin/registrations/status`, requestBody);
   }
 
-  rejectRegistration(id: string, reason?: string) {
-    return this.httpClient.post(`${this.apiUrl}/admin/registrations/${id}/reject`, { reason });
-  }
+  
 
   // Admin Dashboard - User Management
-  getAdminUsers() {
-    return this.httpClient.get(`${this.apiUrl}/admin/users`);
+  getAdminUsers(): Observable<GenericAPIResponse<SystemUser[]>> {    
+    return this.httpClient.get<GenericAPIResponse<SystemUser[]>>(`${this.apiUrl}/admin/users` );
   }
+
+  //Activating, deactivate, blocking & deleting user account by changing the account status
+  changeUserAccountStatus(id: string, status: string) {
+    const requestBody = {
+      userId: id,
+      accountStatusId: status
+    };
+    return this.httpClient.post(`${this.apiUrl}/admin/users/status`, requestBody);
+  }
+
 
   deactivateUser(id: string) {
     return this.httpClient.post(`${this.apiUrl}/admin/users/${id}/deactivate`, {});
@@ -207,17 +368,21 @@ export class ApiService {
     return this.httpClient.put(`${this.apiUrl}/admin/users/${id}`, userData);
   }
 
+   updateUserByAdmin(userData: any):Observable<GenericAPIResponse<string>> {
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/admin/users/update`, userData);
+  }
+
   // Admin Dashboard - Module Management
-  getAdminModules() {
-    return this.httpClient.get(`${this.apiUrl}/admin/modules`);
+  getAdminModules():Observable<GenericAPIResponse<Module[]>> {
+    return this.httpClient.get<GenericAPIResponse<Module[]>>(`${this.apiUrl}/admin/modules`);
   }
 
-  createModule(moduleData: any) {
-    return this.httpClient.post(`${this.apiUrl}/admin/modules`, moduleData);
+  createModule(moduleData: any): Observable<GenericAPIResponse<string>> {
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/admin/modules`, moduleData);
   }
 
-  updateModule(id: string, moduleData: any) {
-    return this.httpClient.put(`${this.apiUrl}/admin/modules/${id}`, moduleData);
+  updateModule(id: string, moduleData: any): Observable<GenericAPIResponse<string>> {
+    return this.httpClient.put<GenericAPIResponse<string>>(`${this.apiUrl}/admin/modules/`, moduleData);
   }
 
   deactivateModule(id: string) {

@@ -4,6 +4,8 @@ public class QuizViewModel
 {
     public Guid Id { get; set; }
 
+    public Guid? QuizAttemptId { get; set; }
+
     public string Name { get; set; }
 
     public string Description { get; set; }
@@ -12,5 +14,5 @@ public class QuizViewModel
 
     public string TopicName { get; set; }
 
-    public string Duration { get; set; }
+    public TimeSpan Duration { get; set; }
 }

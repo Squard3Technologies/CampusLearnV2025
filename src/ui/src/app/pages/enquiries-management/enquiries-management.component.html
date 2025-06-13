@@ -8,45 +8,34 @@
         </li>
         <li class="breadcrumb-item active" aria-current="page">Enquiry Management</li>
       </ol>
-    </nav>  </div>
+    </nav>
+  </div>
 
   <!-- Main Container for Sidebar and Content -->
   <div class="main-container">
     <!-- Sidebar -->
-    <div class="sidebar">
-      <h3>Enquiry Management</h3>
-      <ul class="tabs">
-        <li class="tab active">Pending Enquiries</li>
-        <li class="tab clickable" (click)="navigateToHistory()">History</li>
-      </ul>
+    <div class="sidebar">      
+        <h3>Enquiry Management</h3>
+        <ul class="tabs">
+          <li class="tab active">Enquiries management</li>
+          <li class="tab clickable" (click)="navigateToHistory()">History</li>
+        </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-      <h2>Pending Enquiries</h2>
-      
-      <div class="pending-card">
-        <h3>Heading</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
-      </div>
+      <h2>All Enquiries</h2>
 
-      <div class="pending-card">
-        <h3>Heading</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
+      <div *ngIf="activeEnquiries.length === 0">
+        <p>No enquiries found.</p>
       </div>
-
-      <div class="pending-card">
-        <h3>Heading</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>        <button class="resolve-btn" (click)="openViewModal(selectedEnquiry)">Resolve</button>
-      </div>
+      <ng-container *ngFor="let enquiry of activeEnquiries">
+        <div class="pending-card">
+          <h3>{{ enquiry.title }}</h3>
+          <p>{{ enquiry.description }}</p>
+          <button class="resolve-btn" (click)="openViewModal(enquiry)">Resolve</button>
+        </div>
+      </ng-container>
     </div>
   </div>
 
@@ -64,17 +53,24 @@
 
         <label for="view-description">Select Resolution Action</label>
         <select id="resolution-action" [(ngModel)]="selectedEnquiry.resolutionAction">
-          <option value="New Topic">New Topic</option>
-          <option value="Link To Existing Topic">Link To Existing Topic</option>
-          <option value="No Action Required">No Action Required</option>
+          <option value="1">No Action</option>
+          <option value="2">Linked To Topic</option>
+          <option value="3">Created New Topic</option>
         </select>
 
-        <label for="linked-topic">Select Topic Link</label>
-        <input id="linked-topic" type="text" [(ngModel)]="selectedEnquiry.linkedTopic" >
+        <ng-container *ngIf="selectedEnquiry.resolutionAction == 2">
+          <label for="linked-topic">Select Topic Link</label>
+          <select id="resolution-action" [(ngModel)]="selectedEnquiry.linkedTopic">
+            <ng-container *ngFor="let topic of currentTopics">
+              <option value="topic.id">{{topic.title}}</option>
+            </ng-container>
+          </select>
+        </ng-container>
 
         <label for="resolution-response">Resolution Response</label>
         <textarea id="resolution-response" rows="4" [(ngModel)]="selectedEnquiry.resolutionResponse" ></textarea>
 
+        <button (click)="resolveEnquiry(selectedEnquiry)">Resolve</button>
         <button (click)="closeViewModal()">Back</button>
       </div>
     </div>

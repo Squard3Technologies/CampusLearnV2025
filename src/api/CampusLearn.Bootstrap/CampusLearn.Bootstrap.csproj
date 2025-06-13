@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.40.40</AssemblyVersion>
-    <FileVersion>1.0.40.40</FileVersion>
+    <AssemblyVersion>1.0.57.57</AssemblyVersion>
+    <FileVersion>1.0.57.57</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +20,6 @@
     <None Remove="Sql\StoredProcedures\SP_GetModules.sql" />
     <None Remove="Sql\StoredProcedures\SP_GetPendingMessages.sql" />
     <None Remove="Sql\StoredProcedures\SP_GetPendingRegistrations.sql" />
-    <None Remove="Sql\StoredProcedures\SP_GetUserModules.sql" />
     <None Remove="Sql\StoredProcedures\SP_GetUsers.sql" />
     <None Remove="Sql\StoredProcedures\SP_UpdateMessageStatus.sql" />
     <None Remove="Sql\StoredProcedures\SP_UpdateModule.sql" />
@@ -57,43 +56,49 @@
     <EmbeddedResource Include="Sql\StoredProcedures\learningmaterial\SP_AddLearningMaterial.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeModuleStatus.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_ChangeModuleStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateModule.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_GetUserModules.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UpdateUserDetails.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_UpdateModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_ChangeAccountStatus.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_UpdateUserDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_CreateUserAccounts.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_ChangeAccountStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetPendingRegistrations.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_CreateUserAccounts.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUsers.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_GetPendingRegistrations.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_GetUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\SP_UpsetDiscussionComment.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_AddUserModule.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_AddUserModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetUserModules.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_GetUserModuleLinks.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_GetModules.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_GetModules.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_AddModule.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\modules\SP_AddModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sql\StoredProcedures\SP_UserLogin.sql">
+    <EmbeddedResource Include="Sql\StoredProcedures\users\SP_UserLogin.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\StoredProcedures\topics\SP_GetModuleTopic.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Sql\StoredProcedures\topics\SP_GetModuleTopics.sql">
@@ -202,6 +207,9 @@
     <None Update="Sql\StoredProcedures\enquiries\SP_ResolveEnquiry.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Sql\StoredProcedures\quizzes\SP_CompleteQuizAttempt.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sql\StoredProcedures\quizzes\SP_CreateQuizAttempt.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -226,13 +234,13 @@
     <None Update="Sql\StoredProcedures\quizzes\SP_UpsertQuizQuestion.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sql\StoredProcedures\SP_CreateNotification.sql">
+    <None Update="Sql\StoredProcedures\notifications\SP_CreateNotification.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sql\StoredProcedures\SP_GetPendingNotifications.sql">
+    <None Update="Sql\StoredProcedures\notifications\SP_GetPendingNotifications.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sql\StoredProcedures\SP_UpdateNotificationStatus.sql">
+    <None Update="Sql\StoredProcedures\notifications\SP_UpdateNotificationStatus.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sql\StoredProcedures\subscriptions\SP_GetSubscribedUserIdentifiers.sql">

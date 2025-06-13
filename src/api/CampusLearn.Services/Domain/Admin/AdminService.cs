@@ -76,6 +76,7 @@ public class AdminService : IAdminService
         {
             Id = model.Id.Value,
             FirstName = model.FirstName,
+            MiddleName = model.MiddleName,
             Surname = model.LastName,
             ContactNumber = model.ContactNumber,
             EmailAddress = model.EmailAddress,

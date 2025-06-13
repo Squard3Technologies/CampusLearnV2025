@@ -4,7 +4,7 @@ public interface IEnquiryRepository
 {
     Task<List<EnquiryViewModel>> GetEnquiriesAsync(Guid userId, CancellationToken token);
 
-    Task CreateEnquiryAsync(Guid userId, CreateEnquiryRequestModel model, CancellationToken token);
+    Task<Guid?> CreateEnquiryAsync(Guid userId, CreateEnquiryRequestModel model, CancellationToken token);
 
     Task<EnquiryViewModel?> GetEnquiryAsync(Guid id, CancellationToken token);
 

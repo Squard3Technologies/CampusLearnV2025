@@ -5,6 +5,7 @@ CREATE OR ALTER PROCEDURE dbo.SP_GetDiscussionComments
 AS
 BEGIN
     SELECT 
+        c.Id,
         c.Content,
         c.CreatedDate 'DateCreated',
         c.CreatedByUserId,
