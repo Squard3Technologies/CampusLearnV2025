@@ -16,7 +16,7 @@ export class ModulesComponent {
 
   constructor(private apiService: ApiService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.apiService.getModules().subscribe((x: any | null) => {
       this.userModules = x;
     });
