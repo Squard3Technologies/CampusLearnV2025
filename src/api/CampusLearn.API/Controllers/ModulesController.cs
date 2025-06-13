@@ -43,11 +43,19 @@ public class ModulesController : ControllerBase
         return response?.Body != null ? Ok(response) : NoContent();
     }
 
-    [HttpGet("modules/{moduleId}")]
+    [HttpGet("{moduleId}/topics")]
     [ProducesResponseType(typeof(GenericAPIResponse<IEnumerable<TopicViewModel>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllTopicsAsync(Guid moduleId)
     {
-        var responses = await moduleService.GetModuleTopicAsync(moduleId);
+        var responses = await moduleService.GetModuleTopicsAsync(moduleId);
+        return Ok(responses);
+    }
+
+    [HttpGet("{moduleId}/topics/{topicId}")]
+    [ProducesResponseType(typeof(GenericAPIResponse<TopicViewModel>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllTopicsAsync(Guid moduleId, Guid topicId)
+    {
+        var responses = await moduleService.GetModuleTopicAsync(moduleId, topicId);
         return Ok(responses);
     }
 }

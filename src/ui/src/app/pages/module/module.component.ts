@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Topic, mockTopics, mockModuleNames } from '../../mock-data';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-module',
@@ -14,7 +15,7 @@ export class ModuleComponent implements OnInit {
   moduleId: string | null = null;
   moduleName: string | null = null;
   topics: Topic[] = [];
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -23,9 +24,19 @@ export class ModuleComponent implements OnInit {
     });
   }
   loadModuleData() {
-    // Get module name from mock data
-    this.moduleName = mockModuleNames[this.moduleId || ''] || mockModuleNames['default'];
-    
+    if (this.moduleId != null) {
+      this.apiService.getModules().subscribe((modules:any) => {
+        const module = modules.find((x: any) => x.id === this.moduleId);
+        if (module) {
+          this.moduleName = module.code + " - " + module.name;
+        }
+      });
+
+      this.apiService.getTopics(this.moduleId).subscribe((x:any) =>
+        this.topics = x.body
+      );
+    }
+
     // Get topics and set the moduleId for each topic
     this.topics = mockTopics.map(topic => ({
       ...topic,

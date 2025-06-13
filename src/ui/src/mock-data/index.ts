@@ -2,7 +2,6 @@
 
 export * from './interfaces';
 export * from './learning-materials';
-export * from './quizzes';
 
 // You can import additional mock data modules here as needed
 // export * from './topics';

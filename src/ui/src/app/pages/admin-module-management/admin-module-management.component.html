@@ -34,9 +34,24 @@
       </div>
       <!-- Create Module Button -->
       <div class="controls-section">
-        <button class="btn btn-primary" (click)="createModule()">
+        <button class="btn btn-primary" (click)="openCreateModuleModal()">
           <i class="fas fa-plus"></i> Create Module
         </button>
+
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search module..." [(ngModel)]="searchTerm" (input)="filterModules()">
+        </div>
+
+        <div class="filter-controls">         
+          <select [(ngModel)]="statusFilter" (change)="filterModules()" class="filter-select">
+            <option value="">ALL STATUSES</option>
+            <option value="true">ACTIVE</option>
+            <option value="false">CANCELLED</option>
+          </select>
+
+        </div>
+
       </div>
 
       <!-- Modules Table -->
@@ -44,17 +59,23 @@
         <table class="modules-table">
           <thead>
             <tr>
-              <th>Module Name</th>
-              <th>Instructor</th>
-              <th>Level</th>
-              <th>Status</th>
-              <th>Enrollments</th>
-              <th>Created Date</th>
+              <th (click)="sortData('code')">
+                Module Code &nbsp;
+                <span *ngIf="sortColumn === 'code'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="sortData('name')">
+                Module Name &nbsp;
+                <span *ngIf="sortColumn === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="sortData('status')">
+                Status &nbsp;
+                <span *ngIf="sortColumn === 'status'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="filteredModules.length === 0">
+            <tr *ngIf="pagedModules.length === 0">
               <td colspan="7" class="text-center">
                 <div class="empty-state">
                   <i class="fas fa-book fa-3x text-muted mb-3"></i>
@@ -63,43 +84,34 @@
                 </div>
               </td>
             </tr>
-            <tr *ngFor="let module of filteredModules">
+            <tr *ngFor="let module of pagedModules">
               <td>
                 <div class="module-info">
-                  <div class="module-icon">
-                    <i class="fas fa-book"></i>
-                  </div>
                   <div class="module-details">
-                    <span class="module-name">{{ module.name }}</span>
-                    <small class="module-description">{{ module.description }}</small>
+                    <span class="module-name">{{ module.code }}</span>
                   </div>
                 </div>
               </td>
-              <td>{{ module.instructor }}</td>
+              <td>{{ module.name }}</td>
               <td>
-                <span class="level-badge">
-                  {{ module.level }}
-                </span>
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                  <button type="button" class="btn btn-sm w-100"
+                    [ngClass]="module.status === true ? 'btn-success' : 'btn-danger'"
+                    [disabled]="module.status === true" (click)="toggleModuleStatus(module, true)">
+                    <span
+                      [title]="module.status === true ? 'module is active' : 'click to activate module'">{{module.status
+                      === true ? 'Active' : 'Cancelled'}}</span>
+                  </button>
+                </div>
+
               </td>
-              <td>
-                <span class="status-badge">
-                  {{ module.status }}
-                </span>
-              </td>
-              <td>{{ module.enrollments }}</td>
-              <td>{{ module.createdDate | date:'short' }}</td>
               <td>
                 <div class="action-buttons">
-                  <button class="btn btn-sm btn-info" title="View Module">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-sm btn-primary" title="Edit Module">
+                  <button class="btn btn-sm btn-info" title="Edit Module" (click)="openEditModuleModal(module)">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="btn btn-sm btn-warning" title="Toggle Status">
-                    <i class="fas fa-pause"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger" title="Delete Module">
+                  <button class="btn btn-sm btn-danger" title="Cancel Module"
+                    (click)="toggleModuleStatus(module, false)">
                     <i class="fas fa-trash"></i>
                   </button>
                 </div>
@@ -108,6 +120,68 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container" *ngIf="filteredModules.length > 0">
+        <div class="pagination-info">
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to
+          {{ Math.min(currentPage * pageSize, filteredModules.length) }} of
+          {{ filteredModules.length }} modules
+        </div>
+        <div class="pagination-controls">
+          <button class="btn btn-outline-primary" [disabled]="currentPage === 1" (click)="previousPage()">
+            Previous
+          </button>
+          <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+          <button class="btn btn-outline-primary" [disabled]="currentPage === totalPages" (click)="nextPage()">
+            Next
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
+
+
+<!-- Modal New enquiry-->
+<ng-container *ngIf="showModal">
+  <div class="modal-backdrop">
+    <div class="modal-content">
+      <h2>New Module</h2>
+
+      <label for="title">Module Code</label>
+      <input type="text" id="moduleCode" [(ngModel)]="moduleCode" placeholder="Enter module code" required>
+
+      <label for="description">Module Name</label>
+      <input type="text" id="moduleName" [(ngModel)]="moduleName" placeholder="Enter module name" required />
+
+      <div class="modal-buttons">
+        <button class="cancel-btn" (click)="closeCreateModuleModal(true, false)">Cancel</button>
+        <button class="submit-btn" (click)="submitCreateModule()">Submit</button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+
+<!-- Modal New enquiry-->
+<ng-container *ngIf="showEditModal">
+  <div class="modal-backdrop">
+    <div class="modal-content">
+      <h2>New Module</h2>
+
+      <input type="hidden" id="moduleId" [(ngModel)]="moduleId" />
+      <label for="title">Module Code</label>
+      <input type="text" id="moduleCode" [(ngModel)]="moduleCode" placeholder="Enter module code" required>
+
+      <label for="description">Module Name</label>
+      <input type="text" id="moduleName" [(ngModel)]="moduleName" placeholder="Enter module name" required />
+
+      <div class="modal-buttons">
+        <button class="cancel-btn" (click)="closeCreateModuleModal(true, true)">Cancel</button>
+        <button class="submit-btn" (click)="submitEditModule()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</ng-container>

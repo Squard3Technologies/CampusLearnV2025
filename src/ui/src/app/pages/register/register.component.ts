@@ -28,33 +28,9 @@ export class RegisterComponent {
   ) { }
 
 
-  onTestDialog(): void {
-
-
-
-    Swal.fire({
-      icon: 'success',
-      iconColor: '#dc3545',
-      title: 'SUCCESS',
-      html: '<p class="font-13">Registration successful. <br/>Once account has been approved by admin you will recieve email notification</p>',
-      //color: "#198754",
-      //background: "#198754",
-      confirmButtonColor: '#fafafa',
-      confirmButtonText: '<i class="fa fa-thumbs-up me-2"></i> Dismiss',
-      allowOutsideClick: false,
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'btn btn-md btn-outline-danger me-2',
-      }
-    }).then((result) => {
-
-    });
-  }
-
+  
   onSubmit(): void {
     // Check if all required fields are filled
-
-
     if (!this.firstName || !this.surname || !this.emailAddress || !this.password || !this.confirmPassword || !this.contactNumber) {
       this.errorMessage = 'Please fill in all fields';
       Swal.fire({
@@ -166,8 +142,6 @@ export class RegisterComponent {
               iconColor: '#dc3545',
               title: 'REGISTRATION ERROR',
               text: response.statusMessage,
-              //background: "#fafafa",
-              //color: "#fafafa",
               confirmButtonColor: '#dc3545',
               confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
               allowOutsideClick: false,

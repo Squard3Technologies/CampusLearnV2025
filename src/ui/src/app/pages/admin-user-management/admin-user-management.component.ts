@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { UserService } from '../../services/user.service';
 import Swal from 'sweetalert2';
-import { SystemUser } from '../../models/systemuser.models';
+import { SystemUser } from '../../models/api.models';
 
 
 @Component({
@@ -18,11 +18,13 @@ import { SystemUser } from '../../models/systemuser.models';
 export class AdminUserManagementComponent implements OnInit {
   users: SystemUser[] = [];
   filteredUsers: SystemUser[] = [];
+  pagedUsers: any[] = [];
   searchTerm: string = '';
   roleFilter: number = 0;
   statusFilter: string = '';
+
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 5;
   totalPages: number = 1;
 
   constructor(
@@ -38,8 +40,7 @@ export class AdminUserManagementComponent implements OnInit {
 
   loadUsers(): void {
     // Mock user data
-    var token = this.userService.getAuthToken() as string;
-    this.apiService.getAdminUsers(token).subscribe({
+    this.apiService.getAdminUsers().subscribe({
       next: (response) => {
         if (!response.status) {
           Swal.fire({
@@ -77,7 +78,6 @@ export class AdminUserManagementComponent implements OnInit {
           f.accountStatusDescription = this.toSentenceCase(f.accountStatusDescription)
         });
         this.users = response.body;
-
         this.filterUsers();
       },
       error: (error) => {
@@ -136,19 +136,32 @@ export class AdminUserManagementComponent implements OnInit {
     if (this.currentPage > this.totalPages) {
       this.currentPage = 1;
     }
+
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
+
+    // Bound currentPage to valid range
+    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages || 1;
+    if (this.currentPage < 1) this.currentPage = 1;
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pagedUsers = this.filteredUsers.slice(startIndex, endIndex);
   }
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.updatePagination();
     }
   }
 
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.updatePagination();
     }
   }
+
   navigateToPendingRegistrations(): void {
     this.router.navigate(['/admin/registrations']);
   }
@@ -163,8 +176,8 @@ export class AdminUserManagementComponent implements OnInit {
   }
 
   toggleUserStatus(user: SystemUser): void {
-    
-    var tempusers = this.users.filter(f => f.id !== user.id); 
+
+    var tempusers = this.users.filter(f => f.id !== user.id);
     var currentStatus = user.accountStatusDescription;
     user.accountStatusDescription = currentStatus === 'Active' ? 'Inactive' : 'Active';
     user.accountStatusId = currentStatus === 'Active' ? '2C1904BB-07F2-4A0E-8CB4-ECB768239D19' : 'B492BB30-B073-4059-A58B-B3F6E5BE4C95';
@@ -175,21 +188,11 @@ export class AdminUserManagementComponent implements OnInit {
     // Implement API call to update user status
   }
 
-  toggleUserStatusExt(user: SystemUser, status:string): void {
-    
-    var tempusers = this.users.filter(f => f.id !== user.id); 
-    var currentStatus = user.accountStatusDescription;
-    user.accountStatusDescription = this.getStatusClass(status);
-    user.accountStatusId = status;
-    tempusers.push(user);
-    this.users = tempusers;
-    console.log('Toggled user status:', JSON.stringify(user));
-    console.log('users:', JSON.stringify(this.users));
+  toggleUserStatusExt(user: SystemUser, status: string): void {
     // Implement API call to update user status
-    var token = this.userService.getAuthToken() as string;
-    this.apiService.changeUserAccountStatus(user.id, status, token).subscribe({
+    this.apiService.changeUserAccountStatus(user.id, status).subscribe({
       next: (response) => {
-
+        this.loadUsers();
       }
     });
 

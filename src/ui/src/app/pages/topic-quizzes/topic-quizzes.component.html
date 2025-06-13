@@ -34,11 +34,13 @@
     <div class="main-content">
       <div class="quizzes-header">
         <h2>Topic Quizzes</h2>
-        <div class="header-actions">
-          <button class="btn btn-primary">
-            <i class="fas fa-plus"></i> Create Quiz
-          </button>
-        </div>
+        <ng-container *ngIf="allowQuizManagement">
+          <div class="header-actions">
+            <button class="btn btn-primary" (click)="createQuiz()">
+              <i class="fas fa-plus"></i> Create Quiz
+            </button>
+          </div>
+        </ng-container>
       </div>
 
       <!-- Quizzes Table -->
@@ -56,12 +58,6 @@
                 <th scope="col">
                   <i class="fas fa-clock"></i> Duration
                 </th>
-                <th scope="col">
-                  <i class="fas fa-star"></i> Difficulty
-                </th>
-                <th scope="col">
-                  <i class="fas fa-chart-line"></i> Status
-                </th>
                 <th scope="col" class="text-center">
                   <i class="fas fa-cog"></i> Actions
                 </th>
@@ -74,59 +70,36 @@
                     <i class="fas fa-file-alt text-primary me-2"></i>
                     <div>
                       <strong>{{ quiz.name }}</strong>
-                      <div class="quiz-details">
-                        <small class="text-muted">{{ quiz.totalQuestions }} questions • {{ quiz.passingScore }}% to pass</small>
-                      </div>
                     </div>
                   </div>
                 </td>
-                <td class="quiz-description">
-                  <span class="description-text">{{ quiz.description }}</span>
-                  <div class="quiz-meta" *ngIf="quiz.dueDate">
-                    <small class="text-muted">
-                      Due: {{ quiz.dueDate | date:'MMM d, y' }}
-                      <span class="text-danger" *ngIf="isQuizOverdue(quiz)"> (Overdue)</span>
-                    </small>
+                <td class="quiz-name">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-file-alt text-primary me-2"></i>
+                    <div>
+                      {{ quiz.description }}
+                    </div>
                   </div>
                 </td>
                 <td class="quiz-duration">
-                  <span class="duration-text">{{ quiz.duration }} min</span>
-                </td>
-                <td class="quiz-difficulty">
-                  <span class="badge" [ngClass]="'badge-' + quiz.difficulty.toLowerCase()">
-                    <i class="fas fa-star" [ngClass]="getDifficultyClass(quiz.difficulty)"></i>
-                    {{ quiz.difficulty }}
-                  </span>
-                </td>
-                <td class="quiz-status">
-                  <span class="badge" [ngClass]="'badge-status-' + quiz.status.toLowerCase()">
-                    {{ quiz.status }}
-                  </span>
-                  <div class="attempts-info" *ngIf="quiz.maxAttempts">
-                    <small class="text-muted">{{ quiz.attempts }}/{{ quiz.maxAttempts }} attempts</small>
-                  </div>
+                  <span class="duration-text">{{ parseTimeSpanToMinutes(quiz.duration) }} min</span>
                 </td>
                 <td class="quiz-actions text-center">
                   <div class="btn-group" role="group">
                     <button 
                       class="btn btn-sm btn-outline-primary"
-                      *ngIf="canStartQuiz(quiz)"
                       (click)="startQuiz(quiz)"
                       title="Start Quiz">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button 
-                      class="btn btn-sm btn-outline-info"
-                      *ngIf="quiz.attempts && quiz.attempts > 0"
-                      (click)="reviewQuiz(quiz)"
-                      title="Review Previous Attempts">
-                      <i class="fas fa-eye"></i>
-                    </button>
-                    <button 
-                      class="btn btn-sm btn-outline-secondary"
-                      title="More Options">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
+                    <ng-container *ngIf="allowQuizManagement">
+                      <button
+                        class="btn btn-sm btn-outline-primary"
+                        (click)="editQuiz(quiz)"
+                        title="Edit Quiz">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </ng-container>
                   </div>
                 </td>
               </tr>
@@ -140,59 +113,9 @@
             <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
             <h4 class="text-muted">No Quizzes Available</h4>
             <p class="text-muted">No quizzes have been created for this topic yet.</p>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" (click)="createQuiz()">
               <i class="fas fa-plus"></i> Create First Quiz
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quizzes Summary -->
-      <div class="quizzes-summary" *ngIf="quizzes.length > 0">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="summary-card">
-              <div class="summary-icon">
-                <i class="fas fa-question-circle"></i>
-              </div>
-              <div class="summary-content">
-                <h6>Total Quizzes</h6>
-                <span class="summary-number">{{ quizzes.length }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="summary-card">
-              <div class="summary-icon">
-                <i class="fas fa-play"></i>
-              </div>
-              <div class="summary-content">
-                <h6>Active</h6>
-                <span class="summary-number">{{ getActiveQuizzesCount() }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="summary-card">
-              <div class="summary-icon">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div class="summary-content">
-                <h6>Pending</h6>
-                <span class="summary-number">{{ getPendingQuizzesCount() }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="summary-card">
-              <div class="summary-icon">
-                <i class="fas fa-check-circle"></i>
-              </div>
-              <div class="summary-content">
-                <h6>Completed</h6>
-                <span class="summary-number">{{ getCompletedQuizzesCount() }}</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { NavComponent } from './shared/nav/nav.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,

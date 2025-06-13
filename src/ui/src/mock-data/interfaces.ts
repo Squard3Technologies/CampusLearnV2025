@@ -28,8 +28,8 @@ export interface Topic {
 }
 
 export interface LearningMaterial {
-  id: number;
-  topicId: number;
+  id: string;
+  topicId: string;
   name: string;
   description: string;
   fileType: 'PDF' | 'Video' | 'Article' | 'Slides' | 'Audio' | 'Code' | 'Quiz';
@@ -66,20 +66,4 @@ export interface Chat {
   lastMessage?: string;
   lastMessageTime?: Date;
   unreadCount?: number;
-}
-
-export interface Quiz {
-  id: number;
-  topicId: number;
-  name: string;
-  description: string;
-  duration: number; // in minutes
-  totalQuestions: number;
-  passingScore: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  status: 'Active' | 'Draft' | 'Archived';
-  createdDate: Date;
-  dueDate?: Date;
-  attempts?: number;
-  maxAttempts?: number;
 }

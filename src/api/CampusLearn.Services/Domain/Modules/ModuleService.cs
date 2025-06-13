@@ -132,15 +132,27 @@ public class ModuleService : IModuleService
         return apiResponse;
     }
 
-    public async Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicAsync(Guid moduleId)
+    public async Task<GenericAPIResponse<IEnumerable<TopicViewModel>>> GetModuleTopicsAsync(Guid moduleId)
     {
         GenericAPIResponse<IEnumerable<TopicViewModel>> apiResponse = new GenericAPIResponse<IEnumerable<TopicViewModel>>();
-        var dbResponse = await moduleRepository.GetModuleTopicAsync(moduleId);
+        var dbResponse = await moduleRepository.GetModuleTopicsAsync(moduleId);
 
         apiResponse.Status = dbResponse.Status;
         apiResponse.StatusCode = dbResponse.StatusCode;
         apiResponse.StatusMessage = dbResponse.StatusMessage;
         apiResponse.Body = (dbResponse.Body != null) ? (List<TopicViewModel>)dbResponse.Body : null;
+        return apiResponse;
+    }
+
+    public async Task<GenericAPIResponse<TopicViewModel>> GetModuleTopicAsync(Guid moduleId, Guid topicId)
+    {
+        GenericAPIResponse<TopicViewModel> apiResponse = new GenericAPIResponse<TopicViewModel>();
+        var dbResponse = await moduleRepository.GetModuleTopicAsync(moduleId, topicId);
+
+        apiResponse.Status = dbResponse.Status;
+        apiResponse.StatusCode = dbResponse.StatusCode;
+        apiResponse.StatusMessage = dbResponse.StatusMessage;
+        apiResponse.Body = (dbResponse.Body != null) ? (TopicViewModel)dbResponse.Body : null;
         return apiResponse;
     }
 
