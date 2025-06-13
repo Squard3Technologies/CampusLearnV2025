@@ -55,6 +55,8 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
+
+
         [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("users/status")]
         [ProducesResponseType(typeof(GenericAPIResponse<string>), StatusCodes.Status200OK)]
@@ -63,6 +65,8 @@ namespace CampusLearn.API.Controllers
             var apiResponse = await adminService.ProcessRegistrationAsync(userId: request.UserId, accountStatusId: request.AccountStatusId, token);
             return Ok(apiResponse);
         }
+
+
 
         [Authorize(Policy = AuthorizationRoles.Administrator)]
         [HttpPost("users/update")]
@@ -73,7 +77,9 @@ namespace CampusLearn.API.Controllers
             return Ok(apiResponse);
         }
 
-        #endregion -- user management --
+        #endregion
+
+
 
         #region -- MODULES API --
 

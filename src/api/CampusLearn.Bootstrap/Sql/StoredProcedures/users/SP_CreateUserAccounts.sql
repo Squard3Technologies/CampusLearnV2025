@@ -1,6 +1,7 @@
 CREATE OR ALTER PROCEDURE dbo.SP_CreateUserAccounts
 (
     @Name NVARCHAR(255),
+    @Middlename VARCHAR(255) = NULL,
     @Surname NVARCHAR(255),
     @Email NVARCHAR(255),
     @ContactNumber NVARCHAR(50),
@@ -19,8 +20,8 @@ BEGIN
 	ELSE
 	BEGIN
 		DECLARE @Id UNIQUEIDENTIFIER = NEWID()
-	    INSERT INTO [User] (Id, Name, Surname, Email, Password, ContactNumber, Role)
-	    VALUES (@Id, @Name, @Surname, @Email, @Password, @ContactNumber, @Role);
+	    INSERT INTO [User] (Id, Name, MiddleName, Surname, Email, Password, ContactNumber, Role)
+	    VALUES (@Id, @Name, ISNULL(@Middlename,''), @Surname, @Email, @Password, @ContactNumber, @Role);
 		SET @Status = 1
 		SET @StatusCode = 200
 		SET @StatusMessage = 'Successfully created user account'

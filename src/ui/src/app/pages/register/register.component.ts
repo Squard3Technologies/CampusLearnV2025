@@ -118,7 +118,7 @@ export class RegisterComponent {
       emailAddress: this.emailAddress,
       password: this.password,
       contactNumber: this.contactNumber,
-      role: 1
+      role: 4
     };
 
     console.log('Registration data:', userData);
