@@ -138,7 +138,6 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     return this.totalQuestions > 0 ? (this.answeredQuestions / this.totalQuestions) * 100 : 0;
   }
 
-  // Question type helper
   getQuestionTypeLabel(type: number): string {
     switch (type) {
       case QuestionType.MultipleChoice: return 'Multiple Choice';

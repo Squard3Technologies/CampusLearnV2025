@@ -96,6 +96,14 @@ export class ApiService {
     return this.httpClient.get<any[]>(`${this.apiUrl}/quizzes/active`);
   }
 
+  createQuiz(data: any) {
+    return this.httpClient.post(`${this.apiUrl}/quizzes`, data);
+  }
+
+  updateQuiz(quizId: any, data: any) {
+    return this.httpClient.put(`${this.apiUrl}/quizzes/${quizId}`, data);
+  }
+
   createQuizAttempt(quizId: any) {
     return this.httpClient.post(`${this.apiUrl}/quizzes/${quizId}/attempt`, {});
   }

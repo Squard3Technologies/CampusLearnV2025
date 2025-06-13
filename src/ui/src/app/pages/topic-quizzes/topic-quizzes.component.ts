@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { UserService, User } from '../../services/user.service';
+import { Subscription } from 'rxjs';
 
 export interface Quiz {
   id: string;
@@ -24,11 +26,15 @@ export class TopicQuizzesComponent implements OnInit {
   moduleId!: string;
   moduleName!: string;
   quizzes: Quiz[] = [];
+  currentUser: User | null = null;
+  allowQuizManagement = false;
+  private userSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +49,20 @@ export class TopicQuizzesComponent implements OnInit {
       this.moduleName = params['moduleName'];
     });
 
+    this.userSubscription = this.userService.currentUser$.subscribe((user: User | null) => {
+      this.currentUser = user;
+      this.allowQuizManagement = (user?.role === 'Tutor'
+        || user?.role === 'Lecturer'
+        || user?.role === 'Administrator') ?? false;
+    });
+
     this.loadQuizzes();
+  }
+
+  ngOnDelete() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
   loadQuizzes(): void {
@@ -105,6 +124,29 @@ export class TopicQuizzesComponent implements OnInit {
   }
 
   editQuiz(quiz: Quiz): void {
-    this.router.navigate(['/quiz', quiz.id, 'management']);
+    this.router.navigate(
+      ['/quiz/management'],
+      {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName,
+          topicId: this.topicId,
+          quizId: quiz.id
+        }
+      }
+    );
+  }
+
+  createQuiz(): void {
+    this.router.navigate(
+      ['/quiz/management'],
+      {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName,
+          topicId: this.topicId
+        }
+      }
+    );
   }
 }

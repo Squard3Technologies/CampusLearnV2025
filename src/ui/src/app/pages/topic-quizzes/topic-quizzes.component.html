@@ -34,11 +34,13 @@
     <div class="main-content">
       <div class="quizzes-header">
         <h2>Topic Quizzes</h2>
-        <div class="header-actions">
-          <button class="btn btn-primary">
-            <i class="fas fa-plus"></i> Create Quiz
-          </button>
-        </div>
+        <ng-container *ngIf="allowQuizManagement">
+          <div class="header-actions">
+            <button class="btn btn-primary" (click)="createQuiz()">
+              <i class="fas fa-plus"></i> Create Quiz
+            </button>
+          </div>
+        </ng-container>
       </div>
 
       <!-- Quizzes Table -->
@@ -90,12 +92,14 @@
                       title="Start Quiz">
                       <i class="fas fa-play"></i>
                     </button>
-                    <button 
-                      class="btn btn-sm btn-outline-primary"
-                      (click)="editQuiz(quiz)"
-                      title="Edit Quiz">
-                      <i class="fas fa-edit"></i>
-                    </button>
+                    <ng-container *ngIf="allowQuizManagement">
+                      <button
+                        class="btn btn-sm btn-outline-primary"
+                        (click)="editQuiz(quiz)"
+                        title="Edit Quiz">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </ng-container>
                   </div>
                 </td>
               </tr>
@@ -109,7 +113,7 @@
             <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
             <h4 class="text-muted">No Quizzes Available</h4>
             <p class="text-muted">No quizzes have been created for this topic yet.</p>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" (click)="createQuiz()">
               <i class="fas fa-plus"></i> Create First Quiz
             </button>
           </div>

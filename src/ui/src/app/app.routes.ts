@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'quiz/:id/attempt', loadComponent: () => import('./pages/quiz-attempt/quiz-attempt.component').then(m => m.QuizAttemptComponent) },
   { path: 'quiz/:id/review', loadComponent: () => import('./pages/quiz-attempt-review/quiz-attempt-review.component').then(m => m.QuizAttemptReviewComponent) },
   { path: 'quiz/history', loadComponent: () => import('./pages/quiz-history/quiz-history.component').then(m => m.QuizHistoryComponent) },
-  { path: 'quiz/:id/management', loadComponent: () => import('./pages/quiz-management/quiz-management.component').then(m => m.QuizManagementComponent) },
+  { path: 'quiz/management', loadComponent: () => import('./pages/quiz-management/quiz-management.component').then(m => m.QuizManagementComponent) },
   { path: 'quizzes', loadComponent: () => import('./pages/quizzes/quizzes.component').then(m => m.QuizzesComponent) },
   { path: 'terms-and-conditions', loadComponent: () => import('./pages/terms-and-conditions/terms-and-conditions.component').then(m => m.TermsAndConditionsComponent) },
   { path: 'topic/:id', loadComponent: () => import('./pages/topic/topic.component').then(m => m.TopicComponent) },
