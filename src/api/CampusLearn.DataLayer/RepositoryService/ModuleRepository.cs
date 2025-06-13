@@ -467,7 +467,6 @@ public class ModuleRepository : IModuleRepository
                     {
                         string query = "dbo.SP_GetModuleTopic";
                         var parameters = new DynamicParameters();
-                        parameters.Add("moduleId", moduleId, DbType.Guid);
                         parameters.Add("topicId", topicId, DbType.Guid);
                         var topic = await db.QueryFirstOrDefaultAsync<TopicViewModel>(sql: query,
                             param: parameters,
