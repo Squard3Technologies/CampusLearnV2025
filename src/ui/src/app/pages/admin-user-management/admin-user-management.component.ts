@@ -50,12 +50,12 @@ export class AdminUserManagementComponent implements OnInit {
             title: 'REGISTRAION ERROR',
             text: response?.statusMessage || 'Retrieving admin users failed. Please try again.',
             confirmButtonColor: '#dc3545',
-        confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
-        allowOutsideClick: false,
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'btn btn-md btn-outline-danger me-2',
-        }
+            confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+            allowOutsideClick: false,
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-md btn-outline-danger me-2',
+            }
           });
           return;
         }
@@ -67,12 +67,12 @@ export class AdminUserManagementComponent implements OnInit {
             title: 'REGISTRAION ERROR',
             text: response?.statusMessage || 'Retrieving admin users failed. Please try again.',
             confirmButtonColor: '#dc3545',
-        confirmButtonText: '<i class="fa fa-thumbs-uo me-2"></i> Dismiss',
-        allowOutsideClick: false,
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'btn btn-md btn-outline-success me-2',
-        }
+            confirmButtonText: '<i class="fa fa-thumbs-uo me-2"></i> Dismiss',
+            allowOutsideClick: false,
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-md btn-outline-success me-2',
+            }
           });
           return;
         }
@@ -92,12 +92,12 @@ export class AdminUserManagementComponent implements OnInit {
           title: 'REGISTRAION ERROR',
           text: error.error?.message || 'Retrieving admin users failed. Please try again.',
           confirmButtonColor: '#dc3545',
-        confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
-        allowOutsideClick: false,
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'btn btn-md btn-outline-danger me-2',
-        }
+          confirmButtonText: '<i class="fa fa-thumbs-down me-2"></i> Dismiss',
+          allowOutsideClick: false,
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-md btn-outline-danger me-2',
+          }
         });
       }
     });
@@ -192,7 +192,7 @@ export class AdminUserManagementComponent implements OnInit {
 
 
   submitEditUserModal() {
-    if (!this.editUserModel.firstName || !this.editUserModel.surname || !this.editUserModel.emailAddress || !this.editUserModel.contactNumber 
+    if (!this.editUserModel.firstName || !this.editUserModel.surname || !this.editUserModel.emailAddress || !this.editUserModel.contactNumber
       || !this.editUserModel.role || !this.editUserModel.accountStatusId
     ) {
       //this.errorMessage = 'Please fill in all fields';
@@ -211,7 +211,7 @@ export class AdminUserManagementComponent implements OnInit {
       });
       return;
     }
-   
+
 
     this.closeEditUserModal(false);
     console.log('edit user data: ', JSON.stringify(this.editUserModel));
