@@ -1,7 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Quiz, mockQuizzes } from '../../../mock-data';
+import { ApiService } from '../../services/api.service';
+import { UserService, User } from '../../services/user.service';
+import { Subscription } from 'rxjs';
+
+export interface Quiz {
+  id: string;
+  name: string;
+  description: string;
+  moduleCode: string;
+  topicName: string;
+  duration: string;
+}
 
 @Component({
   selector: 'app-topic-quizzes',
@@ -15,10 +26,15 @@ export class TopicQuizzesComponent implements OnInit {
   moduleId!: string;
   moduleName!: string;
   quizzes: Quiz[] = [];
+  currentUser: User | null = null;
+  allowQuizManagement = false;
+  private userSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -33,21 +49,38 @@ export class TopicQuizzesComponent implements OnInit {
       this.moduleName = params['moduleName'];
     });
 
-    // Load quizzes for this topic
+    this.userSubscription = this.userService.currentUser$.subscribe((user: User | null) => {
+      this.currentUser = user;
+      this.allowQuizManagement = (user?.role === 'Tutor'
+        || user?.role === 'Lecturer'
+        || user?.role === 'Administrator') ?? false;
+    });
+
     this.loadQuizzes();
   }
+
+  ngOnDelete() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
   loadQuizzes(): void {
-    //this.quizzes = this.getQuizzesByTopicId(this.topicId);
+    this.apiService.getQuizzes(this.topicId).subscribe((x:any) =>
+      this.quizzes = x
+    );
   }
 
-  // Helper function to get quizzes by topic ID
-  getQuizzesByTopicId(topicId: number): Quiz[] {
-    return mockQuizzes.filter(quiz => quiz.topicId === topicId);
+  parseTimeSpanToMinutes(timeSpan: string): number {
+    const parts = timeSpan.split(':').map(Number);
+    const hours = parts[0];
+    const minutes = parts[1];
+    const seconds = parts[2];
+    return Math.round(((hours * 60 + minutes) * 60 + seconds) / 60);
   }
 
-  // Helper function to get quiz by ID
-  getQuizById(id: number): Quiz | undefined {
-    return mockQuizzes.find(quiz => quiz.id === id);
+  getQuizById(id: string): Quiz | undefined {
+    return this.quizzes.find(quiz => quiz.id === id);
   }
 
   navigateToTopicOverview(): void {
@@ -78,53 +111,42 @@ export class TopicQuizzesComponent implements OnInit {
   }
 
   startQuiz(quiz: Quiz): void {
-    if (quiz.status === 'Active' && (!quiz.maxAttempts || quiz.attempts! < quiz.maxAttempts)) {
-      // Navigate to quiz attempt page
-      this.router.navigate(['/quiz', quiz.id, 'attempt']);
-    }
+    this.apiService.createQuizAttempt(quiz.id).subscribe(attemptId => {
+    this.router.navigate(
+      ['/quiz', quiz.id, 'attempt'],
+      {
+        queryParams: {
+          quizAttemptId: attemptId
+        }
+      }
+    );
+  });
   }
 
-  reviewQuiz(quiz: Quiz): void {
-    // Navigate to quiz review page
-    this.router.navigate(['/quiz', quiz.id, 'review']);
+  editQuiz(quiz: Quiz): void {
+    this.router.navigate(
+      ['/quiz/management'],
+      {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName,
+          topicId: this.topicId,
+          quizId: quiz.id
+        }
+      }
+    );
   }
 
-  getDifficultyClass(difficulty: string): string {
-    const classes: { [key: string]: string } = {
-      'Easy': 'text-success',
-      'Medium': 'text-warning',
-      'Hard': 'text-danger'
-    };
-    return classes[difficulty] || 'text-secondary';
-  }
-
-  getStatusClass(status: string): string {
-    const classes: { [key: string]: string } = {
-      'Active': 'text-success',
-      'Draft': 'text-warning',
-      'Archived': 'text-secondary'
-    };
-    return classes[status] || 'text-secondary';
-  }
-
-  canStartQuiz(quiz: Quiz): boolean {
-    return quiz.status === 'Active' && (!quiz.maxAttempts || quiz.attempts! < quiz.maxAttempts);
-  }
-
-  isQuizOverdue(quiz: Quiz): boolean {
-    return quiz.dueDate ? new Date() > quiz.dueDate : false;
-  }
-
-  // Helper methods for summary statistics
-  getActiveQuizzesCount(): number {
-    return this.quizzes.filter(quiz => quiz.status === 'Active').length;
-  }
-
-  getPendingQuizzesCount(): number {
-    return this.quizzes.filter(quiz => quiz.status === 'Draft').length;
-  }
-
-  getCompletedQuizzesCount(): number {
-    return this.quizzes.filter(quiz => quiz.attempts && quiz.attempts > 0).length;
+  createQuiz(): void {
+    this.router.navigate(
+      ['/quiz/management'],
+      {
+        queryParams: {
+          moduleId: this.moduleId,
+          moduleName: this.moduleName,
+          topicId: this.topicId
+        }
+      }
+    );
   }
 }

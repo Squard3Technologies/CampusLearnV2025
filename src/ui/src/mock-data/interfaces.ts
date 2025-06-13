@@ -67,19 +67,3 @@ export interface Chat {
   lastMessageTime?: Date;
   unreadCount?: number;
 }
-
-export interface Quiz {
-  id: number;
-  topicId: number;
-  name: string;
-  description: string;
-  duration: number; // in minutes
-  totalQuestions: number;
-  passingScore: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  status: 'Active' | 'Draft' | 'Archived';
-  createdDate: Date;
-  dueDate?: Date;
-  attempts?: number;
-  maxAttempts?: number;
-}

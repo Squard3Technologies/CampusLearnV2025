@@ -34,7 +34,7 @@
                     <p><b>Module:</b> {{completedQuiz.moduleCode}}</p>
                     <p><b>Topic:</b> {{completedQuiz.topicName}}</p>
                     <p><b>Duration:</b> {{completedQuiz.duration}}</p>
-                    <p><b>Last Attempt Date Time:</b> {{completedQuiz.lastAttemptDateTime}}</p>
+                    <p><b>Last Attempt:</b> {{completedQuiz.lastAttemptDateTime | date: 'yyyy-MM-dd'}}</p>
                     <p><b>Last Attempt Score:</b> {{completedQuiz.lastAttemptScore}}</p>
                 </div>
                 <div class="quiz-actions">

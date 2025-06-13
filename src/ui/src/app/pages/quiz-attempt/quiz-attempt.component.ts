@@ -138,7 +138,6 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     return this.totalQuestions > 0 ? (this.answeredQuestions / this.totalQuestions) * 100 : 0;
   }
 
-  // Question type helper
   getQuestionTypeLabel(type: number): string {
     switch (type) {
       case QuestionType.MultipleChoice: return 'Multiple Choice';
@@ -201,7 +200,7 @@ export class QuizAttemptComponent implements OnInit, OnDestroy {
     // Calculate score and navigate to results
     const score = this.calculateScore();
     console.log('Quiz submitted with score:', score);
-    if (this.currentQuiz != null) {
+    if (this.currentQuiz != null && this.quizAttemptId != null) {
       const payload = {
         duration: this.formatTimeSpan(this.parseTimeSpan(this.currentQuiz.duration) - this.timeRemaining),
         questionAnswers: this.currentQuiz.questions

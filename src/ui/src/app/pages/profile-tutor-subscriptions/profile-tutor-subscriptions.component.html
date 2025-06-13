@@ -41,6 +41,19 @@
           </button>
         </div>
       </div>
+      <!-- Popup Modal -->
+      <!--<div class="modal-backdrop" *ngIf="showPopup" (click)="closePopup()"></div>
+      <div class="modal" *ngIf="showPopup">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <span class="close-btn" (click)="closePopup()">&times;</span>
+          <h3>{{ popupTitle }}</h3>
+          <p>{{ popupMessage }}</p>
+          <div class="modal-actions">
+            <button class="confirm-btn" (click)="confirmPopup()">Confirm</button>
+            <button class="cancel-btn" (click)="closePopup()">Cancel</button>
+          </div>
+        </div>
+      </div>-->
 
       <!-- Search Section -->
       <div class="search-section" [class.expanded]="showSearch">
