@@ -6,18 +6,22 @@ public class EnquiryService : IEnquiryService
 {
     private readonly IEnquiryRepository _enquiryRepository;
     private readonly IModuleRepository _moduleRepository;
-    private readonly ITopicRepository _topicRepository;
+    private readonly INotificationService _notificationService;
 
     public EnquiryService(IEnquiryRepository enquiryRepository,
-        IModuleRepository moduleRepository)
+        IModuleRepository moduleRepository,
+        INotificationService notificationService)
     {
         _enquiryRepository = enquiryRepository;
         _moduleRepository = moduleRepository;
+        _notificationService = notificationService;
     }
 
     public async Task CreateEnquiry(Guid userId, CreateEnquiryRequestModel model, CancellationToken token)
     {
-        await _enquiryRepository.CreateEnquiryAsync(userId, model, token);
+        var enquiryId = await _enquiryRepository.CreateEnquiryAsync(userId, model, token);
+        if (enquiryId != null)
+            await _notificationService.SendEnquiryCreatedAsync(userId, enquiryId.Value, NotificationTypes.Email, token);
     }
 
     public async Task<List<EnquiryViewModel>> GetEnquiries(Guid userId, CancellationToken token)
@@ -49,5 +53,7 @@ public class EnquiryService : IEnquiryService
         }
 
         await _enquiryRepository.ResolveEnquiryAsync(enquiryId, tutorId, model, token);
+
+        await _notificationService.SendEnquiryResolvedAsync(tutorId, enquiryId, NotificationTypes.Email, token);
     }
 }

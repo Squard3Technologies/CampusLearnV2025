@@ -45,7 +45,7 @@ export class AdminPendingRegistrationsComponent implements OnInit {
     this.apiService.getPendingRegistrations().subscribe({
       next: (response) => {
         if (!response.status && response.statusCode !== 404) {
-          
+
           Swal.fire({
             icon: 'error',
             iconColor: '#AD0151',
@@ -60,7 +60,7 @@ export class AdminPendingRegistrationsComponent implements OnInit {
             }
           });
           this.registrations = [];
-        this.filterRegistrations();
+          this.filterRegistrations();
           return;
         }
 
@@ -78,9 +78,9 @@ export class AdminPendingRegistrationsComponent implements OnInit {
               confirmButton: 'btn btn-md btn-outline-danger me-2',
             }
           });
-          
+
           this.registrations = [];
-        this.filterRegistrations();
+          this.filterRegistrations();
           return;
         }
 
@@ -106,8 +106,8 @@ export class AdminPendingRegistrationsComponent implements OnInit {
             confirmButton: 'btn btn-md btn-outline-danger me-2',
           }
         });
-        
-          this.registrations = [];
+
+        this.registrations = [];
         this.filterRegistrations();
       }
     });
@@ -209,8 +209,8 @@ export class AdminPendingRegistrationsComponent implements OnInit {
         Swal.showLoading();
       }
     });
-    
-    
+
+
     // Call API registration service
     this.apiService.processRegistration(userId, accountStatus).subscribe({
       next: (response) => {

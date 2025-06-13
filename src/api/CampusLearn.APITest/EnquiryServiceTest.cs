@@ -1,13 +1,6 @@
 ﻿using CampusLearn.DataLayer.IRepositoryService;
 using CampusLearn.DataModel.ViewModels;
 using CampusLearn.Services.Domain.Enquiries;
-using CampusLearn.Services.Domain.Quizzes;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Assert = Xunit.Assert;
 
@@ -21,9 +14,8 @@ public class EnquiryServiceTest
     public EnquiryServiceTest()
     {
         enquiryRepositoryMock = new Mock<IEnquiryRepository>();
-        enquiryService = new EnquiryService(enquiryRepositoryMock.Object);
+        enquiryService = new EnquiryService(enquiryRepositoryMock.Object, null, null);
     }
-
 
     [Fact]
     public async Task GetEnquiries_ForUserWithNoEnquiries_And_ReturnsEmptyList()
@@ -47,5 +39,4 @@ public class EnquiryServiceTest
         //The result should be empty
         Assert.Empty(result);
     }
-
 }

@@ -34,9 +34,9 @@ public class EnquiryRepository : IEnquiryRepository
         });
     }
 
-    public async Task CreateEnquiryAsync(Guid userId, CreateEnquiryRequestModel model, CancellationToken token)
+    public async Task<Guid?> CreateEnquiryAsync(Guid userId, CreateEnquiryRequestModel model, CancellationToken token)
     {
-        await _database.ExecuteTransactionAsync(async (db, transaction) =>
+        return await _database.ExecuteTransactionAsync(async (db, transaction) =>
         {
             var parameters = new DynamicParameters();
             parameters.Add("CreatedByUserId", userId, DbType.Guid);
@@ -45,13 +45,15 @@ public class EnquiryRepository : IEnquiryRepository
             parameters.Add("EnquiryStatus", EnquiryStatus.Pending, DbType.Int16);
             parameters.Add("ModuleId", model.ModuleId, DbType.Guid);
 
-            var rowsAffected = await db.ExecuteAsync(
+            var result = await db.QueryFirstOrDefaultAsync<Guid?>(
                 "dbo.SP_CreateEnquiry",
                 parameters,
                 transaction,
                 commandTimeout: 360,
                 commandType: CommandType.StoredProcedure
             );
+
+            return result;
         });
     }
 

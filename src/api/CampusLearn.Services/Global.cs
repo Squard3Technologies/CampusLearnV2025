@@ -22,3 +22,5 @@ global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.JsonWebTokens;
 global using Microsoft.IdentityModel.Tokens;
 global using Newtonsoft.Json;
+global using CampusLearn.Services.Domain.Admin;
+global using Microsoft.Extensions.DependencyInjection;

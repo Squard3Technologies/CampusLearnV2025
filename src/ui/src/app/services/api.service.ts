@@ -157,6 +157,10 @@ export class ApiService {
     return this.httpClient.post(`${this.apiUrl}/learning-material`, materialData);
   }
 
+  uploadLearningMaterial(materialData: any): Observable<GenericAPIResponse<string>> {
+    return this.httpClient.post<GenericAPIResponse<string>>(`${this.apiUrl}/learningmaterials/topic/uploads`, materialData);
+  }
+
   downloadLearningMaterial(fileId: string) {
     return this.httpClient.get(`${this.apiUrl}/learning-material/download`, {
       params: { fileId },
